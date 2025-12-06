@@ -1,0 +1,47 @@
+[0m[[0m[0mdebug[0m] [0m[0m[zinc] IncrementalCompile -----------[0m
+[0m[[0m[0mdebug[0m] [0m[0mIncrementalCompile.incrementalCompile[0m
+[0m[[0m[0mdebug[0m] [0m[0mprevious = Stamps for: 5 products, 3 sources, 6 libraries[0m
+[0m[[0m[0mdebug[0m] [0m[0mcurrent source = Set(${BASE}/modules/engine-api/src/main/scala/mnemocast/engine/api/HttpServer.scala, ${BASE}/modules/engine-api/src/main/scala/mnemocast/engine/api/json/JsonSupport.scala, ${BASE}/modules/engine-api/src/main/scala/mnemocast/engine/api/routes/AdRoute.scala)[0m
+[0m[[0m[0mdebug[0m] [0m[0m> initialChanges = InitialChanges(Changes(added = Set(), removed = Set(), changed = Set(${BASE}/modules/engine-api/src/main/scala/mnemocast/engine/api/HttpServer.scala), unmodified = ...),Set(),Set(),API Changes: Set(NamesChange(mnemocast.engine.infra.services.AdDeliveryService,ModifiedNames(changes = UsedName(mnemocast;engine;infra;services;AdDeliveryService;init;,[Default])))))[0m
+[0m[[0m[0mdebug[0m] [0m[0mThe mnemocast.engine.infra.services.AdDeliveryService has the following regular definitions changed:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	UsedName(mnemocast;engine;infra;services;AdDeliveryService;init;,[Default]).[0m
+[0m[[0m[0mdebug[0m] [0m[0mAll member reference dependencies will be considered within this context.[0m
+[0m[[0m[0mdebug[0m] [0m[0mFiles invalidated by inheriting from (external) mnemocast.engine.infra.services.AdDeliveryService: Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0mNow invalidating by inheritance (internally).[0m
+[0m[[0m[0mdebug[0m] [0m[0mGetting direct dependencies of all classes transitively invalidated by inheritance.[0m
+[0m[[0m[0mdebug[0m] [0m[0mGetting classes that directly depend on (external) mnemocast.engine.infra.services.AdDeliveryService.[0m
+[0m[[0m[0mdebug[0m] [0m[0mThe following modified names cause invalidation of mnemocast.engine.api.HttpServer: [mnemocast;engine;infra;services;AdDeliveryService;init;][0m
+[0m[[0m[0mdebug[0m] [0m[0mNone of the modified names appears in source file of mnemocast.engine.api.routes.AdRoutes. This dependency is not being considered for invalidation.[0m
+[0m[[0m[0mdebug[0m] [0m[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mInitial source changes:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	removed: Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0m	added: Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0m	modified: Set(${BASE}/modules/engine-api/src/main/scala/mnemocast/engine/api/HttpServer.scala)[0m
+[0m[[0m[0mdebug[0m] [0m[0mInvalidated products: Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0mExternal API changes: API Changes: Set(NamesChange(mnemocast.engine.infra.services.AdDeliveryService,ModifiedNames(changes = UsedName(mnemocast;engine;infra;services;AdDeliveryService;init;,[Default]))))[0m
+[0m[[0m[0mdebug[0m] [0m[0mModified binary dependencies: Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0mInitial directly invalidated classes: Set(mnemocast.engine.api.HttpServer)[0m
+[0m[[0m[0mdebug[0m] [0m[0mSources indirectly invalidated by:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	product: Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0m	binary dep: Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0m	external source: Set(mnemocast.engine.api.HttpServer)[0m
+[0m[[0m[0mdebug[0m] [0m[0mAll initially invalidated classes: Set(mnemocast.engine.api.HttpServer)[0m
+[0m[[0m[0mdebug[0m] [0m[0mAll initially invalidated sources:Set(${BASE}/modules/engine-api/src/main/scala/mnemocast/engine/api/HttpServer.scala)[0m
+[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: mnemocast.engine.api.HttpServer[0m
+[0m[[0m[0mdebug[0m] [0m[0mcompilation cycle 1[0m
+[0m[[0m[0minfo[0m] [0m[0mcompiling 1 Scala source to /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/target/scala-2.13/classes ...[0m
+[0m[[0m[0mdebug[0m] [0m[0mGetting org.scala-sbt:compiler-bridge_2.13:1.9.0:compile for Scala 2.13.12[0m
+[0m[[0m[0mdebug[0m] [0m[0m[zinc] Running cached compiler 2843553e for Scala compiler version 2.13.12[0m
+[0m[[0m[0mdebug[0m] [0m[0m[zinc] The Scala compiler is invoked with:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	-bootclasspath[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.12/scala-library-2.13.12.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	-classpath[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/target/scala-2.13/classes:/home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-domain/target/scala-2.13/classes:/home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/apache/pekko/pekko-actor-typed_2.13/1.0.2/pekko-actor-typed_2.13-1.0.2.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/apache/pekko/pekko-stream_2.13/1.0.2/pekko-stream_2.13-1.0.2.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/apache/pekko/pekko-http_2.13/1.0.1/pekko-http_2.13-1.0.1.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/com/github/pjfanning/pekko-http-circe_2.13/2.8.0/pekko-http-circe_2.13-2.8.0.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/io/circe/circe-core_2.13/0.14.10/circe-core_2.13-0.14.10.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/io/circe/circe-generic_2.13/0.14.7/circe-generic_2.13-0.14.7.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/io/circe/circe-parser_2.13/0.14.10/circe-parser_2.13-0.14.10.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/redis/clients/jedis/5.1.0/jedis-5.1.0.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/apache/pekko/pekko-actor_2.13/1.0.2/pekko-actor_2.13-1.0.2.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/apache/pekko/pekko-slf4j_2.13/1.0.2/pekko-slf4j_2.13-1.0.2.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/apache/pekko/pekko-protobuf-v3_2.13/1.0.2/pekko-protobuf-v3_2.13-1.0.2.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/reactivestreams/reactive-streams/1.0.4/reactive-streams-1.0.4.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/com/typesafe/ssl-config-core_2.13/0.6.1/ssl-config-core_2.13-0.6.1.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/apache/pekko/pekko-http-core_2.13/1.0.1/pekko-http-core_2.13-1.0.1.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/io/circe/circe-numbers_2.13/0.14.10/circe-numbers_2.13-0.14.10.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/typelevel/cats-core_2.13/2.12.0/cats-core_2.13-2.12.0.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/com/chuusai/shapeless_2.13/2.3.10/shapeless_2.13-2.3.10.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/io/circe/circe-jawn_2.13/0.14.10/circe-jawn_2.13-0.14.10.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/apache/commons/commons-pool2/2.12.0/commons-pool2-2.12.0.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/json/json/20231013/json-20231013.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/com/typesafe/config/1.4.3/config-1.4.3.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/apache/pekko/pekko-parsing_2.13/1.0.1/pekko-parsing_2.13-1.0.1.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/parboiled/parboiled_2.13/2.5.0/parboiled_2.13-2.5.0.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/typelevel/cats-kernel_2.13/2.12.0/cats-kernel_2.13-2.12.0.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/typelevel/jawn-parser_2.13/1.6.0/jawn-parser_2.13-1.6.0.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0mNew invalidations:[0m
+[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: [0m
+[0m[[0m[0mdebug[0m] [0m[0mPreviously invalidated, but (transitively) depend on new invalidations:[0m
+[0m[[0m[0mdebug[0m] [0m[0mFinal step, transitive dependencies:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0mNo classes were invalidated.[0m
+[0m[[0m[0mdebug[0m] [0m[0mScala compilation took 6.296470628 s[0m
+[0m[[0m[0mdebug[0m] [0m[0mdone compiling[0m
