@@ -188,6 +188,7 @@ After the server is running, you can create sample ads using the demo script:
 See `docs/demo-script.md` for examples, or create an ad manually:
 
 ```bash
+# Basic ad (no budget or frequency capping)
 curl -X POST http://localhost:8080/admin/ads \
   -H "Content-Type: application/json" \
   -d '{
@@ -198,6 +199,34 @@ curl -X POST http://localhost:8080/admin/ads \
       {"key": "country", "operator": "eq", "value": "IN"}
     ],
     "isActive": true
+  }'
+
+# Ad with budget management
+curl -X POST http://localhost:8080/admin/ads \
+  -H "Content-Type: application/json" \
+  -d '{
+    "advertiserId": "test-advertiser",
+    "creativeUrl": "https://example.com/ad.jpg",
+    "targetUrl": "https://example.com",
+    "targetingRules": [],
+    "isActive": true,
+    "maxPlays": 1000,
+    "dailyLimit": 100,
+    "hourlyLimit": 10
+  }'
+
+# Ad with frequency capping
+curl -X POST http://localhost:8080/admin/ads \
+  -H "Content-Type: application/json" \
+  -d '{
+    "advertiserId": "test-advertiser",
+    "creativeUrl": "https://example.com/ad.jpg",
+    "targetUrl": "https://example.com",
+    "targetingRules": [],
+    "isActive": true,
+    "maxImpressionsPerDevice": 5,
+    "maxImpressionsPerUser": 3,
+    "frequencyCapWindowHours": 24
   }'
 ```
 
@@ -326,10 +355,23 @@ For production deployment:
 Once running, the API is available at:
 
 - **Base URL:** `http://localhost:8080`
+
+### Ad Delivery
 - **Ad Delivery:** `GET /ads/deliver`
-- **Admin - Create Ad:** `POST /admin/ads`
-- **Admin - List Ads:** `GET /admin/ads`
-- **Admin - Get Events:** `GET /admin/ads/{adId}/events`
+
+### Admin
+- **Create Ad:** `POST /admin/ads`
+- **List Ads:** `GET /admin/ads`
+- **Get Events:** `GET /admin/ads/{adId}/events`
+
+### Event Tracking
+- **Click Tracking:** `GET /api/v1/events/click?adId={adId}&requestId={requestId}`
+- **Impression Tracking:** `GET /api/v1/events/impression?adId={adId}&requestId={requestId}`
+
+### Analytics
+- **Ad Performance:** `GET /api/v1/analytics/ads/{adId}`
+- **Campaign Performance:** `GET /api/v1/analytics/campaigns`
+- **Dashboard Metrics:** `GET /api/v1/analytics/dashboard`
 
 See `docs/02-api-spec.md` for full API documentation.
 

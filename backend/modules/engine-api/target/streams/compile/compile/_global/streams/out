@@ -1,5 +1,6 @@
-[error] /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/src/main/scala/mnemocast/engine/api/HttpServer.scala:35:31: not enough arguments for constructor AdminAdRoutes: (adStore: mnemocast.engine.infra.store.AdStore, eventStore: mnemocast.engine.infra.store.EventStore)(implicit ec: scala.concurrent.ExecutionContext): mnemocast.engine.api.routes.AdminAdRoutes.
-[error] Unspecified value parameter eventStore.
-[error]   private val adminAdRoutes = new AdminAdRoutes(adStore)
-[error]                               ^
+[error] /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/src/main/scala/mnemocast/engine/api/routes/EventRoutes.scala:84:25: type mismatch;
+[error]  found   : org.apache.pekko.http.scaladsl.server.StandardRoute
+[error]  required: scala.concurrent.Future[org.apache.pekko.http.scaladsl.server.RouteResult]
+[error]                 complete(StatusCodes.NoContent)
+[error]                         ^
 [error] one error found

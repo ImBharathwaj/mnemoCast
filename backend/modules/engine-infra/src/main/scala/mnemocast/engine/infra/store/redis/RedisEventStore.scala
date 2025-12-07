@@ -1,5 +1,7 @@
 package mnemocast.engine.infra.store.redis
 
+import java.time.Instant
+
 import scala.concurrent.{ExecutionContext, Future}
 
 import io.circe.parser.decode
@@ -33,6 +35,64 @@ class RedisEventStore(
 
       items.flatMap { json =>
         decode[DeliveryEvent](json).toOption.toList
+      }
+    }
+  }
+
+  override def countImpressionsByAdId(adId: String, since: Instant): Future[Int] = Future {
+    client.withJedis { jedis =>
+      import scala.jdk.CollectionConverters._
+
+      val items = jedis.lrange(eventsKey(adId), 0L, -1L).asScala.toList
+
+      items.count { json =>
+        decode[DeliveryEvent](json).toOption.exists { event =>
+          event.eventType == "impression" && !event.occurredAt.isBefore(since)
+        }
+      }
+    }
+  }
+
+  override def countImpressionsByAdIdAndDevice(adId: String, deviceId: String, since: Instant): Future[Int] = Future {
+    client.withJedis { jedis =>
+      import scala.jdk.CollectionConverters._
+
+      val items = jedis.lrange(eventsKey(adId), 0L, -1L).asScala.toList
+
+      items.count { json =>
+        decode[DeliveryEvent](json).toOption.exists { event =>
+          event.eventType == "impression" &&
+          !event.occurredAt.isBefore(since) &&
+          event.metadata.get("deviceId").contains(deviceId)
+        }
+      }
+    }
+  }
+
+  override def countImpressionsByAdIdAndUser(adId: String, userId: String, since: Instant): Future[Int] = Future {
+    client.withJedis { jedis =>
+      import scala.jdk.CollectionConverters._
+
+      val items = jedis.lrange(eventsKey(adId), 0L, -1L).asScala.toList
+
+      items.count { json =>
+        decode[DeliveryEvent](json).toOption.exists { event =>
+          event.eventType == "impression" &&
+          !event.occurredAt.isBefore(since) &&
+          event.metadata.get("userId").contains(userId)
+        }
+      }
+    }
+  }
+
+  override def countTotalImpressionsByAdId(adId: String): Future[Int] = Future {
+    client.withJedis { jedis =>
+      import scala.jdk.CollectionConverters._
+
+      val items = jedis.lrange(eventsKey(adId), 0L, -1L).asScala.toList
+
+      items.count { json =>
+        decode[DeliveryEvent](json).toOption.exists(_.eventType == "impression")
       }
     }
   }

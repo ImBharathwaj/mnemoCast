@@ -11,42 +11,67 @@ import mnemocast.engine.domain.services.TargetingService
 import mnemocast.engine.infra.store.{AdStore, EventStore}
 
 /**
-  * Core ad delivery logic (v2 with targeting).
+  * Core ad delivery logic (v3 with targeting, budget, and frequency capping).
   *
   * - Fetch all active ads from AdStore
   * - Filter ads using targeting rules (TargetingService)
+  * - Filter ads using budget constraints (BudgetService)
+  * - Filter ads using frequency capping (FrequencyCapService)
   * - Pick one at random from eligible ads
-  * - Build DeliveryResponse
+  * - Build DeliveryResponse with click tracking URL
   * - Log an "impression" DeliveryEvent when an ad is served
   */
 class AdDeliveryService(
   adStore: AdStore,
-  eventStore: EventStore
+  eventStore: EventStore,
+  budgetService: BudgetService,
+  frequencyCapService: FrequencyCapService,
+  baseUrl: String = "http://localhost:8080" // Base URL for tracking endpoints
 )(implicit ec: ExecutionContext) {
 
   /** Main entry point: given a request, decide which ad (if any) to serve. */
   def deliver(request: DeliveryRequest): Future[Option[DeliveryResponse]] =
     adStore.listActive().flatMap { ads =>
-      // Filter ads using targeting rules
-      val eligible = ads.filter(ad => TargetingService.matches(ad, request))
+      // Step 1: Filter ads using targeting rules
+      val targetingEligible = ads.filter(ad => TargetingService.matches(ad, request))
       
-      pickAd(eligible) match {
-        case Some(ad) =>
-          val response = DeliveryResponse(
-            requestId = request.requestId,
-            adId = ad.id,
-            creativeUrl = ad.creativeUrl,
-            targetUrl = ad.targetUrl,
-            impressionTrackingUrl = None // will wire tracking endpoint later
+      // Step 2: Filter by budget constraints (async)
+      Future.sequence(
+        targetingEligible.map(ad => 
+          budgetService.isWithinBudget(ad).map(withinBudget => (ad, withinBudget))
+        )
+      ).flatMap { budgetResults =>
+        val budgetEligible = budgetResults.filter(_._2).map(_._1)
+        
+        // Step 3: Filter by frequency capping (async)
+        Future.sequence(
+          budgetEligible.map(ad =>
+            frequencyCapService.canShow(ad, request).map(canShow => (ad, canShow))
           )
+        ).flatMap { frequencyResults =>
+          val eligible = frequencyResults.filter(_._2).map(_._1)
+          
+          pickAd(eligible) match {
+            case Some(ad) =>
+              val clickTrackingUrl = s"$baseUrl/api/v1/events/click?adId=${ad.id}&requestId=${request.requestId}"
+              val response = DeliveryResponse(
+                requestId = request.requestId,
+                adId = ad.id,
+                creativeUrl = ad.creativeUrl,
+                targetUrl = ad.targetUrl,
+                impressionTrackingUrl = Some(s"$baseUrl/api/v1/events/impression?adId=${ad.id}&requestId=${request.requestId}"),
+                clickTrackingUrl = Some(clickTrackingUrl)
+              )
 
-          val event = buildImpressionEvent(request, ad)
+              val event = buildImpressionEvent(request, ad)
 
-          // Log event, then return the response
-          eventStore.append(event).map(_ => Some(response))
+              // Log event, then return the response
+              eventStore.append(event).map(_ => Some(response))
 
-        case None =>
-          Future.successful(None)
+            case None =>
+              Future.successful(None)
+          }
+        }
       }
     }
 

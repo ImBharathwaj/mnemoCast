@@ -7,6 +7,8 @@ lazy val jedisVersion      = "5.1.0"
 lazy val pekkoVersion      = "1.0.2"
 lazy val pekkoHttpVersion  = "1.0.1"
 lazy val pekkoCirceVersion = "2.8.0"
+lazy val postgresVersion   = "42.7.1"
+lazy val hikariVersion     = "5.1.0"
 
 lazy val root = (project in file("."))
   .aggregate(engineDomain, engineInfra, engineApi)
@@ -30,17 +32,19 @@ lazy val engineDomain = (project in file("modules/engine-domain"))
   )
 
 // ----------------------
-// engine-infra (Redis, etc.)
+// engine-infra (Redis, Postgres, etc.)
 // ----------------------
 lazy val engineInfra = (project in file("modules/engine-infra"))
   .dependsOn(engineDomain)
   .settings(
     name := "engine-infra",
     libraryDependencies ++= Seq(
-      "redis.clients" %  "jedis"         % jedisVersion,
-      "io.circe"      %% "circe-core"    % circeVersion,
-      "io.circe"      %% "circe-generic" % circeVersion,
-      "io.circe"      %% "circe-parser"  % circeVersion
+      "redis.clients"     %  "jedis"         % jedisVersion,
+      "org.postgresql"    %  "postgresql"    % postgresVersion,
+      "com.zaxxer"        %  "HikariCP"      % hikariVersion,
+      "io.circe"          %% "circe-core"    % circeVersion,
+      "io.circe"          %% "circe-generic" % circeVersion,
+      "io.circe"          %% "circe-parser"  % circeVersion
     )
   )
 

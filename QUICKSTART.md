@@ -55,6 +55,7 @@ curl -X POST http://localhost:8080/admin/ads \
   -d '{
     "advertiserId": "test",
     "creativeUrl": "https://example.com/ad.jpg",
+    "targetUrl": "https://example.com",
     "targetingRules": [],
     "isActive": true
   }'
@@ -64,10 +65,62 @@ Now try the delivery endpoint again - you should get an ad!
 
 ---
 
+## Try New Features
+
+### Create Ad with Budget Management
+
+```bash
+curl -X POST http://localhost:8080/admin/ads \
+  -H "Content-Type: application/json" \
+  -d '{
+    "advertiserId": "test",
+    "creativeUrl": "https://example.com/ad.jpg",
+    "targetUrl": "https://example.com",
+    "targetingRules": [],
+    "isActive": true,
+    "maxPlays": 100,
+    "dailyLimit": 10,
+    "hourlyLimit": 2
+  }'
+```
+
+### Create Ad with Frequency Capping
+
+```bash
+curl -X POST http://localhost:8080/admin/ads \
+  -H "Content-Type: application/json" \
+  -d '{
+    "advertiserId": "test",
+    "creativeUrl": "https://example.com/ad.jpg",
+    "targetUrl": "https://example.com",
+    "targetingRules": [],
+    "isActive": true,
+    "maxImpressionsPerDevice": 3,
+    "maxImpressionsPerUser": 2,
+    "frequencyCapWindowHours": 24
+  }'
+```
+
+### View Analytics
+
+```bash
+# Get dashboard metrics
+curl http://localhost:8080/api/v1/analytics/dashboard
+
+# Get performance for a specific ad (replace ad-123 with actual ad ID)
+curl http://localhost:8080/api/v1/analytics/ads/ad-123
+
+# Get all campaign performance
+curl http://localhost:8080/api/v1/analytics/campaigns
+```
+
+---
+
 ## Need More Details?
 
 - **Full guide:** See `docs/RUNNING.md`
 - **API docs:** See `docs/02-api-spec.md`
+- **Features:** See `docs/FEATURES.md`
 - **Demo walkthrough:** See `docs/demo-script.md`
 
 ---

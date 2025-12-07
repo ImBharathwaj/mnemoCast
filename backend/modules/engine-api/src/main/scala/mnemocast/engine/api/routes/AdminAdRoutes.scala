@@ -45,6 +45,12 @@ class AdminAdRoutes(
                 targetUrl = request.targetUrl,
                 targetingRules = request.targetingRules,
                 isActive = request.isActive,
+                maxPlays = request.maxPlays,
+                dailyLimit = request.dailyLimit,
+                hourlyLimit = request.hourlyLimit,
+                maxImpressionsPerDevice = request.maxImpressionsPerDevice,
+                maxImpressionsPerUser = request.maxImpressionsPerUser,
+                frequencyCapWindowHours = request.frequencyCapWindowHours,
                 createdAt = now,
                 updatedAt = now
               )

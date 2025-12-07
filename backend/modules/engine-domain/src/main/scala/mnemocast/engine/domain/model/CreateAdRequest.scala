@@ -13,7 +13,15 @@ final case class CreateAdRequest(
   creativeUrl: String,
   targetUrl: Option[String],
   targetingRules: List[TargetingRule],
-  isActive: Boolean
+  isActive: Boolean,
+  // Budget fields
+  maxPlays: Option[Int] = None,
+  dailyLimit: Option[Int] = None,
+  hourlyLimit: Option[Int] = None,
+  // Frequency capping fields
+  maxImpressionsPerDevice: Option[Int] = None,
+  maxImpressionsPerUser: Option[Int] = None,
+  frequencyCapWindowHours: Option[Int] = None
 )
 
 object CreateAdRequest {

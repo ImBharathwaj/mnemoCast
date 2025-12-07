@@ -46,11 +46,15 @@ class AdRoutes(
                 timestamp = Instant.now()
               )
 
-              onSuccess(adDeliveryService.deliver(request)) {
-                case Some(response) =>
+              onComplete(adDeliveryService.deliver(request)) {
+                case scala.util.Success(Some(response)) =>
                   complete(response) // JSON (via JsonSupport + Circe)
-                case None =>
+                case scala.util.Success(None) =>
                   complete(StatusCodes.NoContent)
+                case scala.util.Failure(ex) =>
+                  println(s"Error in ad delivery: ${ex.getMessage}")
+                  ex.printStackTrace()
+                  complete(StatusCodes.InternalServerError, s"Internal server error: ${ex.getMessage}")
               }
             }
           }

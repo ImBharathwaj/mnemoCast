@@ -31,7 +31,8 @@ Request an ad for delivery to a screen/device.
     "adId": "ad-123",
     "creativeUrl": "https://cdn.example.com/ad.mp4",
     "targetUrl": "https://example.com/landing",
-    "impressionTrackingUrl": null
+    "impressionTrackingUrl": "http://localhost:8080/api/v1/events/impression?adId=ad-123&requestId=uuid",
+    "clickTrackingUrl": "http://localhost:8080/api/v1/events/click?adId=ad-123&requestId=uuid"
   }
   ```
 
@@ -71,9 +72,25 @@ Create a new ad with targeting rules.
       "value": "android,ios"
     }
   ],
-  "isActive": true
+  "isActive": true,
+  "maxPlays": 1000,
+  "dailyLimit": 100,
+  "hourlyLimit": 10,
+  "maxImpressionsPerDevice": 5,
+  "maxImpressionsPerUser": 3,
+  "frequencyCapWindowHours": 24
 }
 ```
+
+**Budget Fields (all optional):**
+- `maxPlays` - Total maximum plays across all time (null = unlimited)
+- `dailyLimit` - Maximum plays per day (null = unlimited)
+- `hourlyLimit` - Maximum plays per hour (null = unlimited)
+
+**Frequency Capping Fields (all optional):**
+- `maxImpressionsPerDevice` - Maximum impressions per device in time window (null = no limit)
+- `maxImpressionsPerUser` - Maximum impressions per user in time window (null = no limit)
+- `frequencyCapWindowHours` - Time window in hours for frequency cap (defaults to 24 if not set)
 
 **Response:**
 
@@ -103,7 +120,10 @@ curl -X POST http://localhost:8080/admin/ads \
     "targetingRules": [
       {"key": "country", "operator": "eq", "value": "IN"}
     ],
-    "isActive": true
+    "isActive": true,
+    "maxPlays": 1000,
+    "dailyLimit": 100,
+    "hourlyLimit": 10
   }'
 ```
 
@@ -190,6 +210,272 @@ Get delivery events (impressions) for a specific ad.
 ```bash
 curl "http://localhost:8080/admin/ads/ad-1/events?limit=10"
 ```
+
+---
+
+## Event Tracking API
+
+### GET /api/v1/events/click
+
+Track click events and redirect to the ad's target URL.
+
+**Query Parameters:**
+
+| Parameter | Type   | Required | Description                    |
+|-----------|--------|----------|--------------------------------|
+| adId      | string | Yes      | The ad identifier              |
+| requestId | string | No       | Original request ID (optional) |
+
+**Response:**
+
+- **302 Found**: Redirects to the ad's `targetUrl` after logging the click
+- **204 No Content**: Click logged but ad has no target URL
+- **404 Not Found**: Ad not found
+
+**Example:**
+
+```bash
+# Click tracking URL (typically called by client when user clicks ad)
+curl -L "http://localhost:8080/api/v1/events/click?adId=ad-123&requestId=req-456"
+```
+
+**Note:** The `-L` flag follows redirects. The endpoint logs the click event and then redirects to the ad's target URL.
+
+---
+
+### GET /api/v1/events/impression
+
+Track impression events (for client-side tracking).
+
+**Query Parameters:**
+
+| Parameter | Type   | Required | Description                    |
+|-----------|--------|----------|--------------------------------|
+| adId      | string | Yes      | The ad identifier              |
+| requestId | string | No       | Original request ID (optional) |
+
+**Response:**
+
+- **204 No Content**: Impression event logged successfully
+
+**Example:**
+
+```bash
+# Impression tracking URL (typically called by client when ad is displayed)
+curl "http://localhost:8080/api/v1/events/impression?adId=ad-123&requestId=req-456"
+```
+
+**Note:** This endpoint is useful for client-side impression tracking when the server-side impression logging isn't sufficient.
+
+---
+
+## Analytics API
+
+### GET /api/v1/analytics/ads/{adId}
+
+Get performance metrics for a specific ad.
+
+**Path Parameters:**
+
+| Parameter | Type   | Required | Description       |
+|-----------|--------|----------|-------------------|
+| adId      | string | Yes      | The ad identifier |
+
+**Query Parameters:**
+
+| Parameter | Type   | Required | Description                                    |
+|-----------|--------|----------|------------------------------------------------|
+| startTime | string | No       | Start time in ISO 8601 format (e.g., "2024-01-01T00:00:00Z") |
+| endTime   | string | No       | End time in ISO 8601 format (defaults to now)  |
+
+**Response:**
+
+- **200 OK**: Ad performance metrics
+  ```json
+  {
+    "adId": "ad-123",
+    "impressions": 1500,
+    "clicks": 45,
+    "ctr": 3.0,
+    "startTime": "2024-01-01T00:00:00Z",
+    "endTime": "2024-01-31T23:59:59Z"
+  }
+  ```
+
+- **404 Not Found**: Ad not found
+
+**Example:**
+
+```bash
+# Get all-time performance
+curl "http://localhost:8080/api/v1/analytics/ads/ad-123"
+
+# Get performance for a specific time range
+curl "http://localhost:8080/api/v1/analytics/ads/ad-123?startTime=2024-01-01T00:00:00Z&endTime=2024-01-31T23:59:59Z"
+```
+
+---
+
+### GET /api/v1/analytics/campaigns
+
+Get performance metrics for all campaigns (ads).
+
+**Query Parameters:**
+
+| Parameter | Type   | Required | Description                                    |
+|-----------|--------|----------|------------------------------------------------|
+| startTime | string | No       | Start time in ISO 8601 format                  |
+| endTime   | string | No       | End time in ISO 8601 format (defaults to now)  |
+
+**Response:**
+
+- **200 OK**: Array of campaign performance metrics
+  ```json
+  [
+    {
+      "campaignId": "ad-123",
+      "totalImpressions": 1500,
+      "totalClicks": 45,
+      "overallCTR": 3.0,
+      "ads": [
+        {
+          "adId": "ad-123",
+          "impressions": 1500,
+          "clicks": 45,
+          "ctr": 3.0
+        }
+      ]
+    }
+  ]
+  ```
+
+**Example:**
+
+```bash
+# Get all campaign performance
+curl "http://localhost:8080/api/v1/analytics/campaigns"
+
+# Get performance for a specific time range
+curl "http://localhost:8080/api/v1/analytics/campaigns?startTime=2024-01-01T00:00:00Z"
+```
+
+---
+
+### GET /api/v1/analytics/dashboard
+
+Get dashboard summary with key metrics.
+
+**Query Parameters:**
+
+| Parameter | Type   | Required | Default | Description                          |
+|-----------|--------|----------|---------|--------------------------------------|
+| topN      | int    | No       | 10      | Number of top performing ads to show |
+
+**Response:**
+
+- **200 OK**: Dashboard metrics
+  ```json
+  {
+    "totalAds": 25,
+    "activeAds": 18,
+    "totalImpressions": 50000,
+    "totalClicks": 1500,
+    "overallCTR": 3.0,
+    "topPerformingAds": [
+      {
+        "adId": "ad-123",
+        "impressions": 5000,
+        "clicks": 200,
+        "ctr": 4.0
+      }
+    ],
+    "recentActivity": [
+      {
+        "eventId": "event-1",
+        "requestId": "req-1",
+        "adId": "ad-123",
+        "eventType": "click",
+        "occurredAt": "2024-01-15T10:30:00Z",
+        "metadata": {}
+      }
+    ]
+  }
+  ```
+
+**Example:**
+
+```bash
+# Get dashboard with default top 10 ads
+curl "http://localhost:8080/api/v1/analytics/dashboard"
+
+# Get dashboard with top 5 ads
+curl "http://localhost:8080/api/v1/analytics/dashboard?topN=5"
+```
+
+---
+
+## Budget Management
+
+Ads can have budget constraints to control delivery:
+
+### Budget Fields
+
+| Field         | Type    | Description                                    |
+|---------------|---------|------------------------------------------------|
+| maxPlays      | int?    | Total maximum plays across all time (global)   |
+| dailyLimit    | int?    | Maximum plays per day                          |
+| hourlyLimit   | int?    | Maximum plays per hour                         |
+
+**Behavior:**
+- If a budget field is `null` or not provided, that limit is not enforced
+- Budgets are checked before ad delivery
+- Once a budget is exhausted, the ad is automatically excluded from delivery
+- Budgets reset automatically (daily/hourly limits reset at the start of each period)
+
+**Example:**
+
+```json
+{
+  "maxPlays": 1000,      // Total limit: 1000 plays
+  "dailyLimit": 100,     // Max 100 plays per day
+  "hourlyLimit": 10      // Max 10 plays per hour
+}
+```
+
+---
+
+## Frequency Capping
+
+Frequency capping limits how often an ad is shown to the same device or user:
+
+### Frequency Cap Fields
+
+| Field                    | Type    | Description                                    |
+|--------------------------|---------|------------------------------------------------|
+| maxImpressionsPerDevice  | int?    | Maximum impressions per device in time window  |
+| maxImpressionsPerUser    | int?    | Maximum impressions per user in time window    |
+| frequencyCapWindowHours  | int?    | Time window in hours (defaults to 24 if not set) |
+
+**Behavior:**
+- If frequency cap fields are `null` or not provided, frequency capping is not enforced
+- Frequency caps are checked per device/user before ad delivery
+- The time window determines how far back to look for previous impressions
+- Once the cap is reached, the ad won't be shown to that device/user until the window expires
+
+**Example:**
+
+```json
+{
+  "maxImpressionsPerDevice": 5,   // Max 5 impressions per device
+  "maxImpressionsPerUser": 3,     // Max 3 impressions per user
+  "frequencyCapWindowHours": 24   // Within a 24-hour window
+}
+```
+
+This means:
+- A device can see the ad at most 5 times in any 24-hour period
+- A user can see the ad at most 3 times in any 24-hour period
+- Both conditions must be satisfied for the ad to be delivered
 
 ---
 
