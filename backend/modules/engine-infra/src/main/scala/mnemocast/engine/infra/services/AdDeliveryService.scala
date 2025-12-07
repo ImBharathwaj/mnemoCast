@@ -7,13 +7,15 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Random
 
 import mnemocast.engine.domain.model.{Ad, DeliveryEvent, DeliveryRequest, DeliveryResponse}
+import mnemocast.engine.domain.services.TargetingService
 import mnemocast.engine.infra.store.{AdStore, EventStore}
 
 /**
-  * Core ad delivery logic (v1).
+  * Core ad delivery logic (v2 with targeting).
   *
   * - Fetch all active ads from AdStore
-  * - Pick one at random
+  * - Filter ads using targeting rules (TargetingService)
+  * - Pick one at random from eligible ads
   * - Build DeliveryResponse
   * - Log an "impression" DeliveryEvent when an ad is served
   */
@@ -25,7 +27,10 @@ class AdDeliveryService(
   /** Main entry point: given a request, decide which ad (if any) to serve. */
   def deliver(request: DeliveryRequest): Future[Option[DeliveryResponse]] =
     adStore.listActive().flatMap { ads =>
-      pickAd(ads) match {
+      // Filter ads using targeting rules
+      val eligible = ads.filter(ad => TargetingService.matches(ad, request))
+      
+      pickAd(eligible) match {
         case Some(ad) =>
           val response = DeliveryResponse(
             requestId = request.requestId,
@@ -45,7 +50,7 @@ class AdDeliveryService(
       }
     }
 
-  /** v1 logic: random selection among active ads. */
+  /** Random selection among eligible ads. */
   private def pickAd(ads: List[Ad]): Option[Ad] =
     if (ads.isEmpty) None
     else Some(ads(Random.nextInt(ads.length)))

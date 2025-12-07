@@ -5,9 +5,10 @@ import scala.io.StdIn
 
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.http.scaladsl.Http
+import org.apache.pekko.http.scaladsl.server.Directives._
 import org.apache.pekko.http.scaladsl.server.Route
 
-import mnemocast.engine.api.routes.AdRoutes
+import mnemocast.engine.api.routes.{AdRoutes, AdminAdRoutes}
 import mnemocast.engine.infra.services.AdDeliveryService
 import mnemocast.engine.infra.store.redis.{RedisAdStore, RedisClient, RedisEventStore}
 import mnemocast.engine.infra.store.{AdStore, EventStore}
@@ -31,8 +32,10 @@ object HttpServer extends App {
     new AdDeliveryService(adStore, eventStore)
 
   private val adRoutes = new AdRoutes(adDeliveryService)
+  private val adminAdRoutes = new AdminAdRoutes(adStore, eventStore)
 
-  private val allRoutes: Route = adRoutes.routes
+  private val allRoutes: Route = 
+    concat(adRoutes.routes, adminAdRoutes.routes)
 
   // --- HTTP binding ---
 

@@ -10,8 +10,10 @@ lazy val pekkoCirceVersion = "2.8.0"
 
 lazy val root = (project in file("."))
   .aggregate(engineDomain, engineInfra, engineApi)
+  .dependsOn(engineApi)
   .settings(
-    name := "mnemocast-engine"
+    name := "mnemocast-engine",
+    Compile / mainClass := Some("mnemocast.engine.api.HttpServer")
   )
 
 // ----------------------
@@ -49,6 +51,7 @@ lazy val engineApi = (project in file("modules/engine-api"))
   .dependsOn(engineDomain, engineInfra)
   .settings(
     name := "engine-api",
+    Compile / mainClass := Some("mnemocast.engine.api.HttpServer"),
     libraryDependencies ++= Seq(
       "org.apache.pekko" %% "pekko-actor-typed" % pekkoVersion,
       "org.apache.pekko" %% "pekko-stream"      % pekkoVersion,

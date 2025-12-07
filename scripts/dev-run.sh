@@ -3,5 +3,5 @@
 
 echo "Starting Mnemocast Engine..."
 cd "$(dirname "$0")/../backend"
-sbt run
+sbt "project engineApi" run
 

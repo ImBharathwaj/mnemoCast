@@ -19,6 +19,9 @@ trait AdStore {
   /** Return all active ads (for simple v1 delivery). */
   def listActive(): Future[List[Ad]]
 
+  /** Return all ads (both active and inactive). */
+  def listAll(): Future[List[Ad]]
+
   /** Delete an ad (optional for v1, useful later). */
   def delete(id: String): Future[Unit]
 }

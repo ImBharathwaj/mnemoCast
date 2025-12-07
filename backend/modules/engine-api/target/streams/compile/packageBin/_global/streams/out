@@ -12,6 +12,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/target/scala-2.13/classes/mnemocast/engine/api/json/JsonSupport.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/api/routes[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/target/scala-2.13/classes/mnemocast/engine/api/routes[0m
+[0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/api/routes/AdminAdRoutes.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/target/scala-2.13/classes/mnemocast/engine/api/routes/AdminAdRoutes.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/api/routes/AdRoutes.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/target/scala-2.13/classes/mnemocast/engine/api/routes/AdRoutes.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/api/HttpServer$.class[0m

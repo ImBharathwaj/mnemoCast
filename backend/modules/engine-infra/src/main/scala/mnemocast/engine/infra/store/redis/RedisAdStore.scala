@@ -49,6 +49,22 @@ class RedisAdStore(
     }
   }
 
+  override def listAll(): Future[List[Ad]] = Future {
+    client.withJedis { jedis =>
+      import scala.jdk.CollectionConverters._
+
+      val ids = jedis.smembers(adsIndexKey).asScala.toList
+      if (ids.isEmpty) Nil
+      else {
+        val keys   = ids.map(adKey)
+        val values = jedis.mget(keys: _*).asScala.toList
+        values.flatMap { json =>
+          if (json == null) Nil else decode[Ad](json).toOption.toList
+        }
+      }
+    }
+  }
+
   override def delete(id: String): Future[Unit] = Future {
     client.withJedis { jedis =>
       jedis.del(adKey(id))
