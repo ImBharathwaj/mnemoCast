@@ -134,37 +134,7 @@ A comprehensive overview of what the Mnemocast Ad Serving Engine can do.
 
 ---
 
-### 5. Click Tracking & Attribution
-
-**What it does:**
-- Tracks every click on ads
-- Automatically redirects to advertiser landing pages
-- Logs click events with full metadata
-- Enables click-through rate (CTR) calculation
-
-**Tracking Flow:**
-1. Ad response includes `clickTrackingUrl`
-2. User clicks ad → client calls click tracking URL
-3. System logs click event (IP, timestamp, metadata)
-4. System redirects to ad's `targetUrl`
-5. Click counted in analytics
-
-**Key Features:**
-- ✅ Automatic click logging
-- ✅ HTTP redirect to target URL
-- ✅ Full metadata capture (IP, device, user, etc.)
-- ✅ Integration with analytics system
-- ✅ Support for client-side and server-side tracking
-
-**Use Cases:**
-- Measure ad effectiveness: Track which ads get clicked
-- Calculate CTR: `clicks / impressions × 100`
-- Attribution: Know which ads drive conversions
-- Fraud detection: Analyze click patterns
-
----
-
-### 6. Analytics & Performance Reporting
+### 5. Analytics & Performance Reporting
 
 **What it does:**
 - Calculates performance metrics for ads and campaigns
@@ -178,21 +148,16 @@ A comprehensive overview of what the Mnemocast Ad Serving Engine can do.
    - Total number of times ad was shown
    - Filtered by time range if specified
 
-2. **Clicks**
-   - Total number of clicks on ad
+2. **Impression Metrics**
+   - Total number of impressions per ad
    - Filtered by time range if specified
-
-3. **Click-Through Rate (CTR)**
-   - Percentage: `(clicks / impressions) × 100`
-   - Key performance indicator
-   - Defaults to 0.0 if no impressions
 
 **Analytics Endpoints:**
 
 1. **Ad Performance** (`/api/v1/analytics/ads/{adId}`)
    - Metrics for a specific ad
    - Optional time range filtering
-   - Returns: impressions, clicks, CTR
+   - Returns: impressions
 
 2. **Campaign Performance** (`/api/v1/analytics/campaigns`)
    - Metrics for all campaigns (ads)
@@ -213,10 +178,10 @@ A comprehensive overview of what the Mnemocast Ad Serving Engine can do.
 - ✅ JSON API responses
 
 **Use Cases:**
-- Monitor campaign performance: Track impressions and clicks
+- Monitor campaign performance: Track impressions
 - Optimize ad selection: Identify high-performing ads
 - Generate reports: Export metrics for stakeholders
-- Make data-driven decisions: Use CTR to improve campaigns
+- Make data-driven decisions: Use impression metrics to improve campaigns
 
 ---
 
@@ -330,8 +295,6 @@ A comprehensive overview of what the Mnemocast Ad Serving Engine can do.
 
 2. **Performance Metrics**
    - Impressions per ad
-   - Clicks per ad
-   - CTR per ad
    - Top performing ads
 
 3. **Budget Metrics**
@@ -402,9 +365,9 @@ A comprehensive overview of what the Mnemocast Ad Serving Engine can do.
 **Process:**
 1. Run campaigns with multiple ads
 2. Query analytics dashboard: `GET /api/v1/analytics/dashboard`
-3. Identify top performers by CTR
-4. Increase budget for high-CTR ads
-5. Pause or reduce budget for low-CTR ads
+3. Identify top performers by impressions
+4. Increase budget for high-performing ads
+5. Pause or reduce budget for low-performing ads
 
 ---
 

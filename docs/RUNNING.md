@@ -365,7 +365,7 @@ Once running, the API is available at:
 - **Get Events:** `GET /admin/ads/{adId}/events`
 
 ### Event Tracking
-- **Click Tracking:** `GET /api/v1/events/click?adId={adId}&requestId={requestId}`
+- **Impression Tracking:** `GET /api/v1/events/impression?adId={adId}&requestId={requestId}`
 - **Impression Tracking:** `GET /api/v1/events/impression?adId={adId}&requestId={requestId}`
 
 ### Analytics

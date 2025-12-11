@@ -31,8 +31,7 @@ Request an ad for delivery to a screen/device.
     "adId": "ad-123",
     "creativeUrl": "https://cdn.example.com/ad.mp4",
     "targetUrl": "https://example.com/landing",
-    "impressionTrackingUrl": "http://localhost:8080/api/v1/events/impression?adId=ad-123&requestId=uuid",
-    "clickTrackingUrl": "http://localhost:8080/api/v1/events/click?adId=ad-123&requestId=uuid"
+    "impressionTrackingUrl": "http://localhost:8080/api/v1/events/impression?adId=ad-123&requestId=uuid"
   }
   ```
 
@@ -215,34 +214,6 @@ curl "http://localhost:8080/admin/ads/ad-1/events?limit=10"
 
 ## Event Tracking API
 
-### GET /api/v1/events/click
-
-Track click events and redirect to the ad's target URL.
-
-**Query Parameters:**
-
-| Parameter | Type   | Required | Description                    |
-|-----------|--------|----------|--------------------------------|
-| adId      | string | Yes      | The ad identifier              |
-| requestId | string | No       | Original request ID (optional) |
-
-**Response:**
-
-- **302 Found**: Redirects to the ad's `targetUrl` after logging the click
-- **204 No Content**: Click logged but ad has no target URL
-- **404 Not Found**: Ad not found
-
-**Example:**
-
-```bash
-# Click tracking URL (typically called by client when user clicks ad)
-curl -L "http://localhost:8080/api/v1/events/click?adId=ad-123&requestId=req-456"
-```
-
-**Note:** The `-L` flag follows redirects. The endpoint logs the click event and then redirects to the ad's target URL.
-
----
-
 ### GET /api/v1/events/impression
 
 Track impression events (for client-side tracking).
@@ -295,8 +266,6 @@ Get performance metrics for a specific ad.
   {
     "adId": "ad-123",
     "impressions": 1500,
-    "clicks": 45,
-    "ctr": 3.0,
     "startTime": "2024-01-01T00:00:00Z",
     "endTime": "2024-01-31T23:59:59Z"
   }
@@ -335,14 +304,10 @@ Get performance metrics for all campaigns (ads).
     {
       "campaignId": "ad-123",
       "totalImpressions": 1500,
-      "totalClicks": 45,
-      "overallCTR": 3.0,
       "ads": [
         {
           "adId": "ad-123",
-          "impressions": 1500,
-          "clicks": 45,
-          "ctr": 3.0
+          "impressions": 1500
         }
       ]
     }
@@ -379,13 +344,10 @@ Get dashboard summary with key metrics.
     "totalAds": 25,
     "activeAds": 18,
     "totalImpressions": 50000,
-    "totalClicks": 1500,
-    "overallCTR": 3.0,
     "topPerformingAds": [
       {
         "adId": "ad-123",
         "impressions": 5000,
-        "clicks": 200,
         "ctr": 4.0
       }
     ],
@@ -394,7 +356,7 @@ Get dashboard summary with key metrics.
         "eventId": "event-1",
         "requestId": "req-1",
         "adId": "ad-123",
-        "eventType": "click",
+        "eventType": "impression",
         "occurredAt": "2024-01-15T10:30:00Z",
         "metadata": {}
       }
