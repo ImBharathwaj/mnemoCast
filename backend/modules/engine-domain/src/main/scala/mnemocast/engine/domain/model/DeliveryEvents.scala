@@ -9,7 +9,7 @@ final case class DeliveryEvent(
   eventId: String,
   requestId: String,
   adId: String,
-  eventType: String,              // e.g. "impression", "click"
+  eventType: String,              // e.g. "impression"
   occurredAt: Instant,
   metadata: Map[String, String] = Map.empty
 )

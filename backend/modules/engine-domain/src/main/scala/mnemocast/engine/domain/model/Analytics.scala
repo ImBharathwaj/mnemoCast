@@ -11,8 +11,6 @@ import io.circe.generic.semiauto._
 final case class AdPerformance(
   adId: String,
   impressions: Long,
-  clicks: Long,
-  ctr: Double,  // Click-through rate (clicks / impressions * 100)
   startTime: Option[Instant] = None,
   endTime: Option[Instant] = None
 )
@@ -29,8 +27,6 @@ object AdPerformance {
 final case class CampaignPerformance(
   campaignId: String,  // For MVP, this is the adId
   totalImpressions: Long,
-  totalClicks: Long,
-  overallCTR: Double,
   ads: List[AdPerformance] = Nil
 )
 
@@ -46,8 +42,6 @@ final case class DashboardMetrics(
   totalAds: Int,
   activeAds: Int,
   totalImpressions: Long,
-  totalClicks: Long,
-  overallCTR: Double,
   topPerformingAds: List[AdPerformance] = Nil,
   recentActivity: List[DeliveryEvent] = Nil
 )

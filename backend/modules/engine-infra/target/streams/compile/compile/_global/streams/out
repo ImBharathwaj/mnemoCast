@@ -1,0 +1,4 @@
+[error] /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/src/main/scala/mnemocast/engine/infra/store/postgres/PostgresAdStore.scala:23:12: value withTransactionAsync is not a member of mnemocast.engine.infra.store.postgres.PostgresClient
+[error]     client.withTransactionAsync { conn =>
+[error]            ^
+[error] one error found

@@ -16,10 +16,13 @@ class HybridAdStore(
 
   override def upsert(ad: Ad): Future[Unit] = {
     // Write to both: Postgres (persistent) and Redis (cache)
-    for {
-      _ <- postgresStore.upsert(ad)
-      _ <- redisStore.upsert(ad)
-    } yield ()
+    // If Postgres fails, still write to Redis (graceful degradation)
+    postgresStore.upsert(ad).recover { case ex: Exception =>
+      println(s"⚠️  Warning: Failed to write to Postgres: ${ex.getMessage}")
+      println(s"⚠️  Continuing with Redis-only write for ad ${ad.id}")
+    }.flatMap { _ =>
+      redisStore.upsert(ad)
+    }
   }
 
   override def getById(id: String): Future[Option[Ad]] = {

@@ -18,7 +18,7 @@ import mnemocast.engine.infra.store.{AdStore, EventStore}
   * - Filter ads using budget constraints (BudgetService)
   * - Filter ads using frequency capping (FrequencyCapService)
   * - Pick one at random from eligible ads
-  * - Build DeliveryResponse with click tracking URL
+  * - Build DeliveryResponse with impression tracking URL
   * - Log an "impression" DeliveryEvent when an ad is served
   */
 class AdDeliveryService(
@@ -53,14 +53,12 @@ class AdDeliveryService(
           
           pickAd(eligible) match {
             case Some(ad) =>
-              val clickTrackingUrl = s"$baseUrl/api/v1/events/click?adId=${ad.id}&requestId=${request.requestId}"
               val response = DeliveryResponse(
                 requestId = request.requestId,
                 adId = ad.id,
                 creativeUrl = ad.creativeUrl,
                 targetUrl = ad.targetUrl,
-                impressionTrackingUrl = Some(s"$baseUrl/api/v1/events/impression?adId=${ad.id}&requestId=${request.requestId}"),
-                clickTrackingUrl = Some(clickTrackingUrl)
+                impressionTrackingUrl = Some(s"$baseUrl/api/v1/events/impression?adId=${ad.id}&requestId=${request.requestId}")
               )
 
               val event = buildImpressionEvent(request, ad)

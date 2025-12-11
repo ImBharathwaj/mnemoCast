@@ -21,7 +21,7 @@ class AnalyticsService(
     * @param adId      The ad ID
     * @param startTime Optional start time for filtering (defaults to all time)
     * @param endTime   Optional end time for filtering (defaults to now)
-    * @return AdPerformance with impressions, clicks, and CTR
+    * @return AdPerformance with impressions
     */
   def getAdPerformance(
     adId: String,
@@ -41,14 +41,10 @@ class AnalyticsService(
       }
 
       val impressions = filteredEvents.count(_.eventType == "impression")
-      val clicks = filteredEvents.count(_.eventType == "click")
-      val ctr = if (impressions > 0) (clicks.toDouble / impressions.toDouble) * 100.0 else 0.0
 
       Some(AdPerformance(
         adId = adId,
         impressions = impressions,
-        clicks = clicks,
-        ctr = ctr,
         startTime = startTime,
         endTime = Some(end)
       ))
@@ -75,16 +71,12 @@ class AnalyticsService(
               CampaignPerformance(
                 campaignId = ad.id,
                 totalImpressions = perf.impressions,
-                totalClicks = perf.clicks,
-                overallCTR = perf.ctr,
                 ads = List(perf)
               )
             case None =>
               CampaignPerformance(
                 campaignId = ad.id,
                 totalImpressions = 0,
-                totalClicks = 0,
-                overallCTR = 0.0,
                 ads = Nil
               )
           }
@@ -111,13 +103,11 @@ class AnalyticsService(
       
       // Calculate totals
       totalImpressions = adPerformances.map(_.impressions).sum
-      totalClicks = adPerformances.map(_.clicks).sum
-      overallCTR = if (totalImpressions > 0) (totalClicks.toDouble / totalImpressions.toDouble) * 100.0 else 0.0
       
-      // Get top performing ads (by CTR, then by impressions)
+      // Get top performing ads (by impressions)
       topPerforming = adPerformances
         .filter(_.impressions > 0) // Only ads with impressions
-        .sortBy(perf => (-perf.ctr, -perf.impressions)) // Sort by CTR desc, then impressions desc
+        .sortBy(perf => -perf.impressions) // Sort by impressions desc
         .take(topN)
       
       // Get recent events (last 50 across all ads)
@@ -127,8 +117,6 @@ class AnalyticsService(
         totalAds = allAds.size,
         activeAds = activeAds.size,
         totalImpressions = totalImpressions,
-        totalClicks = totalClicks,
-        overallCTR = overallCTR,
         topPerformingAds = topPerforming,
         recentActivity = recentEvents
       )

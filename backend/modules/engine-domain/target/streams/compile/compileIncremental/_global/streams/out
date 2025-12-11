@@ -2,5 +2,73 @@
 [0m[[0m[0mdebug[0m] [0m[0mIncrementalCompile.incrementalCompile[0m
 [0m[[0m[0mdebug[0m] [0m[0mprevious = Stamps for: 38 products, 8 sources, 5 libraries[0m
 [0m[[0m[0mdebug[0m] [0m[0mcurrent source = Set(${BASE}/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/Analytics.scala, ${BASE}/modules/engine-domain/src/main/scala/mnemocast/engine/domain/services/TargetingService.scala, ${BASE}/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/CreateAdRequest.scala, ${BASE}/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/DeliveryEvents.scala, ${BASE}/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/DeliveryResponse.scala, ${BASE}/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/DeliveryRequest.scala, ${BASE}/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/Ad.scala, ${BASE}/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/TargetingRule.scala)[0m
-[0m[[0m[0mdebug[0m] [0m[0m> initialChanges = InitialChanges(Changes(added = Set(), removed = Set(), changed = Set(), unmodified = ...),Set(),Set(),API Changes: Set())[0m
-[0m[[0m[0mdebug[0m] [0m[0mNo changes[0m
+[0m[[0m[0mdebug[0m] [0m[0m> initialChanges = InitialChanges(Changes(added = Set(), removed = Set(), changed = Set(${BASE}/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/DeliveryResponse.scala, ${BASE}/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/DeliveryEvents.scala, ${BASE}/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/Analytics.scala), unmodified = ...),Set(),Set(),API Changes: Set())[0m
+[0m[[0m[0mdebug[0m] [0m[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mInitial source changes:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	removed: Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0m	added: Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0m	modified: Set(${BASE}/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/DeliveryResponse.scala, ${BASE}/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/DeliveryEvents.scala, ${BASE}/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/Analytics.scala)[0m
+[0m[[0m[0mdebug[0m] [0m[0mInvalidated products: Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0mExternal API changes: API Changes: Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0mModified binary dependencies: Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0mInitial directly invalidated classes: Set(mnemocast.engine.domain.model.DeliveryResponse, mnemocast.engine.domain.model.CampaignPerformance, mnemocast.engine.domain.model.DashboardMetrics, mnemocast.engine.domain.model.DeliveryEvent, mnemocast.engine.domain.model.AdPerformance)[0m
+[0m[[0m[0mdebug[0m] [0m[0mSources indirectly invalidated by:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	product: Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0m	binary dep: Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0m	external source: Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0mAll initially invalidated classes: Set(mnemocast.engine.domain.model.DeliveryResponse, mnemocast.engine.domain.model.CampaignPerformance, mnemocast.engine.domain.model.DashboardMetrics, mnemocast.engine.domain.model.DeliveryEvent, mnemocast.engine.domain.model.AdPerformance)[0m
+[0m[[0m[0mdebug[0m] [0m[0mAll initially invalidated sources:Set(${BASE}/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/DeliveryResponse.scala, ${BASE}/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/DeliveryEvents.scala, ${BASE}/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/Analytics.scala)[0m
+[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: mnemocast.engine.domain.model.DeliveryResponse, mnemocast.engine.domain.model.CampaignPerformance, mnemocast.engine.domain.model.DashboardMetrics, mnemocast.engine.domain.model.DeliveryEvent, mnemocast.engine.domain.model.AdPerformance[0m
+[0m[[0m[0mdebug[0m] [0m[0mcompilation cycle 1[0m
+[0m[[0m[0minfo[0m] [0m[0mcompiling 3 Scala sources to /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-domain/target/scala-2.13/classes ...[0m
+[0m[[0m[0mdebug[0m] [0m[0mGetting org.scala-sbt:compiler-bridge_2.13:1.9.0:compile for Scala 2.13.12[0m
+[0m[[0m[0mdebug[0m] [0m[0m[zinc] Running cached compiler 6d3126a7 for Scala compiler version 2.13.12[0m
+[0m[[0m[0mdebug[0m] [0m[0m[zinc] The Scala compiler is invoked with:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	-bootclasspath[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/scala-lang/scala-library/2.13.12/scala-library-2.13.12.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0m	-classpath[0m
+[0m[[0m[0mdebug[0m] [0m[0m	/home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-domain/target/scala-2.13/classes:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/io/circe/circe-core_2.13/0.14.7/circe-core_2.13-0.14.7.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/io/circe/circe-generic_2.13/0.14.7/circe-generic_2.13-0.14.7.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/io/circe/circe-parser_2.13/0.14.7/circe-parser_2.13-0.14.7.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/io/circe/circe-numbers_2.13/0.14.7/circe-numbers_2.13-0.14.7.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/typelevel/cats-core_2.13/2.10.0/cats-core_2.13-2.10.0.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/com/chuusai/shapeless_2.13/2.3.10/shapeless_2.13-2.3.10.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/io/circe/circe-jawn_2.13/0.14.7/circe-jawn_2.13-0.14.7.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/typelevel/cats-kernel_2.13/2.10.0/cats-kernel_2.13-2.10.0.jar:/home/bharathwaj/.cache/coursier/v1/https/repo1.maven.org/maven2/org/typelevel/jawn-parser_2.13/1.5.1/jawn-parser_2.13-1.5.1.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0mInvalidating (transitively) by inheritance from mnemocast.engine.domain.model.DeliveryResponse...[0m
+[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: mnemocast.engine.domain.model.DeliveryResponse[0m
+[0m[[0m[0mdebug[0m] [0m[0mInvalidated by transitive inheritance dependency: Set(mnemocast.engine.domain.model.DeliveryResponse)[0m
+[0m[[0m[0mdebug[0m] [0m[0mChange NamesChange(mnemocast.engine.domain.model.DeliveryResponse,ModifiedNames(changes = UsedName(apply$default$6,[Default]), UsedName(copy,[Default]), UsedName(<init>$default$6,[Default]), UsedName(copy$default$6,[Default]), UsedName(mnemocast;engine;domain;model;DeliveryResponse;init;,[Default]), UsedName(unapply,[Default]), UsedName(clickTrackingUrl,[Default]), UsedName(apply,[Default]))) invalidates 1 classes due to The mnemocast.engine.domain.model.DeliveryResponse has the following regular definitions changed:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	UsedName(apply$default$6,[Default]), UsedName(copy,[Default]), UsedName(<init>$default$6,[Default]), UsedName(copy$default$6,[Default]), UsedName(mnemocast;engine;domain;model;DeliveryResponse;init;,[Default]), UsedName(unapply,[Default]), UsedName(clickTrackingUrl,[Default]), UsedName(apply,[Default]).[0m
+[0m[[0m[0mdebug[0m] [0m[0m  > by transitive inheritance: Set(mnemocast.engine.domain.model.DeliveryResponse)[0m
+[0m[[0m[0mdebug[0m] [0m[0m  > [0m
+[0m[[0m[0mdebug[0m] [0m[0m  > [0m
+[0m[[0m[0mdebug[0m] [0m[0m        [0m
+[0m[[0m[0mdebug[0m] [0m[0mInvalidating (transitively) by inheritance from mnemocast.engine.domain.model.DashboardMetrics...[0m
+[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: mnemocast.engine.domain.model.DashboardMetrics[0m
+[0m[[0m[0mdebug[0m] [0m[0mInvalidated by transitive inheritance dependency: Set(mnemocast.engine.domain.model.DashboardMetrics)[0m
+[0m[[0m[0mdebug[0m] [0m[0mChange NamesChange(mnemocast.engine.domain.model.DashboardMetrics,ModifiedNames(changes = UsedName(apply$default$6,[Default]), UsedName(totalClicks,[Default]), UsedName(apply$default$5,[Default]), UsedName(<init>$default$7,[Default]), UsedName(copy,[Default]), UsedName(<init>$default$6,[Default]), UsedName(copy$default$6,[Default]), UsedName(copy$default$4,[Default]), UsedName(copy$default$5,[Default]), UsedName(unapply,[Default]), UsedName(<init>$default$5,[Default]), UsedName(apply$default$4,[Default]), UsedName(apply,[Default]), UsedName(copy$default$7,[Default]), UsedName(overallCTR,[Default]), UsedName(apply$default$7,[Default]), UsedName(<init>$default$4,[Default]), UsedName(mnemocast;engine;domain;model;DashboardMetrics;init;,[Default]))) invalidates 1 classes due to The mnemocast.engine.domain.model.DashboardMetrics has the following regular definitions changed:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	UsedName(apply$default$6,[Default]), UsedName(totalClicks,[Default]), UsedName(apply$default$5,[Default]), UsedName(<init>$default$7,[Default]), UsedName(copy,[Default]), UsedName(<init>$default$6,[Default]), UsedName(copy$default$6,[Default]), UsedName(copy$default$4,[Default]), UsedName(copy$default$5,[Default]), UsedName(unapply,[Default]), UsedName(<init>$default$5,[Default]), UsedName(apply$default$4,[Default]), UsedName(apply,[Default]), UsedName(copy$default$7,[Default]), UsedName(overallCTR,[Default]), UsedName(apply$default$7,[Default]), UsedName(<init>$default$4,[Default]), UsedName(mnemocast;engine;domain;model;DashboardMetrics;init;,[Default]).[0m
+[0m[[0m[0mdebug[0m] [0m[0m  > by transitive inheritance: Set(mnemocast.engine.domain.model.DashboardMetrics)[0m
+[0m[[0m[0mdebug[0m] [0m[0m  > [0m
+[0m[[0m[0mdebug[0m] [0m[0m  > [0m
+[0m[[0m[0mdebug[0m] [0m[0m        [0m
+[0m[[0m[0mdebug[0m] [0m[0mInvalidating (transitively) by inheritance from mnemocast.engine.domain.model.CampaignPerformance...[0m
+[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: mnemocast.engine.domain.model.CampaignPerformance[0m
+[0m[[0m[0mdebug[0m] [0m[0mInvalidated by transitive inheritance dependency: Set(mnemocast.engine.domain.model.CampaignPerformance)[0m
+[0m[[0m[0mdebug[0m] [0m[0mChange NamesChange(mnemocast.engine.domain.model.CampaignPerformance,ModifiedNames(changes = UsedName(mnemocast;engine;domain;model;CampaignPerformance;init;,[Default]), UsedName(totalClicks,[Default]), UsedName(apply$default$5,[Default]), UsedName(copy,[Default]), UsedName(copy$default$4,[Default]), UsedName(copy$default$5,[Default]), UsedName(apply$default$3,[Default]), UsedName(copy$default$3,[Default]), UsedName(unapply,[Default]), UsedName(<init>$default$3,[Default]), UsedName(<init>$default$5,[Default]), UsedName(apply,[Default]), UsedName(overallCTR,[Default]))) invalidates 1 classes due to The mnemocast.engine.domain.model.CampaignPerformance has the following regular definitions changed:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	UsedName(mnemocast;engine;domain;model;CampaignPerformance;init;,[Default]), UsedName(totalClicks,[Default]), UsedName(apply$default$5,[Default]), UsedName(copy,[Default]), UsedName(copy$default$4,[Default]), UsedName(copy$default$5,[Default]), UsedName(apply$default$3,[Default]), UsedName(copy$default$3,[Default]), UsedName(unapply,[Default]), UsedName(<init>$default$3,[Default]), UsedName(<init>$default$5,[Default]), UsedName(apply,[Default]), UsedName(overallCTR,[Default]).[0m
+[0m[[0m[0mdebug[0m] [0m[0m  > by transitive inheritance: Set(mnemocast.engine.domain.model.CampaignPerformance)[0m
+[0m[[0m[0mdebug[0m] [0m[0m  > [0m
+[0m[[0m[0mdebug[0m] [0m[0m  > [0m
+[0m[[0m[0mdebug[0m] [0m[0m        [0m
+[0m[[0m[0mdebug[0m] [0m[0mInvalidating (transitively) by inheritance from mnemocast.engine.domain.model.AdPerformance...[0m
+[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: mnemocast.engine.domain.model.AdPerformance[0m
+[0m[[0m[0mdebug[0m] [0m[0mInvalidated by transitive inheritance dependency: Set(mnemocast.engine.domain.model.AdPerformance)[0m
+[0m[[0m[0mdebug[0m] [0m[0mChange NamesChange(mnemocast.engine.domain.model.AdPerformance,ModifiedNames(changes = UsedName(apply$default$6,[Default]), UsedName(apply$default$5,[Default]), UsedName(copy,[Default]), UsedName(<init>$default$6,[Default]), UsedName(copy$default$6,[Default]), UsedName(copy$default$4,[Default]), UsedName(mnemocast;engine;domain;model;AdPerformance;init;,[Default]), UsedName(copy$default$5,[Default]), UsedName(apply$default$3,[Default]), UsedName(copy$default$3,[Default]), UsedName(unapply,[Default]), UsedName(<init>$default$3,[Default]), UsedName(<init>$default$5,[Default]), UsedName(apply$default$4,[Default]), UsedName(apply,[Default]), UsedName(<init>$default$4,[Default]), UsedName(ctr,[Default]), UsedName(clicks,[Default]))) invalidates 1 classes due to The mnemocast.engine.domain.model.AdPerformance has the following regular definitions changed:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	UsedName(apply$default$6,[Default]), UsedName(apply$default$5,[Default]), UsedName(copy,[Default]), UsedName(<init>$default$6,[Default]), UsedName(copy$default$6,[Default]), UsedName(copy$default$4,[Default]), UsedName(mnemocast;engine;domain;model;AdPerformance;init;,[Default]), UsedName(copy$default$5,[Default]), UsedName(apply$default$3,[Default]), UsedName(copy$default$3,[Default]), UsedName(unapply,[Default]), UsedName(<init>$default$3,[Default]), UsedName(<init>$default$5,[Default]), UsedName(apply$default$4,[Default]), UsedName(apply,[Default]), UsedName(<init>$default$4,[Default]), UsedName(ctr,[Default]), UsedName(clicks,[Default]).[0m
+[0m[[0m[0mdebug[0m] [0m[0m  > by transitive inheritance: Set(mnemocast.engine.domain.model.AdPerformance)[0m
+[0m[[0m[0mdebug[0m] [0m[0m  > [0m
+[0m[[0m[0mdebug[0m] [0m[0m  > [0m
+[0m[[0m[0mdebug[0m] [0m[0m        [0m
+[0m[[0m[0mdebug[0m] [0m[0mNew invalidations:[0m
+[0m[[0m[0mdebug[0m] [0m[0mInitial set of included nodes: [0m
+[0m[[0m[0mdebug[0m] [0m[0mPreviously invalidated, but (transitively) depend on new invalidations:[0m
+[0m[[0m[0mdebug[0m] [0m[0mFinal step, transitive dependencies:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Set()[0m
+[0m[[0m[0mdebug[0m] [0m[0mNo classes were invalidated.[0m
+[0m[[0m[0mdebug[0m] [0m[0mScala compilation took 11.799678792 s[0m
+[0m[[0m[0mdebug[0m] [0m[0mdone compiling[0m

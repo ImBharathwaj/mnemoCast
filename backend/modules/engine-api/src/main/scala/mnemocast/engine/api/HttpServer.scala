@@ -23,6 +23,11 @@ object HttpServer extends App {
   // Storage strategy: Use environment variable STORAGE_STRATEGY
   // Options: "redis", "postgres", "hybrid" (default: "redis" for easy startup)
   val storageStrategy = sys.env.getOrElse("STORAGE_STRATEGY", "redis")
+  println(s"📦 Storage Strategy: $storageStrategy")
+  if (storageStrategy == "redis") {
+    println("⚠️  NOTE: Using Redis-only mode. Data will NOT be stored in Postgres.")
+    println("⚠️  To store in Postgres, set STORAGE_STRATEGY=hybrid or STORAGE_STRATEGY=postgres")
+  }
 
   private val redisClient = new RedisClient("localhost", 6379)
   private val redisAdStore = new RedisAdStore(redisClient)
@@ -102,7 +107,7 @@ object HttpServer extends App {
 
   private val adRoutes = new AdRoutes(adDeliveryService)
   private val adminAdRoutes = new AdminAdRoutes(adStore, eventStore)
-  private val eventRoutes = new EventRoutes(adStore, eventStore)
+  private val eventRoutes = new EventRoutes(eventStore)
   private val analyticsRoutes = new AnalyticsRoutes(analyticsService)
 
   private val allRoutes: Route = 
