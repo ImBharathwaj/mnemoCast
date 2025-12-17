@@ -1,5 +1,6 @@
 -- Mnemocast Engine - PostgreSQL Database Schema
 -- Run this script to initialize the database
+-- This script is idempotent (safe to run multiple times on existing databases)
 
 -- Create database (run as postgres user)
 -- CREATE DATABASE mnemocast;
@@ -28,6 +29,9 @@ CREATE TABLE IF NOT EXISTS ads (
     max_impressions_per_user INTEGER,
     frequency_cap_window_hours INTEGER,
     
+    -- OOH-specific fields
+    duration_seconds INTEGER,
+    
     -- Timestamps
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -53,6 +57,76 @@ CREATE TABLE IF NOT EXISTS targeting_rules (
 
 -- Index for ad_id (most common query)
 CREATE INDEX IF NOT EXISTS idx_targeting_rules_ad_id ON targeting_rules(ad_id);
+
+-- ============================================
+-- SCREENS TABLE (OOH)
+-- ============================================
+CREATE TABLE IF NOT EXISTS screens (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    
+    -- Location fields
+    country TEXT,
+    city TEXT,
+    area TEXT,
+    venue_type TEXT,
+    timezone TEXT,
+    
+    -- Status fields
+    is_online BOOLEAN NOT NULL DEFAULT false,
+    last_seen TIMESTAMPTZ,
+    
+    -- Timestamps
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Index for common queries
+CREATE INDEX IF NOT EXISTS idx_screens_city ON screens(city);
+CREATE INDEX IF NOT EXISTS idx_screens_area ON screens(area);
+CREATE INDEX IF NOT EXISTS idx_screens_venue_type ON screens(venue_type);
+CREATE INDEX IF NOT EXISTS idx_screens_is_online ON screens(is_online) WHERE is_online = true;
+
+-- ============================================
+-- SCREEN TAGS TABLE (OOH)
+-- ============================================
+CREATE TABLE IF NOT EXISTS screen_tags (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    screen_id TEXT NOT NULL REFERENCES screens(id) ON DELETE CASCADE,
+    tag TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE(screen_id, tag)
+);
+
+-- Index for tag queries
+CREATE INDEX IF NOT EXISTS idx_screen_tags_screen_id ON screen_tags(screen_id);
+CREATE INDEX IF NOT EXISTS idx_screen_tags_tag ON screen_tags(tag);
+
+-- ============================================
+-- SCREEN METADATA TABLE (OOH)
+-- ============================================
+CREATE TABLE IF NOT EXISTS screen_metadata (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    screen_id TEXT NOT NULL REFERENCES screens(id) ON DELETE CASCADE,
+    metadata_key TEXT NOT NULL,
+    metadata_value TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE(screen_id, metadata_key)
+);
+
+-- Index for screen_id queries
+CREATE INDEX IF NOT EXISTS idx_screen_metadata_screen_id ON screen_metadata(screen_id);
+
+-- Trigger to auto-update updated_at for screens (safe creation)
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_trigger WHERE tgname = 'update_screens_updated_at'
+    ) THEN
+        CREATE TRIGGER update_screens_updated_at BEFORE UPDATE ON screens
+            FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+    END IF;
+END $$;
 
 -- ============================================
 -- DELIVERY EVENTS TABLE

@@ -32,8 +32,13 @@ class AdRoutes(
             "userId".?,
             "appId".?,
             "country".?,
-            "platform".?
-          ) { (deviceIdOpt, userIdOpt, appIdOpt, countryOpt, platformOpt) =>
+            "platform".?,
+            "screenId".?,
+            "city".?,
+            "area".?,
+            "venueType".?,
+            "timezone".?
+          ) { (deviceIdOpt, userIdOpt, appIdOpt, countryOpt, platformOpt, screenIdOpt, cityOpt, areaOpt, venueTypeOpt, timezoneOpt) =>
             extractClientIP { ip =>
               val request = DeliveryRequest(
                 requestId = UUID.randomUUID().toString,
@@ -43,6 +48,11 @@ class AdRoutes(
                 ip = Some(ip.toOption.map(_.getHostAddress).getOrElse(ip.toString())),
                 country = countryOpt,
                 platform = platformOpt,
+                screenId = screenIdOpt,
+                city = cityOpt,
+                area = areaOpt,
+                venueType = venueTypeOpt,
+                timezone = timezoneOpt,
                 timestamp = Instant.now()
               )
 

@@ -27,8 +27,8 @@ class PostgresAdStore(
           id, advertiser_id, creative_url, target_url, is_active,
           max_plays, daily_limit, hourly_limit,
           max_impressions_per_device, max_impressions_per_user, frequency_cap_window_hours,
-          created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          duration_seconds, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT (id) DO UPDATE SET
           advertiser_id = EXCLUDED.advertiser_id,
           creative_url = EXCLUDED.creative_url,
@@ -40,6 +40,7 @@ class PostgresAdStore(
           max_impressions_per_device = EXCLUDED.max_impressions_per_device,
           max_impressions_per_user = EXCLUDED.max_impressions_per_user,
           frequency_cap_window_hours = EXCLUDED.frequency_cap_window_hours,
+          duration_seconds = EXCLUDED.duration_seconds,
           updated_at = EXCLUDED.updated_at
       """)
 
@@ -54,8 +55,9 @@ class PostgresAdStore(
       adStmt.setObject(9, ad.maxImpressionsPerDevice.map(_.asInstanceOf[Object]).orNull, java.sql.Types.INTEGER)
       adStmt.setObject(10, ad.maxImpressionsPerUser.map(_.asInstanceOf[Object]).orNull, java.sql.Types.INTEGER)
       adStmt.setObject(11, ad.frequencyCapWindowHours.map(_.asInstanceOf[Object]).orNull, java.sql.Types.INTEGER)
-      adStmt.setTimestamp(12, Timestamp.from(ad.createdAt))
-      adStmt.setTimestamp(13, Timestamp.from(ad.updatedAt))
+      adStmt.setObject(12, ad.durationSeconds.map(_.asInstanceOf[Object]).orNull, java.sql.Types.INTEGER)
+      adStmt.setTimestamp(13, Timestamp.from(ad.createdAt))
+      adStmt.setTimestamp(14, Timestamp.from(ad.updatedAt))
       adStmt.executeUpdate()
       adStmt.close()
 
@@ -90,7 +92,7 @@ class PostgresAdStore(
         SELECT id, advertiser_id, creative_url, target_url, is_active,
                max_plays, daily_limit, hourly_limit,
                max_impressions_per_device, max_impressions_per_user, frequency_cap_window_hours,
-               created_at, updated_at
+               duration_seconds, created_at, updated_at
         FROM ads WHERE id = ?
       """)
       stmt.setString(1, id)
@@ -116,7 +118,7 @@ class PostgresAdStore(
         SELECT id, advertiser_id, creative_url, target_url, is_active,
                max_plays, daily_limit, hourly_limit,
                max_impressions_per_device, max_impressions_per_user, frequency_cap_window_hours,
-               created_at, updated_at
+               duration_seconds, created_at, updated_at
         FROM ads WHERE is_active = true
         ORDER BY created_at DESC
       """)
@@ -138,7 +140,7 @@ class PostgresAdStore(
         SELECT id, advertiser_id, creative_url, target_url, is_active,
                max_plays, daily_limit, hourly_limit,
                max_impressions_per_device, max_impressions_per_user, frequency_cap_window_hours,
-               created_at, updated_at
+               duration_seconds, created_at, updated_at
         FROM ads
         ORDER BY created_at DESC
       """)
@@ -182,6 +184,7 @@ class PostgresAdStore(
       maxImpressionsPerDevice = getNullableInt("max_impressions_per_device"),
       maxImpressionsPerUser = getNullableInt("max_impressions_per_user"),
       frequencyCapWindowHours = getNullableInt("frequency_cap_window_hours"),
+      durationSeconds = getNullableInt("duration_seconds"),
       createdAt = rs.getTimestamp("created_at").toInstant,
       updatedAt = rs.getTimestamp("updated_at").toInstant
     )

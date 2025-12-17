@@ -8,11 +8,11 @@ import org.apache.pekko.http.scaladsl.Http
 import org.apache.pekko.http.scaladsl.server.Directives._
 import org.apache.pekko.http.scaladsl.server.Route
 
-import mnemocast.engine.api.routes.{AdRoutes, AdminAdRoutes, AnalyticsRoutes, EventRoutes}
-import mnemocast.engine.infra.services.{AdDeliveryService, AnalyticsService, BudgetService, FrequencyCapService}
-import mnemocast.engine.infra.store.redis.{RedisAdStore, RedisClient, RedisEventStore}
-import mnemocast.engine.infra.store.postgres.{PostgresAdStore, PostgresClient, PostgresEventStore}
-import mnemocast.engine.infra.store.{AdStore, EventStore, HybridAdStore, HybridEventStore}
+import mnemocast.engine.api.routes.{AdRoutes, AdminAdRoutes, AnalyticsRoutes, EventRoutes, PlaylistRoutes, ScreenRoutes}
+import mnemocast.engine.infra.services.{AdDeliveryService, AnalyticsService, BudgetService, FrequencyCapService, PlaylistService}
+import mnemocast.engine.infra.store.redis.{RedisAdStore, RedisClient, RedisEventStore, RedisScreenStore}
+import mnemocast.engine.infra.store.postgres.{PostgresAdStore, PostgresClient, PostgresEventStore, PostgresScreenStore}
+import mnemocast.engine.infra.store.{AdStore, EventStore, HybridAdStore, HybridEventStore, HybridScreenStore, ScreenStore}
 
 object HttpServer extends App {
 
@@ -32,6 +32,7 @@ object HttpServer extends App {
   private val redisClient = new RedisClient("localhost", 6379)
   private val redisAdStore = new RedisAdStore(redisClient)
   private val redisEventStore = new RedisEventStore(redisClient)
+  private val redisScreenStore = new RedisScreenStore(redisClient)
 
   // Postgres client (only initialized if needed, with error handling)
   private val postgresClientOpt: Option[PostgresClient] = 
@@ -56,6 +57,7 @@ object HttpServer extends App {
 
   private val postgresAdStoreOpt = postgresClientOpt.map(new PostgresAdStore(_))
   private val postgresEventStoreOpt = postgresClientOpt.map(new PostgresEventStore(_))
+  private val postgresScreenStoreOpt = postgresClientOpt.map(new PostgresScreenStore(_))
 
   // Choose storage based on strategy (with fallback to Redis if Postgres fails)
   private val adStore: AdStore = storageStrategy match {
@@ -98,6 +100,27 @@ object HttpServer extends App {
       redisEventStore
   }
 
+  // Screen store (using Postgres when available, with Redis cache in hybrid mode)
+  private val screenStore: ScreenStore = storageStrategy match {
+    case "redis" => 
+      redisScreenStore
+    case "postgres" => 
+      postgresScreenStoreOpt.getOrElse {
+        println("⚠️  Postgres unavailable, falling back to Redis")
+        redisScreenStore
+      }
+    case "hybrid" => 
+      postgresScreenStoreOpt match {
+        case Some(pgStore) => new HybridScreenStore(pgStore, redisScreenStore)
+        case None =>
+          println("⚠️  Postgres unavailable for hybrid mode, using Redis-only")
+          redisScreenStore
+      }
+    case _ => 
+      println(s"⚠️  Unknown storage strategy: $storageStrategy, using Redis")
+      redisScreenStore
+  }
+
   private val budgetService = new BudgetService(eventStore)
   private val frequencyCapService = new FrequencyCapService(eventStore)
   private val analyticsService = new AnalyticsService(adStore, eventStore)
@@ -105,13 +128,25 @@ object HttpServer extends App {
   private val adDeliveryService =
     new AdDeliveryService(adStore, eventStore, budgetService, frequencyCapService)
 
+  private val playlistService =
+    new PlaylistService(adStore, budgetService, frequencyCapService)
+
   private val adRoutes = new AdRoutes(adDeliveryService)
   private val adminAdRoutes = new AdminAdRoutes(adStore, eventStore)
   private val eventRoutes = new EventRoutes(eventStore)
   private val analyticsRoutes = new AnalyticsRoutes(analyticsService)
+  private val screenRoutes = new ScreenRoutes(screenStore)
+  private val playlistRoutes = new PlaylistRoutes(playlistService, screenStore)
 
   private val allRoutes: Route = 
-    concat(adRoutes.routes, adminAdRoutes.routes, eventRoutes.routes, analyticsRoutes.routes)
+    concat(
+      adRoutes.routes,
+      adminAdRoutes.routes,
+      eventRoutes.routes,
+      analyticsRoutes.routes,
+      screenRoutes.routes,
+      playlistRoutes.routes
+    )
 
   // --- HTTP binding ---
 

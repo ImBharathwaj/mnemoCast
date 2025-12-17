@@ -51,6 +51,7 @@ object TargetingService {
         rule.operator.toLowerCase match {
           case "eq" => evaluateEq(rule.value, requestValue)
           case "in" => evaluateIn(rule.value, requestValue)
+          case "daypart" | "timeband" => evaluateTimeBand(rule.value, request)
           case _    => false // Unknown operator = rule fails
         }
     }
@@ -65,6 +66,12 @@ object TargetingService {
     * - "deviceId" → request.deviceId
     * - "userId" → request.userId
     * - "appId" → request.appId
+    * - "screenId" → request.screenId (OOH)
+    * - "city" → request.city (OOH)
+    * - "area" → request.area (OOH)
+    * - "venueType" → request.venueType (OOH)
+    * - "venuetype" → request.venueType (OOH, alternate)
+    * - "timezone" → request.timezone (OOH)
     *
     * @param key     The field key (case-insensitive)
     * @param request The delivery request
@@ -79,6 +86,11 @@ object TargetingService {
       case "deviceid" => request.deviceId
       case "userid"   => request.userId
       case "appid"    => request.appId
+      case "screenid" => request.screenId
+      case "city"     => request.city
+      case "area"     => request.area
+      case "venuetype" | "venue_type" => request.venueType
+      case "timezone" => request.timezone
       case _          => None // Unknown key
     }
   }
@@ -116,6 +128,21 @@ object TargetingService {
       .filter(_.nonEmpty)
 
     allowedValues.exists(_.equalsIgnoreCase(requestValue.trim))
+  }
+
+  /**
+    * Evaluates "daypart" or "timeband" operator for time-based targeting.
+    * 
+    * The rule value should be in format "HH:mm-HH:mm" or "HH:mm-HH:mm,day1,day2"
+    * Example: "09:00-17:00" or "09:00-17:00,monday,friday"
+    */
+  private def evaluateTimeBand(ruleValue: String, request: DeliveryRequest): Boolean = {
+    TimeTargetingService.parseTimeBandFromRule(ruleValue) match {
+      case Some(timeBand) =>
+        TimeTargetingService.matches(List(timeBand), request)
+      case None =>
+        false // Invalid format = rule fails
+    }
   }
 }
 

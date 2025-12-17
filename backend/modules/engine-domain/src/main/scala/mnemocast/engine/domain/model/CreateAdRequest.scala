@@ -21,7 +21,9 @@ final case class CreateAdRequest(
   // Frequency capping fields
   maxImpressionsPerDevice: Option[Int] = None,
   maxImpressionsPerUser: Option[Int] = None,
-  frequencyCapWindowHours: Option[Int] = None
+  frequencyCapWindowHours: Option[Int] = None,
+  // OOH-specific fields
+  durationSeconds: Option[Int] = None  // Duration of the ad creative in seconds (for playlist generation)
 )
 
 object CreateAdRequest {
