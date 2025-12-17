@@ -11,11 +11,12 @@ import org.apache.pekko.http.scaladsl.server.Route
 
 import mnemocast.engine.api.json.JsonSupport
 import mnemocast.engine.domain.model.{DeliveryRequest, Screen}
-import mnemocast.engine.infra.services.PlaylistService
+import mnemocast.engine.infra.services.{CampaignPlaylistService, PlaylistService}
 import mnemocast.engine.infra.store.ScreenStore
 
 class PlaylistRoutes(
   playlistService: PlaylistService,
+  campaignPlaylistService: CampaignPlaylistService,
   screenStore: ScreenStore
 )(implicit ec: ExecutionContext)
     extends JsonSupport {
@@ -47,11 +48,16 @@ class PlaylistRoutes(
                     city = screen.location.city,
                     area = screen.location.area,
                     venueType = screen.location.venueType,
+                    screenTags = screen.tags,
                     timezone = screen.location.timezone,
                     timestamp = Instant.now()
                   )
 
-                  playlistService.generatePlaylist(request, durationMinutes)
+                  // Prefer campaign-based playlist generation, fallback to ad-based
+                  campaignPlaylistService.generatePlaylist(request, durationMinutes).flatMap {
+                    case Some(playlist) => Future.successful(Some(playlist))
+                    case None => playlistService.generatePlaylist(request, durationMinutes)
+                  }
 
                 case None =>
                   Future.successful(None)

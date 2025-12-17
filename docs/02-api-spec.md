@@ -462,6 +462,12 @@ Targeting rules determine which ads are eligible for a given delivery request.
 - `deviceId` - Device identifier (matches `DeliveryRequest.deviceId`)
 - `userId` - User identifier (matches `DeliveryRequest.userId`)
 - `appId` - Application identifier (matches `DeliveryRequest.appId`)
+- `screenId` - Screen identifier (OOH, matches `DeliveryRequest.screenId`)
+- `city` - City name (OOH, matches `DeliveryRequest.city`)
+- `area` - Area/neighborhood (OOH, matches `DeliveryRequest.area`)
+- `venueType` / `venue_type` - Venue type (OOH, matches `DeliveryRequest.venueType`)
+- `screenTag` / `tag` - Screen tag (OOH, matches `DeliveryRequest.screenTags`)
+- `timezone` - IANA timezone identifier (OOH, matches `DeliveryRequest.timezone`)
 
 ### Supported Operators
 
@@ -470,12 +476,317 @@ Targeting rules determine which ads are eligible for a given delivery request.
 
 - **`in`** - List membership (comma-separated values, case-insensitive)
   - Example: `{"key": "platform", "operator": "in", "value": "android,ios"}`
+  - For screenTag/tag: matches if any request tag intersects with rule value tags
+
+- **`daypart`** / **`timeband`** - Time-based targeting (OOH)
+  - Example: `{"key": "timezone", "operator": "daypart", "value": "09:00-17:00,monday,friday"}`
+  - Format: `"HH:mm-HH:mm"` or `"HH:mm-HH:mm,day1,day2"` (days optional)
+  - Days: monday, tuesday, wednesday, thursday, friday, saturday, sunday (or mon, tue, etc.)
 
 ### Rule Evaluation Logic
 
 - If an ad has **no targeting rules**, it matches all requests (default: show everywhere)
 - All targeting rules must pass for an ad to be eligible (AND logic)
 - If any rule fails, the ad is excluded from delivery
+
+---
+
+## Campaign Management API
+
+### POST /api/v1/campaigns
+
+Create a new campaign.
+
+**Request Body:**
+
+```json
+{
+  "id": "optional-uuid",
+  "name": "Morning Coffee Campaign",
+  "advertiserId": "advertiser-123",
+  "status": "active",
+  "startDate": "2024-01-01T00:00:00Z",
+  "endDate": "2024-12-31T23:59:59Z",
+  "totalBudget": 10000,
+  "targetPlayouts": 5000,
+  "targetingRules": [
+    {
+      "key": "city",
+      "operator": "in",
+      "value": "Chennai,Mumbai"
+    },
+    {
+      "key": "screenTag",
+      "operator": "in",
+      "value": "mall,food_court"
+    },
+    {
+      "key": "timezone",
+      "operator": "daypart",
+      "value": "09:00-17:00,monday,friday"
+    }
+  ],
+  "priority": 5
+}
+```
+
+**Fields:**
+- `id` - Optional campaign ID (auto-generated if not provided)
+- `name` - Campaign name (required)
+- `advertiserId` - Advertiser identifier (required)
+- `status` - Campaign status: "active", "paused", "completed" (default: "active")
+- `startDate` - Campaign start date/time (ISO8601, required)
+- `endDate` - Campaign end date/time (ISO8601, required)
+- `totalBudget` - Total budget in plays (optional, null = unlimited)
+- `targetPlayouts` - Target number of playouts (optional)
+- `targetingRules` - List of targeting rules (campaign-level, inherited by creatives)
+- `priority` - Priority weight for selection (1-10, higher = more frequent, default: 1)
+
+**Response:**
+
+- **200 OK**: Campaign created successfully
+  ```json
+  {
+    "id": "camp-123",
+    "name": "Morning Coffee Campaign",
+    "advertiserId": "advertiser-123",
+    "status": "active",
+    "startDate": "2024-01-01T00:00:00Z",
+    "endDate": "2024-12-31T23:59:59Z",
+    "totalBudget": 10000,
+    "targetPlayouts": 5000,
+    "targetingRules": [...],
+    "priority": 5,
+    "createdAt": "2024-01-01T00:00:00Z",
+    "updatedAt": "2024-01-01T00:00:00Z"
+  }
+  ```
+
+**Example:**
+
+```bash
+curl -X POST http://localhost:8080/api/v1/campaigns \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Morning Coffee Campaign",
+    "advertiserId": "adv-123",
+    "startDate": "2024-01-01T00:00:00Z",
+    "endDate": "2024-12-31T23:59:59Z",
+    "priority": 5
+  }'
+```
+
+---
+
+### GET /api/v1/campaigns
+
+List all campaigns.
+
+**Query Parameters:**
+
+| Parameter  | Type    | Required | Description                                    |
+|------------|---------|----------|------------------------------------------------|
+| activeOnly | boolean | No       | If true, only return active campaigns (default: false) |
+
+**Response:**
+
+- **200 OK**: List of campaigns
+  ```json
+  [
+    {
+      "id": "camp-123",
+      "name": "Morning Coffee Campaign",
+      ...
+    }
+  ]
+  ```
+
+---
+
+### GET /api/v1/campaigns/{campaignId}
+
+Get a campaign by ID.
+
+**Response:**
+
+- **200 OK**: Campaign details
+- **404 Not Found**: Campaign not found
+
+---
+
+## Creative Management API
+
+### POST /api/v1/campaigns/{campaignId}/creatives
+
+Create a new creative for a campaign.
+
+**Request Body:**
+
+```json
+{
+  "id": "optional-uuid",
+  "campaignId": "camp-123",
+  "name": "Coffee Ad Video",
+  "creativeType": "video",
+  "creativeUrl": "https://cdn.example.com/coffee-ad.mp4",
+  "targetUrl": "https://example.com/coffee",
+  "durationSeconds": 30,
+  "status": "active",
+  "shareOfVoice": 0.5,
+  "frequencyCapPerScreen": 10,
+  "metadata": {
+    "version": "1.0",
+    "language": "en"
+  }
+}
+```
+
+**Fields:**
+- `id` - Optional creative ID (auto-generated if not provided)
+- `campaignId` - Campaign ID (required, must exist)
+- `name` - Creative name (required)
+- `creativeType` - Type: "video", "image", "html" (default: "video")
+- `creativeUrl` - URL to creative asset (required)
+- `targetUrl` - Click-through URL (optional)
+- `durationSeconds` - Duration in seconds (required)
+- `status` - Creative status: "active", "paused", "deleted" (default: "active")
+- `shareOfVoice` - Share of voice (0.0 to 1.0, optional, not yet used in selection)
+- `frequencyCapPerScreen` - Max plays per day per screen (optional, not yet enforced)
+- `metadata` - Additional metadata key-value pairs (optional)
+
+**Response:**
+
+- **200 OK**: Creative created successfully
+- **404 Not Found**: Campaign not found
+
+---
+
+### GET /api/v1/campaigns/{campaignId}/creatives
+
+List all creatives for a campaign.
+
+**Response:**
+
+- **200 OK**: List of creatives
+
+---
+
+### GET /api/v1/creatives/{creativeId}
+
+Get a creative by ID.
+
+**Response:**
+
+- **200 OK**: Creative details
+- **404 Not Found**: Creative not found
+
+---
+
+## Screen Management API (OOH)
+
+### POST /api/v1/screens/register
+
+Register a new screen.
+
+**Request Body:**
+
+```json
+{
+  "id": "optional-screen-id",
+  "name": "Phoenix Mall - Food Court Screen 1",
+  "location": {
+    "country": "IN",
+    "city": "Chennai",
+    "area": "Velachery",
+    "venueType": "mall",
+    "timezone": "Asia/Kolkata"
+  },
+  "tags": ["mall", "food_court"],
+  "metadata": {
+    "building": "Phoenix Mall",
+    "floor": "3"
+  }
+}
+```
+
+**Response:**
+
+- **200 OK**: Screen registered successfully
+
+---
+
+### GET /api/v1/screens/{screenId}
+
+Get screen details.
+
+**Response:**
+
+- **200 OK**: Screen details
+- **404 Not Found**: Screen not found
+
+---
+
+### GET /api/v1/screens
+
+List all screens.
+
+**Response:**
+
+- **200 OK**: List of all screens
+
+---
+
+### PUT /api/v1/screens/{screenId}/heartbeat
+
+Update screen heartbeat (mark as online).
+
+**Response:**
+
+- **200 OK**: Heartbeat updated
+
+---
+
+## Playlist API (OOH)
+
+### GET /api/v1/screens/{screenId}/playlist
+
+Generate a playlist for a screen.
+
+**Query Parameters:**
+
+| Parameter      | Type | Required | Description                        |
+|----------------|------|----------|------------------------------------|
+| durationMinutes | int | No       | Playlist duration in minutes (default: 3) |
+
+**Response:**
+
+- **200 OK**: Playlist generated successfully
+  ```json
+  {
+    "requestId": "req-uuid",
+    "screenId": "screen-123",
+    "items": [
+      {
+        "adId": "creative-123",
+        "creativeUrl": "https://cdn.example.com/ad.mp4",
+        "targetUrl": "https://example.com/landing",
+        "durationSeconds": 30,
+        "impressionTrackingUrl": "http://localhost:8080/api/v1/events/impression?adId=creative-123&campaignId=camp-123&requestId=req-uuid&position=0",
+        "position": 0
+      }
+    ],
+    "validForSeconds": 180,
+    "totalDurationSeconds": 180
+  }
+  ```
+
+- **204 No Content**: No playlist available (no matching campaigns/ads)
+
+**Example:**
+
+```bash
+curl "http://localhost:8080/api/v1/screens/screen-123/playlist?durationMinutes=5"
+```
 
 ---
 

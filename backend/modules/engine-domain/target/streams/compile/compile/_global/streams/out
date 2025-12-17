@@ -1,0 +1,5 @@
+[error] /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/CreateScreenRequest.scala:41:12: value asJson is not a member of io.circe.JsonObject
+[error] did you mean toJson?
+[error]     withId.asJson
+[error]            ^
+[error] one error found

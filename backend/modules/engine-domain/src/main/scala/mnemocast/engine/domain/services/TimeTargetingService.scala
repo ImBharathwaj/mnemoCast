@@ -95,6 +95,11 @@ object TimeTargetingService {
     val startTime = timeParts(0).trim
     val endTime = timeParts(1).trim
 
+    // Validate that times are in correct format (HH:mm)
+    if (!isValidTimeFormat(startTime) || !isValidTimeFormat(endTime)) {
+      return None
+    }
+
     val daysOfWeek = if (parts.length > 1) {
       parts.tail.flatMap(parseDayOfWeek).toList
     } else {
@@ -102,6 +107,18 @@ object TimeTargetingService {
     }
 
     Some(TimeBand(startTime = startTime, endTime = endTime, daysOfWeek = daysOfWeek))
+  }
+
+  /**
+    * Validates that a string is in HH:mm format.
+    */
+  private def isValidTimeFormat(timeStr: String): Boolean = {
+    timeStr.matches("^\\d{2}:\\d{2}$") && {
+      val parts = timeStr.split(":")
+      val hours = parts(0).toInt
+      val minutes = parts(1).toInt
+      hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60
+    }
   }
 
   private def parseDayOfWeek(dayStr: String): Option[DayOfWeek] = {

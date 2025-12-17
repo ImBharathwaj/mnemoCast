@@ -1,13 +1,13 @@
 package mnemocast.engine.domain.model
 
-import io.circe.Codec
+import io.circe.{Codec, Decoder, Encoder}
 import io.circe.generic.semiauto._
 
 /**
   * Request model for screen registration.
   */
 final case class CreateScreenRequest(
-  id: String,                              // Player/device identifier
+  id: Option[String] = None,              // Optional: auto-generated if not provided
   name: String,
   location: ScreenLocation,
   tags: List[String] = List.empty,
@@ -15,6 +15,19 @@ final case class CreateScreenRequest(
 )
 
 object CreateScreenRequest {
-  implicit val createScreenRequestCodec: Codec[CreateScreenRequest] = deriveCodec[CreateScreenRequest]
+  implicit val createScreenRequestDecoder: Decoder[CreateScreenRequest] = Decoder.instance { cursor =>
+    for {
+      id <- cursor.get[Option[String]]("id")
+      name <- cursor.get[String]("name")
+      location <- cursor.get[ScreenLocation]("location")
+      tags <- cursor.getOrElse[List[String]]("tags")(List.empty)
+      metadata <- cursor.getOrElse[Map[String, String]]("metadata")(Map.empty)
+    } yield CreateScreenRequest(id, name, location, tags, metadata)
+  }
+  
+  implicit val createScreenRequestEncoder: Encoder[CreateScreenRequest] = deriveEncoder[CreateScreenRequest]
+  
+  implicit val createScreenRequestCodec: Codec[CreateScreenRequest] = 
+    Codec.from(createScreenRequestDecoder, createScreenRequestEncoder)
 }
 

@@ -1,6 +1,4 @@
-[error] /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/src/main/scala/mnemocast/engine/api/routes/EventRoutes.scala:84:25: type mismatch;
-[error]  found   : org.apache.pekko.http.scaladsl.server.StandardRoute
-[error]  required: scala.concurrent.Future[org.apache.pekko.http.scaladsl.server.RouteResult]
-[error]                 complete(StatusCodes.NoContent)
-[error]                         ^
+[error] /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/src/main/scala/mnemocast/engine/api/routes/ScreenRoutes.scala:57:17: Missing closing brace `}` assumed here
+[error]                 println(s"[$timestamp] [POST /api/v1/screens/register] Request parsed successfully: id=${request.id}, name=${request.name}, location=${request.location}, tags=${request.tags}")
+[error]                 ^
 [error] one error found

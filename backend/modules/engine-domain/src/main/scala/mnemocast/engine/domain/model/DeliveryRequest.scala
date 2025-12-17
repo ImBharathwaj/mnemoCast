@@ -18,6 +18,7 @@ final case class DeliveryRequest(
   city: Option[String] = None,          // City name
   area: Option[String] = None,          // Area/neighborhood
   venueType: Option[String] = None,     // Venue type (e.g., "mall", "airport")
+  screenTags: List[String] = List.empty, // Screen tags for tag-based targeting
   timezone: Option[String] = None,      // IANA timezone identifier
   timestamp: Instant
 )

@@ -1,0 +1,30 @@
+[0m[[0m[0mdebug[0m] [0m[0mRunning TaskDef(mnemocast.engine.domain.services.TargetingServiceSpec, org.scalatest.tools.Framework$$anon$1@36efc71f, false, [SuiteSelector])[0m
+[0m[[0m[0mdebug[0m] [0m[0mRunning TaskDef(mnemocast.engine.domain.services.TimeTargetingServiceSpec, org.scalatest.tools.Framework$$anon$1@36efc71f, false, [SuiteSelector])[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mTimeTargetingServiceSpec:[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mTimeTargetingService[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should match time bands when current time is within range[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should not match time bands when current time is outside range[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should match time bands with specific day of week restriction[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should not match time bands when day of week doesn't match[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should match time bands that wrap around midnight[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should parse time band from targeting rule string format[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should parse time band with day of week restrictions[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should return None for invalid time band format[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mTargetingServiceSpec:[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mTargetingService[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should match ads with no targeting rules[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should match ads with matching country targeting[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should not match ads with non-matching country targeting[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should match ads with screen tag targeting using 'in' operator[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should not match ads with screen tag targeting when no tags match[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should match campaigns with matching city targeting[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should match campaigns with matching venueType targeting[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32m- should require all targeting rules to pass (AND logic)[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mRun completed in 980 milliseconds.[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mTotal number of tests run: 16[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mSuites: completed 2, aborted 0[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[36mTests: succeeded 16, failed 0, canceled 0, ignored 0, pending 0[0m[0m
+[0m[[0m[0minfo[0m] [0m[0m[32mAll tests passed.[0m[0m
+[0m[[0m[0mdebug[0m] [0m[0mPassed tests:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	mnemocast.engine.domain.services.TimeTargetingServiceSpec[0m
+[0m[[0m[0mdebug[0m] [0m[0m	mnemocast.engine.domain.services.TargetingServiceSpec[0m

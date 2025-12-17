@@ -9,6 +9,7 @@ lazy val pekkoHttpVersion  = "1.0.1"
 lazy val pekkoCirceVersion = "2.8.0"
 lazy val postgresVersion   = "42.7.1"
 lazy val hikariVersion     = "5.1.0"
+lazy val scalaTestVersion  = "3.2.17"
 
 lazy val root = (project in file("."))
   .aggregate(engineDomain, engineInfra, engineApi)
@@ -27,7 +28,8 @@ lazy val engineDomain = (project in file("modules/engine-domain"))
     libraryDependencies ++= Seq(
       "io.circe" %% "circe-core"    % circeVersion,
       "io.circe" %% "circe-generic" % circeVersion,
-      "io.circe" %% "circe-parser"  % circeVersion
+      "io.circe" %% "circe-parser"  % circeVersion,
+      "org.scalatest" %% "scalatest" % scalaTestVersion % Test
     )
   )
 
@@ -44,7 +46,9 @@ lazy val engineInfra = (project in file("modules/engine-infra"))
       "com.zaxxer"        %  "HikariCP"      % hikariVersion,
       "io.circe"          %% "circe-core"    % circeVersion,
       "io.circe"          %% "circe-generic" % circeVersion,
-      "io.circe"          %% "circe-parser"  % circeVersion
+      "io.circe"          %% "circe-parser"  % circeVersion,
+      "org.scalatest"     %% "scalatest"     % scalaTestVersion % Test,
+      "org.apache.pekko"  %% "pekko-stream-testkit" % pekkoVersion % Test
     )
   )
 
@@ -65,6 +69,10 @@ lazy val engineApi = (project in file("modules/engine-api"))
 
       "io.circe" %% "circe-core"    % circeVersion,
       "io.circe" %% "circe-generic" % circeVersion,
-      "io.circe" %% "circe-parser"  % circeVersion
+      "io.circe" %% "circe-parser"  % circeVersion,
+      
+      "org.scalatest"     %% "scalatest"                % scalaTestVersion % Test,
+      "org.apache.pekko"  %% "pekko-http-testkit"       % pekkoHttpVersion % Test,
+      "org.apache.pekko"  %% "pekko-stream-testkit"     % pekkoVersion % Test
     )
   )

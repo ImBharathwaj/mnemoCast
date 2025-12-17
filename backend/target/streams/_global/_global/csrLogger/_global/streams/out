@@ -1,6 +1,6 @@
-[debug] downloaded https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.1/postgresql-42.7.1.pom
-[debug] downloaded https://repo1.maven.org/maven2/com/zaxxer/HikariCP/5.1.0/HikariCP-5.1.0.pom
-[debug] downloaded https://repo1.maven.org/maven2/org/checkerframework/checker-qual/3.41.0/checker-qual-3.41.0.pom
-[debug] downloaded https://repo1.maven.org/maven2/org/checkerframework/checker-qual/3.41.0/checker-qual-3.41.0.jar
-[debug] downloaded https://repo1.maven.org/maven2/com/zaxxer/HikariCP/5.1.0/HikariCP-5.1.0.jar
-[debug] downloaded https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.1/postgresql-42.7.1.jar
+[debug] downloaded https://repo1.maven.org/maven2/org/apache/pekko/pekko-stream-testkit_2.13/1.0.2/pekko-stream-testkit_2.13-1.0.2.pom
+[debug] downloaded https://repo1.maven.org/maven2/org/apache/pekko/pekko-testkit_2.13/1.0.2/pekko-testkit_2.13-1.0.2.pom
+[debug] downloaded https://repo1.maven.org/maven2/org/apache/pekko/pekko-stream-testkit_2.13/1.0.2/pekko-stream-testkit_2.13-1.0.2.jar
+[debug] downloaded https://repo1.maven.org/maven2/org/apache/pekko/pekko-testkit_2.13/1.0.2/pekko-testkit_2.13-1.0.2.jar
+[debug] downloaded https://repo1.maven.org/maven2/org/apache/pekko/pekko-http-testkit_2.13/1.0.1/pekko-http-testkit_2.13-1.0.1.pom
+[debug] downloaded https://repo1.maven.org/maven2/org/apache/pekko/pekko-http-testkit_2.13/1.0.1/pekko-http-testkit_2.13-1.0.1.jar

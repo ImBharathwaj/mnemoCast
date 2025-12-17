@@ -1,11 +1,11 @@
 package mnemocast.engine.domain.services
 
-import mnemocast.engine.domain.model.{Ad, DeliveryRequest, TargetingRule}
+import mnemocast.engine.domain.model.{Ad, Campaign, DeliveryRequest, TargetingRule}
 
 /**
   * Pure targeting logic service.
   *
-  * Evaluates whether an ad matches a delivery request based on targeting rules.
+  * Evaluates whether an ad or campaign matches a delivery request based on targeting rules.
   */
 object TargetingService {
 
@@ -29,6 +29,30 @@ object TargetingService {
 
     // All rules must pass (AND logic)
     ad.targetingRules.forall { rule =>
+      evaluateRule(rule, request)
+    }
+  }
+
+  /**
+    * Determines if a campaign matches the given delivery request.
+    *
+    * Rules:
+    * - If campaign has no targeting rules → matches all requests (default: show everywhere)
+    * - All targeting rules must pass (AND logic)
+    * - Rule evaluation extracts request field by key and compares using operator
+    *
+    * @param campaign The campaign to evaluate
+    * @param request  The delivery request to match against
+    * @return true if the campaign matches the request, false otherwise
+    */
+  def matches(campaign: Campaign, request: DeliveryRequest): Boolean = {
+    // No targeting rules = match all requests
+    if (campaign.targetingRules.isEmpty) {
+      return true
+    }
+
+    // All rules must pass (AND logic)
+    campaign.targetingRules.forall { rule =>
       evaluateRule(rule, request)
     }
   }
@@ -71,11 +95,14 @@ object TargetingService {
     * - "area" → request.area (OOH)
     * - "venueType" → request.venueType (OOH)
     * - "venuetype" → request.venueType (OOH, alternate)
+    * - "screenTag" → request.screenTags (OOH, special handling for tag matching)
+    * - "tag" → request.screenTags (OOH, special handling for tag matching)
     * - "timezone" → request.timezone (OOH)
     *
     * @param key     The field key (case-insensitive)
     * @param request The delivery request
     * @return Some(value) if the field exists and has a value, None otherwise
+    *         For screenTag/tag, returns comma-separated list of tags for "in" operator matching
     */
   private def extractRequestValue(key: String, request: DeliveryRequest): Option[String] = {
     val normalizedKey = key.toLowerCase.trim
@@ -90,6 +117,9 @@ object TargetingService {
       case "city"     => request.city
       case "area"     => request.area
       case "venuetype" | "venue_type" => request.venueType
+      case "screentag" | "tag" => 
+        if (request.screenTags.nonEmpty) Some(request.screenTags.mkString(","))
+        else None
       case "timezone" => request.timezone
       case _          => None // Unknown key
     }
@@ -109,13 +139,19 @@ object TargetingService {
   /**
     * Evaluates "in" (list membership) operator.
     *
-    * Checks if requestValue exists in the comma-separated list of ruleValue.
+    * For most fields: Checks if requestValue exists in the comma-separated list of ruleValue.
+    * For screenTag/tag: Checks if any tag in ruleValue exists in requestValue (which is also comma-separated).
     *
-    * Example:
+    * Example (normal field):
     * - ruleValue = "android,ios"
     * - requestValue = "android" → true
     * - requestValue = "ios" → true
     * - requestValue = "web" → false
+    *
+    * Example (screenTag/tag):
+    * - ruleValue = "mall,food_court"
+    * - requestValue = "mall,gym" → true (mall matches)
+    * - requestValue = "office" → false (no match)
     *
     * @param ruleValue    Comma-separated list from the targeting rule
     * @param requestValue The value from the delivery request
@@ -127,7 +163,15 @@ object TargetingService {
       .map(_.trim)
       .filter(_.nonEmpty)
 
-    allowedValues.exists(_.equalsIgnoreCase(requestValue.trim))
+    val requestValues = requestValue
+      .split(",")
+      .map(_.trim)
+      .filter(_.nonEmpty)
+
+    // Check if any requestValue matches any allowedValue
+    requestValues.exists { rv =>
+      allowedValues.exists(_.equalsIgnoreCase(rv))
+    }
   }
 
   /**
