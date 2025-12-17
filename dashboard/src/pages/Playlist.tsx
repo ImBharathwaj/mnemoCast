@@ -118,8 +118,16 @@ const Playlist: React.FC = () => {
           <div className="p-6 border-b">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-semibold text-gray-900">Generated Playlist</h2>
-              <div className="text-sm text-gray-600">
-                Request ID: <span className="font-mono">{playlist.requestId}</span>
+              <div className="flex items-center gap-4">
+                <div className="text-sm text-gray-600">
+                  Request ID: <span className="font-mono">{playlist.requestId}</span>
+                </div>
+                <button
+                  onClick={() => setPlaylist(null)}
+                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+                >
+                  Clear
+                </button>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-4 text-sm">

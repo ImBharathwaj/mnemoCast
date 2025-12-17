@@ -15,8 +15,9 @@ import org.apache.pekko.http.scaladsl.model.{HttpMethods, StatusCodes}
 import org.apache.pekko.http.scaladsl.server.Directives._
 import org.apache.pekko.http.scaladsl.server.{Directive0, Route}
 
-import mnemocast.engine.api.routes.{AdRoutes, AdminAdRoutes, AnalyticsRoutes, CampaignRoutes, CreativeRoutes, EventRoutes, PlaylistRoutes, ScreenRoutes}
-import mnemocast.engine.infra.services.{AdDeliveryService, AnalyticsService, BudgetService, CampaignBudgetService, CampaignPlaylistService, FrequencyCapService, PlaylistService}
+import mnemocast.engine.api.routes.{AdRoutes, AdminAdRoutes, AnalyticsRoutes, CampaignRoutes, CreativeRoutes, EventRoutes, MediaRoutes, PlaylistRoutes, ScreenRoutes}
+import mnemocast.engine.infra.services.{AdDeliveryService, AnalyticsService, BudgetService, CampaignBudgetService, CampaignPlaylistService, FrequencyCapService, MediaValidator, PlaylistService}
+import mnemocast.engine.infra.storage.{LocalFileStorage, MediaStorage}
 import mnemocast.engine.infra.store.redis.{RedisAdStore, RedisCampaignStore, RedisClient, RedisCreativeStore, RedisDecisionStore, RedisEventStore, RedisScreenStore}
 import mnemocast.engine.infra.store.postgres.{PostgresAdStore, PostgresCampaignStore, PostgresClient, PostgresCreativeStore, PostgresEventStore, PostgresScreenStore}
 import mnemocast.engine.infra.store.{AdStore, CampaignStore, CreativeStore, DecisionStore, EventStore, HybridAdStore, HybridCampaignStore, HybridCreativeStore, HybridEventStore, HybridScreenStore, ScreenStore}
@@ -179,6 +180,16 @@ object HttpServer extends App {
   private val campaignRoutes = new CampaignRoutes(campaignStore)
   private val creativeRoutes = new CreativeRoutes(creativeStore, campaignStore)
 
+  // Media storage and upload
+  private val storageBasePath = sys.env.getOrElse("STORAGE_BASE_PATH", "storage/uploads")
+  private val storageBaseUrl = sys.env.getOrElse("STORAGE_BASE_URL", "http://localhost:8080/api/v1/media")
+  private val mediaStorage: MediaStorage = new LocalFileStorage(storageBasePath, storageBaseUrl)
+  private val mediaValidator = new MediaValidator(
+    maxImageSizeBytes = sys.env.getOrElse("MAX_IMAGE_SIZE_MB", "10").toLong * 1024 * 1024,
+    maxVideoSizeBytes = sys.env.getOrElse("MAX_VIDEO_SIZE_MB", "500").toLong * 1024 * 1024
+  )
+  private val mediaRoutes = new MediaRoutes(mediaStorage, mediaValidator)
+
   // Add logging directive to all routes
   private def logRequestResponse: Directive0 = {
     extractRequest.flatMap { request =>
@@ -248,7 +259,8 @@ object HttpServer extends App {
         screenRoutes.routes,
         playlistRoutes.routes,
         campaignRoutes.routes,
-        creativeRoutes.routes
+        creativeRoutes.routes,
+        mediaRoutes.routes
       )
     }
 

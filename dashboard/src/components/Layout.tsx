@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import Logo from './Logo';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -20,6 +21,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { path: '/campaigns', label: 'Campaigns' },
     { path: '/creatives', label: 'Creatives' },
     { path: '/screens', label: 'Screens' },
+    { path: '/upload', label: 'Media Upload' },
     { path: '/analytics', label: 'Analytics' },
     { path: '/playlist', label: 'Playlist' },
   ];
@@ -30,8 +32,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-lg">
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-center h-14 bg-blue-600 text-white border-b border-blue-700">
-            <h1 className="text-lg font-semibold">Mnemocast</h1>
+          <div className="flex items-center justify-center h-16 bg-blue-600 text-white border-b border-blue-700 px-4">
+            <Logo className="w-8 h-8" showText={true} />
           </div>
 
           {/* Navigation */}

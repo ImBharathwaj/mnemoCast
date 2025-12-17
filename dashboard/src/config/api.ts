@@ -16,5 +16,7 @@ export const API_ENDPOINTS = {
     ad: (adId: string) => `${API_BASE_URL}/api/v1/analytics/ads/${adId}`,
     campaigns: `${API_BASE_URL}/api/v1/analytics/campaigns`,
   },
+  mediaUpload: `${API_BASE_URL}/api/v1/creatives/upload`,
+  mediaServe: (filename: string) => `${API_BASE_URL}/api/v1/media/creatives/${filename}`,
 };
 

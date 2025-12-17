@@ -97,30 +97,90 @@ class ScreenRoutes(
             }
           }
         },
-        path(Segment / "heartbeat") { screenId =>
-          put {
-            val futureUpdate = screenStore.updateLastSeen(screenId)
-            onComplete(futureUpdate) {
-              case scala.util.Success(_) =>
-                complete(StatusCodes.OK, "Heartbeat recorded")
-              case scala.util.Failure(ex) =>
-                complete(StatusCodes.InternalServerError, s"Failed to record heartbeat: ${ex.getMessage}")
-            }
-          }
-        },
-        path(Segment) { screenId =>
-          get {
-            val futureScreen = screenStore.getById(screenId)
-            onComplete(futureScreen) {
-              case scala.util.Success(Some(screen)) =>
-                complete(screen)
-              case scala.util.Success(None) =>
-                complete(StatusCodes.NotFound, s"Screen not found: $screenId")
-              case scala.util.Failure(ex) =>
-                complete(StatusCodes.InternalServerError, s"Error retrieving screen: ${ex.getMessage}")
-            }
-          }
-        },
+              path(Segment / "heartbeat") { screenId =>
+                put {
+                  val futureUpdate = screenStore.updateLastSeen(screenId)
+                  onComplete(futureUpdate) {
+                    case scala.util.Success(_) =>
+                      complete(StatusCodes.OK, "Heartbeat recorded")
+                    case scala.util.Failure(ex) =>
+                      complete(StatusCodes.InternalServerError, s"Failed to record heartbeat: ${ex.getMessage}")
+                  }
+                }
+              },
+              path(Segment) { screenId =>
+                concat(
+                  get {
+                    val timestamp = java.time.LocalDateTime.now()
+                    println(s"[$timestamp] [GET /api/v1/screens/$screenId] Request received")
+                    val futureScreen = screenStore.getById(screenId)
+                    onComplete(futureScreen) {
+                      case scala.util.Success(Some(screen)) =>
+                        println(s"[$timestamp] [GET /api/v1/screens/$screenId] Success: Screen found")
+                        complete(screen)
+                      case scala.util.Success(None) =>
+                        println(s"[$timestamp] [GET /api/v1/screens/$screenId] Not found")
+                        complete(StatusCodes.NotFound, s"Screen not found: $screenId")
+                      case scala.util.Failure(ex) =>
+                        println(s"[$timestamp] [GET /api/v1/screens/$screenId] ERROR: ${ex.getMessage}")
+                        ex.printStackTrace()
+                        complete(StatusCodes.InternalServerError, s"Error retrieving screen: ${ex.getMessage}")
+                    }
+                  },
+                  put {
+                    extractRequest { httpRequest =>
+                      val timestamp = java.time.LocalDateTime.now()
+                      println(s"[$timestamp] [PUT /api/v1/screens/$screenId] Request received")
+                      entity(as[CreateScreenRequest]) { request =>
+                        println(s"[$timestamp] [PUT /api/v1/screens/$screenId] Request body: name=${request.name}")
+                        
+                        val futureScreen = screenStore.getById(screenId).flatMap {
+                          case Some(existingScreen) =>
+                            val now = Instant.now()
+                            val updatedScreen = existingScreen.copy(
+                              name = request.name,
+                              location = request.location,
+                              tags = request.tags,
+                              metadata = request.metadata,
+                              classification = request.classification,
+                              updatedAt = now
+                            )
+                            screenStore.upsert(updatedScreen).map(_ => updatedScreen)
+                          case None =>
+                            Future.failed(new IllegalArgumentException(s"Screen not found: $screenId"))
+                        }
+                        
+                        onComplete(futureScreen) {
+                          case scala.util.Success(screen) =>
+                            println(s"[$timestamp] [PUT /api/v1/screens/$screenId] Success: Screen updated")
+                            complete(screen)
+                          case scala.util.Failure(ex: IllegalArgumentException) =>
+                            println(s"[$timestamp] [PUT /api/v1/screens/$screenId] Not found: ${ex.getMessage}")
+                            complete(StatusCodes.NotFound, ex.getMessage)
+                          case scala.util.Failure(ex) =>
+                            println(s"[$timestamp] [PUT /api/v1/screens/$screenId] ERROR: ${ex.getMessage}")
+                            ex.printStackTrace()
+                            complete(StatusCodes.InternalServerError, s"Failed to update screen: ${ex.getMessage}")
+                        }
+                      }
+                    }
+                  },
+                  delete {
+                    val timestamp = java.time.LocalDateTime.now()
+                    println(s"[$timestamp] [DELETE /api/v1/screens/$screenId] Request received")
+                    val futureDelete = screenStore.delete(screenId)
+                    onComplete(futureDelete) {
+                      case scala.util.Success(_) =>
+                        println(s"[$timestamp] [DELETE /api/v1/screens/$screenId] Success: Screen deleted")
+                        complete(StatusCodes.OK, "Screen deleted successfully")
+                      case scala.util.Failure(ex) =>
+                        println(s"[$timestamp] [DELETE /api/v1/screens/$screenId] ERROR: ${ex.getMessage}")
+                        ex.printStackTrace()
+                        complete(StatusCodes.InternalServerError, s"Failed to delete screen: ${ex.getMessage}")
+                    }
+                  }
+                )
+              },
         pathEnd {
           get {
             val futureScreens = screenStore.listAll()

@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { screenApi } from '../services/api';
 import { Screen } from '../types';
 import CreateScreenModal from '../components/CreateScreenModal';
+import EditScreenModal from '../components/EditScreenModal';
 
 const Screens: React.FC = () => {
   const [screens, setScreens] = useState<Screen[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editingScreen, setEditingScreen] = useState<Screen | null>(null);
 
   useEffect(() => {
     loadScreens();
@@ -26,6 +28,23 @@ const Screens: React.FC = () => {
   const handleCreateSuccess = () => {
     setShowCreateModal(false);
     loadScreens();
+  };
+
+  const handleEditSuccess = () => {
+    setEditingScreen(null);
+    loadScreens();
+  };
+
+  const handleDelete = async (screen: Screen) => {
+    if (window.confirm(`Are you sure you want to delete "${screen.name}"? This action cannot be undone.`)) {
+      try {
+        await screenApi.delete(screen.id);
+        loadScreens();
+      } catch (error) {
+        console.error('Failed to delete screen:', error);
+        alert('Failed to delete screen. Please try again.');
+      }
+    }
   };
 
   if (loading) {
@@ -57,7 +76,13 @@ const Screens: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {screens.map((screen) => (
-            <ScreenCard key={screen.id} screen={screen} onUpdate={loadScreens} />
+            <ScreenCard 
+              key={screen.id} 
+              screen={screen} 
+              onUpdate={loadScreens}
+              onEdit={() => setEditingScreen(screen)}
+              onDelete={() => handleDelete(screen)}
+            />
           ))}
         </div>
       )}
@@ -68,6 +93,14 @@ const Screens: React.FC = () => {
           onSuccess={handleCreateSuccess}
         />
       )}
+
+      {editingScreen && (
+        <EditScreenModal
+          screen={editingScreen}
+          onClose={() => setEditingScreen(null)}
+          onSuccess={handleEditSuccess}
+        />
+      )}
     </div>
   );
 };
@@ -75,9 +108,11 @@ const Screens: React.FC = () => {
 interface ScreenCardProps {
   screen: Screen;
   onUpdate: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
-const ScreenCard: React.FC<ScreenCardProps> = ({ screen, onUpdate }) => {
+const ScreenCard: React.FC<ScreenCardProps> = ({ screen, onUpdate, onEdit, onDelete }) => {
   // Determine classification badge color
   const getClassificationBadgeColor = (classification: number) => {
     if (classification >= 8) return 'bg-purple-100 text-purple-800';
@@ -158,12 +193,28 @@ const ScreenCard: React.FC<ScreenCardProps> = ({ screen, onUpdate }) => {
           )}
         </div>
 
-        <button
-          onClick={handleHeartbeat}
-          className="w-full bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200 transition-colors text-sm"
-        >
-          Update Heartbeat
-        </button>
+        <div className="space-y-2">
+          <button
+            onClick={handleHeartbeat}
+            className="w-full bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200 transition-colors text-sm"
+          >
+            Update Heartbeat
+          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={onEdit}
+              className="flex-1 px-4 py-2 bg-yellow-50 text-yellow-700 rounded hover:bg-yellow-100 transition-colors text-sm"
+            >
+              Edit
+            </button>
+            <button
+              onClick={onDelete}
+              className="flex-1 px-4 py-2 bg-red-50 text-red-700 rounded hover:bg-red-100 transition-colors text-sm"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

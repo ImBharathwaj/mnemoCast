@@ -91,23 +91,80 @@ class CampaignRoutes(
           }
         },
         path(Segment) { campaignId =>
-          get {
-            val timestamp = java.time.LocalDateTime.now()
-            println(s"[$timestamp] [GET /api/v1/campaigns/$campaignId] Request received")
-            val futureCampaign = campaignStore.getById(campaignId)
-            onComplete(futureCampaign) {
-              case scala.util.Success(Some(campaign)) =>
-                println(s"[$timestamp] [GET /api/v1/campaigns/$campaignId] Success: Campaign found")
-                complete(campaign)
-              case scala.util.Success(None) =>
-                println(s"[$timestamp] [GET /api/v1/campaigns/$campaignId] Not found")
-                complete(StatusCodes.NotFound, s"Campaign not found: $campaignId")
-              case scala.util.Failure(ex) =>
-                println(s"[$timestamp] [GET /api/v1/campaigns/$campaignId] ERROR: ${ex.getMessage}")
-                ex.printStackTrace()
-                complete(StatusCodes.InternalServerError, s"Error retrieving campaign: ${ex.getMessage}")
+          concat(
+            get {
+              val timestamp = java.time.LocalDateTime.now()
+              println(s"[$timestamp] [GET /api/v1/campaigns/$campaignId] Request received")
+              val futureCampaign = campaignStore.getById(campaignId)
+              onComplete(futureCampaign) {
+                case scala.util.Success(Some(campaign)) =>
+                  println(s"[$timestamp] [GET /api/v1/campaigns/$campaignId] Success: Campaign found")
+                  complete(campaign)
+                case scala.util.Success(None) =>
+                  println(s"[$timestamp] [GET /api/v1/campaigns/$campaignId] Not found")
+                  complete(StatusCodes.NotFound, s"Campaign not found: $campaignId")
+                case scala.util.Failure(ex) =>
+                  println(s"[$timestamp] [GET /api/v1/campaigns/$campaignId] ERROR: ${ex.getMessage}")
+                  ex.printStackTrace()
+                  complete(StatusCodes.InternalServerError, s"Error retrieving campaign: ${ex.getMessage}")
+              }
+            },
+            put {
+              extractRequest { httpRequest =>
+                val timestamp = java.time.LocalDateTime.now()
+                println(s"[$timestamp] [PUT /api/v1/campaigns/$campaignId] Request received")
+                entity(as[CreateCampaignRequest]) { request =>
+                  println(s"[$timestamp] [PUT /api/v1/campaigns/$campaignId] Request body: name=${request.name}, status=${request.status}")
+                  
+                  val futureCampaign = campaignStore.getById(campaignId).flatMap {
+                    case Some(existingCampaign) =>
+                      val updatedCampaign = existingCampaign.copy(
+                        name = request.name,
+                        advertiserId = request.advertiserId,
+                        status = request.status,
+                        startDate = request.startDate,
+                        endDate = request.endDate,
+                        totalBudget = request.totalBudget,
+                        targetPlayouts = request.targetPlayouts,
+                        targetingRules = request.targetingRules,
+                        priority = request.priority,
+                        updatedAt = Instant.now()
+                      )
+                      campaignStore.upsert(updatedCampaign).map(_ => updatedCampaign)
+                    case None =>
+                      Future.failed(new IllegalArgumentException(s"Campaign not found: $campaignId"))
+                  }
+                  
+                  onComplete(futureCampaign) {
+                    case scala.util.Success(campaign) =>
+                      println(s"[$timestamp] [PUT /api/v1/campaigns/$campaignId] Success: Campaign updated")
+                      complete(campaign)
+                    case scala.util.Failure(ex: IllegalArgumentException) =>
+                      println(s"[$timestamp] [PUT /api/v1/campaigns/$campaignId] Not found: ${ex.getMessage}")
+                      complete(StatusCodes.NotFound, ex.getMessage)
+                    case scala.util.Failure(ex) =>
+                      println(s"[$timestamp] [PUT /api/v1/campaigns/$campaignId] ERROR: ${ex.getMessage}")
+                      ex.printStackTrace()
+                      complete(StatusCodes.InternalServerError, s"Failed to update campaign: ${ex.getMessage}")
+                  }
+                }
+              }
+            },
+            delete {
+              val timestamp = java.time.LocalDateTime.now()
+              println(s"[$timestamp] [DELETE /api/v1/campaigns/$campaignId] Request received")
+              val futureDelete = campaignStore.delete(campaignId)
+              onComplete(futureDelete) {
+                case scala.util.Success(_) =>
+                  println(s"[$timestamp] [DELETE /api/v1/campaigns/$campaignId] Success: Campaign deleted")
+                  complete(StatusCodes.OK, "Campaign deleted successfully")
+                case scala.util.Failure(ex) =>
+                  println(s"[$timestamp] [DELETE /api/v1/campaigns/$campaignId] ERROR: ${ex.getMessage}")
+                  ex.printStackTrace()
+                  complete(StatusCodes.InternalServerError, s"Failed to delete campaign: ${ex.getMessage}")
+              }
             }
-          }
+          )
         }
       )
     }

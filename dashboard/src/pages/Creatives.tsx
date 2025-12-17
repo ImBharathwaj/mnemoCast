@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { creativeApi, campaignApi } from '../services/api';
 import { Creative, Campaign } from '../types';
 import CreateCreativeModal from '../components/CreateCreativeModal';
+import EditCreativeModal from '../components/EditCreativeModal';
 
 const Creatives: React.FC = () => {
   const [creatives, setCreatives] = useState<Creative[]>([]);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editingCreative, setEditingCreative] = useState<Creative | null>(null);
   const [selectedCampaign, setSelectedCampaign] = useState<string>('');
 
   useEffect(() => {
@@ -45,6 +47,23 @@ const Creatives: React.FC = () => {
   const handleCreateSuccess = () => {
     setShowCreateModal(false);
     loadData();
+  };
+
+  const handleEditSuccess = () => {
+    setEditingCreative(null);
+    loadData();
+  };
+
+  const handleDelete = async (creative: Creative) => {
+    if (window.confirm(`Are you sure you want to delete "${creative.name}"? This action cannot be undone.`)) {
+      try {
+        await creativeApi.delete(creative.id);
+        loadData();
+      } catch (error) {
+        console.error('Failed to delete creative:', error);
+        alert('Failed to delete creative. Please try again.');
+      }
+    }
   };
 
   if (loading) {
@@ -94,7 +113,12 @@ const Creatives: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {creatives.map((creative) => (
-            <CreativeCard key={creative.id} creative={creative} />
+            <CreativeCard 
+              key={creative.id} 
+              creative={creative}
+              onEdit={() => setEditingCreative(creative)}
+              onDelete={() => handleDelete(creative)}
+            />
           ))}
         </div>
       )}
@@ -106,15 +130,26 @@ const Creatives: React.FC = () => {
           onSuccess={handleCreateSuccess}
         />
       )}
+
+      {editingCreative && (
+        <EditCreativeModal
+          creative={editingCreative}
+          campaigns={campaigns}
+          onClose={() => setEditingCreative(null)}
+          onSuccess={handleEditSuccess}
+        />
+      )}
     </div>
   );
 };
 
 interface CreativeCardProps {
   creative: Creative;
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
-const CreativeCard: React.FC<CreativeCardProps> = ({ creative }) => {
+const CreativeCard: React.FC<CreativeCardProps> = ({ creative, onEdit, onDelete }) => {
   const statusColor = {
     active: 'bg-green-100 text-green-800',
     paused: 'bg-yellow-100 text-yellow-800',
@@ -164,6 +199,21 @@ const CreativeCard: React.FC<CreativeCardProps> = ({ creative }) => {
             </a>
           </div>
         )}
+
+        <div className="flex gap-2">
+          <button
+            onClick={onEdit}
+            className="flex-1 px-4 py-2 bg-yellow-50 text-yellow-700 rounded hover:bg-yellow-100 transition-colors text-sm"
+          >
+            Edit
+          </button>
+          <button
+            onClick={onDelete}
+            className="flex-1 px-4 py-2 bg-red-50 text-red-700 rounded hover:bg-red-100 transition-colors text-sm"
+          >
+            Delete
+          </button>
+        </div>
       </div>
     </div>
   );

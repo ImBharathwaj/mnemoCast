@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { creativeApi, campaignApi } from '../services/api';
 import { Campaign } from '../types';
+import FileUpload from './FileUpload';
 
 interface CreateCreativeModalProps {
   campaigns?: Campaign[]; // Make it optional since we'll load it ourselves
@@ -193,16 +194,50 @@ const CreateCreativeModal: React.FC<CreateCreativeModalProps> = ({ campaigns: pr
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Creative URL *
+                Creative URL * (Upload file or enter URL)
               </label>
+              
+              {/* File Upload Component */}
+              {formData.campaignId && (
+                <div className="mb-3">
+                  <FileUpload
+                    campaignId={formData.campaignId}
+                    onFileUploaded={(url, duration) => {
+                      setFormData(prev => ({
+                        ...prev,
+                        creativeUrl: url,
+                        ...(duration && { durationSeconds: duration.toString() }),
+                      }));
+                    }}
+                    onError={(error) => setError(error)}
+                    acceptedTypes={
+                      formData.creativeType === 'video'
+                        ? 'video/mp4,video/webm'
+                        : formData.creativeType === 'image'
+                        ? 'image/jpeg,image/png,image/gif,image/webp'
+                        : 'image/*,video/*'
+                    }
+                    maxSizeMB={formData.creativeType === 'video' ? 500 : 10}
+                  />
+                </div>
+              )}
+              {!formData.campaignId && (
+                <p className="text-sm text-gray-500 mb-2">
+                  Select a campaign to enable file upload
+                </p>
+              )}
+              
               <input
                 type="url"
                 required
                 value={formData.creativeUrl}
                 onChange={(e) => setFormData({ ...formData, creativeUrl: e.target.value })}
-                placeholder="https://example.com/ad.mp4"
+                placeholder="https://example.com/ad.mp4 or upload file above"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               />
+              <p className="mt-1 text-xs text-gray-500">
+                Upload a file using the uploader above, or enter a URL manually.
+              </p>
             </div>
 
             <div>

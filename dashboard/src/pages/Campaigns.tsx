@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { campaignApi } from '../services/api';
 import { Campaign } from '../types';
 import { Link } from 'react-router-dom';
+import { PencilIcon, TrashIcon } from '../components/Icons';
 import CreateCampaignModal from '../components/CreateCampaignModal';
+import EditCampaignModal from '../components/EditCampaignModal';
 
 const Campaigns: React.FC = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editingCampaign, setEditingCampaign] = useState<Campaign | null>(null);
   const [filterActive, setFilterActive] = useState(false);
 
   useEffect(() => {
@@ -28,6 +31,23 @@ const Campaigns: React.FC = () => {
   const handleCreateSuccess = () => {
     setShowCreateModal(false);
     loadCampaigns();
+  };
+
+  const handleEditSuccess = () => {
+    setEditingCampaign(null);
+    loadCampaigns();
+  };
+
+  const handleDelete = async (campaign: Campaign) => {
+    if (window.confirm(`Are you sure you want to delete "${campaign.name}"? This action cannot be undone.`)) {
+      try {
+        await campaignApi.delete(campaign.id);
+        loadCampaigns();
+      } catch (error) {
+        console.error('Failed to delete campaign:', error);
+        alert('Failed to delete campaign. Please try again.');
+      }
+    }
   };
 
   if (loading) {
@@ -70,7 +90,12 @@ const Campaigns: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {campaigns.map((campaign) => (
-            <CampaignCard key={campaign.id} campaign={campaign} />
+            <CampaignCard 
+              key={campaign.id} 
+              campaign={campaign}
+              onEdit={() => setEditingCampaign(campaign)}
+              onDelete={() => handleDelete(campaign)}
+            />
           ))}
         </div>
       )}
@@ -81,15 +106,25 @@ const Campaigns: React.FC = () => {
           onSuccess={handleCreateSuccess}
         />
       )}
+
+      {editingCampaign && (
+        <EditCampaignModal
+          campaign={editingCampaign}
+          onClose={() => setEditingCampaign(null)}
+          onSuccess={handleEditSuccess}
+        />
+      )}
     </div>
   );
 };
 
 interface CampaignCardProps {
   campaign: Campaign;
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
-const CampaignCard: React.FC<CampaignCardProps> = ({ campaign }) => {
+const CampaignCard: React.FC<CampaignCardProps> = ({ campaign, onEdit, onDelete }) => {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString();
   };
@@ -139,12 +174,28 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ campaign }) => {
           </div>
         </div>
 
-        <Link
-          to={`/campaigns/${campaign.id}`}
-          className="block w-full text-center bg-blue-50 text-blue-600 px-4 py-2 rounded hover:bg-blue-100 transition-colors"
-        >
-          View Details
-        </Link>
+        <div className="flex gap-2">
+          <Link
+            to={`/campaigns/${campaign.id}`}
+            className="flex-1 text-center bg-blue-50 text-blue-600 px-4 py-2 rounded hover:bg-blue-100 transition-colors"
+          >
+            View Details
+          </Link>
+          <button
+            onClick={onEdit}
+            className="px-4 py-2 bg-yellow-50 text-yellow-700 rounded hover:bg-yellow-100 transition-colors flex items-center justify-center"
+            title="Edit"
+          >
+            <PencilIcon className="w-5 h-5" />
+          </button>
+          <button
+            onClick={onDelete}
+            className="px-4 py-2 bg-red-50 text-red-700 rounded hover:bg-red-100 transition-colors flex items-center justify-center"
+            title="Delete"
+          >
+            <TrashIcon className="w-5 h-5" />
+          </button>
+        </div>
       </div>
     </div>
   );

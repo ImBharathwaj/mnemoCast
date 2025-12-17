@@ -46,6 +46,12 @@ export const campaignApi = {
   
   create: (data: any) =>
     api.post(API_ENDPOINTS.campaigns, data).then(res => res.data),
+  
+  update: (id: string, data: any) =>
+    api.put(`${API_ENDPOINTS.campaigns}/${id}`, data).then(res => res.data),
+  
+  delete: (id: string) =>
+    api.delete(`${API_ENDPOINTS.campaigns}/${id}`).then(res => res.data),
 };
 
 // Creative APIs
@@ -61,6 +67,12 @@ export const creativeApi = {
   
   create: (campaignId: string, data: any) =>
     api.post(API_ENDPOINTS.campaignCreatives(campaignId), data).then(res => res.data),
+  
+  update: (id: string, data: any) =>
+    api.put(`${API_ENDPOINTS.creatives}/${id}`, data).then(res => res.data),
+  
+  delete: (id: string) =>
+    api.delete(`${API_ENDPOINTS.creatives}/${id}`).then(res => res.data),
 };
 
 // Screen APIs
@@ -73,6 +85,12 @@ export const screenApi = {
   
   register: (data: any) =>
     api.post(API_ENDPOINTS.screenRegister, data).then(res => res.data),
+  
+  update: (id: string, data: any) =>
+    api.put(`${API_ENDPOINTS.screens}/${id}`, data).then(res => res.data),
+  
+  delete: (id: string) =>
+    api.delete(`${API_ENDPOINTS.screens}/${id}`).then(res => res.data),
   
   heartbeat: (id: string) =>
     api.put(API_ENDPOINTS.screenHeartbeat(id)).then(res => res.data),
@@ -108,6 +126,32 @@ export const analyticsApi = {
     if (endDate) params.append('endDate', endDate);
     const query = params.toString();
     return api.get(`${API_ENDPOINTS.analytics.campaigns}${query ? '?' + query : ''}`).then(res => res.data);
+  },
+};
+
+// Media Upload API
+export const mediaApi = {
+  upload: (file: File, campaignId?: string, creativeId?: string, onProgress?: (progress: number) => void) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    if (campaignId) {
+      formData.append('campaignId', campaignId);
+    }
+    if (creativeId) {
+      formData.append('creativeId', creativeId);
+    }
+    
+    return api.post(API_ENDPOINTS.mediaUpload, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress: (progressEvent) => {
+        if (onProgress && progressEvent.total) {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          onProgress(progress);
+        }
+      },
+    }).then(res => res.data);
   },
 };
 

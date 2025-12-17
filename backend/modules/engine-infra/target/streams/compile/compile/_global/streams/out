@@ -1,4 +1,6 @@
-[error] /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/src/main/scala/mnemocast/engine/infra/services/PlaylistService.scala:61:11: Missing closing brace `}` assumed here
-[error]           playlist match {
-[error]           ^
+[error] /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/src/main/scala/mnemocast/engine/infra/services/MediaValidator.scala:43:30: type mismatch;
+[error]  found   : MediaValidator.this.ValidationResult
+[error]  required: scala.concurrent.Future[MediaValidator.this.ValidationResult]
+[error]       return ValidationResult(
+[error]                              ^
 [error] one error found
