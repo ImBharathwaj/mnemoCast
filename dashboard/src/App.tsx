@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Campaigns from './pages/Campaigns';
+import CampaignDetail from './pages/CampaignDetail';
 import Creatives from './pages/Creatives';
 import Screens from './pages/Screens';
 import Analytics from './pages/Analytics';
@@ -42,17 +43,5 @@ function App() {
     );
   }
 }
-
-// Simple Campaign Detail page
-const CampaignDetail: React.FC = () => {
-  return (
-    <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Campaign Details</h1>
-      <div className="bg-white rounded-lg shadow p-6">
-        <p className="text-gray-500">Campaign detail view - to be implemented</p>
-      </div>
-    </div>
-  );
-};
 
 export default App;

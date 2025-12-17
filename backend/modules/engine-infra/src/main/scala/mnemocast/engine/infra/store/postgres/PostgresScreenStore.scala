@@ -22,8 +22,8 @@ class PostgresScreenStore(
       val screenStmt = conn.prepareStatement("""
         INSERT INTO screens (
           id, name, country, city, area, venue_type, timezone,
-          is_online, last_seen, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          is_online, last_seen, classification, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT (id) DO UPDATE SET
           name = EXCLUDED.name,
           country = EXCLUDED.country,
@@ -33,6 +33,7 @@ class PostgresScreenStore(
           timezone = EXCLUDED.timezone,
           is_online = EXCLUDED.is_online,
           last_seen = EXCLUDED.last_seen,
+          classification = EXCLUDED.classification,
           updated_at = EXCLUDED.updated_at
       """)
 
@@ -45,8 +46,9 @@ class PostgresScreenStore(
       screenStmt.setString(7, screen.location.timezone.orNull)
       screenStmt.setBoolean(8, screen.isOnline)
       screenStmt.setTimestamp(9, screen.lastSeen.map(Timestamp.from).orNull)
-      screenStmt.setTimestamp(10, Timestamp.from(screen.createdAt))
-      screenStmt.setTimestamp(11, Timestamp.from(screen.updatedAt))
+      screenStmt.setInt(10, screen.classification)
+      screenStmt.setTimestamp(11, Timestamp.from(screen.createdAt))
+      screenStmt.setTimestamp(12, Timestamp.from(screen.updatedAt))
       screenStmt.executeUpdate()
       screenStmt.close()
 
@@ -93,7 +95,7 @@ class PostgresScreenStore(
     client.withConnectionAsync { conn =>
       val stmt = conn.prepareStatement("""
         SELECT id, name, country, city, area, venue_type, timezone,
-               is_online, last_seen, created_at, updated_at
+               is_online, last_seen, classification, created_at, updated_at
         FROM screens WHERE id = ?
       """)
       stmt.setString(1, id)
@@ -118,7 +120,7 @@ class PostgresScreenStore(
     client.withConnectionAsync { conn =>
       val stmt = conn.prepareStatement("""
         SELECT id, name, country, city, area, venue_type, timezone,
-               is_online, last_seen, created_at, updated_at
+               is_online, last_seen, classification, created_at, updated_at
         FROM screens
         ORDER BY created_at DESC
       """)
@@ -187,6 +189,7 @@ class PostgresScreenStore(
       location = location,
       tags = Nil, // Loaded separately
       metadata = Map.empty, // Loaded separately
+      classification = rs.getInt("classification"),
       isOnline = rs.getBoolean("is_online"),
       lastSeen = Option(rs.getTimestamp("last_seen")).map(_.toInstant),
       createdAt = rs.getTimestamp("created_at").toInstant,

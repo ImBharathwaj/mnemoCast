@@ -5,7 +5,7 @@ import scala.util.Random
 
 import mnemocast.engine.domain.model.{Ad, DeliveryRequest, PlaylistItem, PlaylistResponse}
 import mnemocast.engine.domain.services.TargetingService
-import mnemocast.engine.infra.store.AdStore
+import mnemocast.engine.infra.store.{AdStore, ScreenStore}
 
 /**
   * Service for generating playlists of ads for OOH screens.
@@ -20,6 +20,7 @@ class PlaylistService(
   adStore: AdStore,
   budgetService: BudgetService,
   frequencyCapService: FrequencyCapService,
+  screenStore: Option[ScreenStore] = None, // Optional: for screen classification-based weighting
   baseUrl: String = "http://localhost:8080"
 )(implicit ec: ExecutionContext) {
 
@@ -36,23 +37,33 @@ class PlaylistService(
   ): Future[Option[PlaylistResponse]] = {
     val targetDurationSeconds = durationMinutes * 60
 
-    // Fetch eligible ads
-    adStore.listActive().flatMap { allAds =>
-      // Step 1: Filter by targeting (including time-based)
-      val targetingEligible = allAds.filter(ad => TargetingService.matches(ad, request))
+    // Fetch screen classification if screenId is present and ScreenStore is available
+    val screenClassificationFut = (request.screenId, screenStore) match {
+      case (Some(screenId), Some(store)) =>
+        store.getById(screenId).map(_.map(_.classification).getOrElse(1))
+      case _ =>
+        Future.successful(1) // Default classification if screen not found or store not available
+    }
 
-      // Step 2: Filter by budget (async)
-      filterByBudget(targetingEligible).flatMap { budgetEligible =>
-        // Step 3: Filter by frequency capping (async)
-        filterByFrequencyCap(budgetEligible, request).flatMap { eligibleAds =>
-          // Step 4: Generate playlist from eligible ads
-          val playlist = buildPlaylist(eligibleAds, targetDurationSeconds, request)
+    screenClassificationFut.flatMap { screenClassification =>
+      // Fetch eligible ads
+      adStore.listActive().flatMap { allAds =>
+        // Step 1: Filter by targeting (including time-based)
+        val targetingEligible = allAds.filter(ad => TargetingService.matches(ad, request))
 
-          playlist match {
-            case Some(playlistResponse) =>
-              Future.successful(Some(playlistResponse))
-            case None =>
-              Future.successful(None)
+        // Step 2: Filter by budget (async)
+        filterByBudget(targetingEligible).flatMap { budgetEligible =>
+          // Step 3: Filter by frequency capping (async)
+          filterByFrequencyCap(budgetEligible, request).flatMap { eligibleAds =>
+            // Step 4: Generate playlist from eligible ads with screen classification
+            val playlist = buildPlaylist(eligibleAds, targetDurationSeconds, request, screenClassification)
+
+            playlist match {
+              case Some(playlistResponse) =>
+                Future.successful(Some(playlistResponse))
+              case None =>
+                Future.successful(None)
+            }
           }
         }
       }
@@ -84,16 +95,19 @@ class PlaylistService(
     ).map(_.filter(_._2).map(_._1))
   }
 
-  /**
+    /**
     * Builds a playlist from eligible ads to fill the target duration.
     *
-    * Uses a simple weighted random selection with repetition allowed
-    * (ads can appear multiple times in the playlist if needed).
+    * Uses weighted selection based on ad weight boosted by screen classification:
+    * - Higher classified screens boost ad weights proportionally
+    * - Creates a pay-per-attention model where premium screens favor premium (high-weight) ads
+    * - Repetition allowed (ads can appear multiple times in the playlist if needed)
     */
   private def buildPlaylist(
     eligibleAds: List[Ad],
     targetDurationSeconds: Int,
-    request: DeliveryRequest
+    request: DeliveryRequest,
+    screenClassification: Int = 1
   ): Option[PlaylistResponse] = {
     if (eligibleAds.isEmpty) {
       return None
@@ -114,9 +128,17 @@ class PlaylistService(
     var iterations = 0
     val maxIterations = (targetDurationSeconds / 5) + 10 // Reasonable upper bound
 
+    // Build weighted pool for ad selection with screen classification boost
+    // Higher classified screens boost ad weights proportionally (pay-per-attention model)
+    val weightedPool = adsWithDuration.flatMap { ad =>
+      val baseWeight = math.max(1, ad.weight) // Ensure weight is at least 1
+      val effectiveWeight = baseWeight * math.max(1, screenClassification) // Boost by screen classification
+      List.fill(effectiveWeight)(ad)
+    }
+
     while (currentDuration < targetDurationSeconds && iterations < maxIterations) {
-      // Pick a random ad
-      val selectedAd = adsWithDuration(Random.nextInt(adsWithDuration.length))
+      // Pick an ad using weighted selection
+      val selectedAd = weightedPool(Random.nextInt(weightedPool.length))
       val adDuration = selectedAd.durationSeconds.getOrElse(30) // Default to 30s if missing
 
       // Add to playlist

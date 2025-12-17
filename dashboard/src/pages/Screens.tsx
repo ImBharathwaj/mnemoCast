@@ -78,6 +78,20 @@ interface ScreenCardProps {
 }
 
 const ScreenCard: React.FC<ScreenCardProps> = ({ screen, onUpdate }) => {
+  // Determine classification badge color
+  const getClassificationBadgeColor = (classification: number) => {
+    if (classification >= 8) return 'bg-purple-100 text-purple-800';
+    if (classification >= 5) return 'bg-blue-100 text-blue-800';
+    if (classification >= 3) return 'bg-green-100 text-green-800';
+    return 'bg-gray-100 text-gray-800';
+  };
+
+  const getClassificationLabel = (classification: number) => {
+    if (classification >= 8) return 'Premium';
+    if (classification >= 5) return 'High';
+    if (classification >= 3) return 'Medium';
+    return 'Standard';
+  };
   const handleHeartbeat = async () => {
     try {
       await screenApi.heartbeat(screen.id);
@@ -92,9 +106,14 @@ const ScreenCard: React.FC<ScreenCardProps> = ({ screen, onUpdate }) => {
       <div className="p-6">
         <div className="flex justify-between items-start mb-4">
           <h3 className="text-xl font-semibold text-gray-900">{screen.name}</h3>
-          <div className="flex items-center gap-2">
-            <span className={`w-3 h-3 rounded-full ${screen.isOnline ? 'bg-green-500' : 'bg-gray-400'}`} />
-            <span className="text-sm text-gray-600">{screen.isOnline ? 'Online' : 'Offline'}</span>
+          <div className="flex flex-col items-end gap-2">
+            <div className="flex items-center gap-2">
+              <span className={`w-3 h-3 rounded-full ${screen.isOnline ? 'bg-green-500' : 'bg-gray-400'}`} />
+              <span className="text-sm text-gray-600">{screen.isOnline ? 'Online' : 'Offline'}</span>
+            </div>
+            <span className={`px-2 py-1 text-xs font-semibold rounded ${getClassificationBadgeColor(screen.classification || 1)}`}>
+              {getClassificationLabel(screen.classification || 1)} ({screen.classification || 1}/10)
+            </span>
           </div>
         </div>
 
@@ -121,6 +140,10 @@ const ScreenCard: React.FC<ScreenCardProps> = ({ screen, onUpdate }) => {
               <span className="font-medium capitalize">{screen.location.venueType}</span>
             </div>
           )}
+          <div className="flex justify-between">
+            <span>Classification:</span>
+            <span className="font-medium">{screen.classification || 1}/10</span>
+          </div>
           {screen.tags.length > 0 && (
             <div>
               <span className="text-gray-600">Tags: </span>

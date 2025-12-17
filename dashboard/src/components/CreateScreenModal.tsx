@@ -16,6 +16,7 @@ const CreateScreenModal: React.FC<CreateScreenModalProps> = ({ onClose, onSucces
     venueType: '',
     timezone: 'UTC',
     tags: '',
+    classification: '1', // Default classification
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,6 +38,7 @@ const CreateScreenModal: React.FC<CreateScreenModalProps> = ({ onClose, onSucces
           ...(formData.timezone && { timezone: formData.timezone }),
         },
         tags: formData.tags.split(',').map(t => t.trim()).filter(t => t.length > 0),
+        classification: parseInt(formData.classification, 10) || 1, // Screen classification (1-10)
       };
 
       await screenApi.register(screenData);
@@ -176,6 +178,29 @@ const CreateScreenModal: React.FC<CreateScreenModalProps> = ({ onClose, onSucces
                 placeholder="mall, food_court, premium"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Classification (1-10) *
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  required
+                  min="1"
+                  max="10"
+                  value={formData.classification}
+                  onChange={(e) => setFormData({ ...formData, classification: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-500 whitespace-nowrap">
+                  (Higher = Premium)
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-gray-500">
+                Screen classification affects ad selection. Premium screens (higher classification) favor ads with higher weights.
+              </p>
             </div>
 
             <div className="flex justify-end gap-4 pt-4">

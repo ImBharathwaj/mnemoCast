@@ -138,10 +138,10 @@ object HttpServer extends App {
   private val analyticsService = new AnalyticsService(adStore, eventStore)
 
   private val adDeliveryService =
-    new AdDeliveryService(adStore, eventStore, budgetService, frequencyCapService)
+    new AdDeliveryService(adStore, eventStore, budgetService, frequencyCapService, Some(screenStore))
 
   private val playlistService =
-    new PlaylistService(adStore, budgetService, frequencyCapService)
+    new PlaylistService(adStore, budgetService, frequencyCapService, Some(screenStore))
 
   private val campaignBudgetService = new CampaignBudgetService(eventStore)
   private val decisionStore: DecisionStore = redisDecisionStore // For MVP, use Redis only

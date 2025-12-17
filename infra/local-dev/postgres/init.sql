@@ -32,6 +32,9 @@ CREATE TABLE IF NOT EXISTS ads (
     -- OOH-specific fields
     duration_seconds INTEGER,
     
+    -- Weight/priority for ad serving (higher weight = more likely to be selected)
+    weight INTEGER NOT NULL DEFAULT 1,
+    
     -- Timestamps
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -139,6 +142,10 @@ CREATE TABLE IF NOT EXISTS screens (
     -- Status fields
     is_online BOOLEAN NOT NULL DEFAULT false,
     last_seen TIMESTAMPTZ,
+    
+    -- Classification for pay-per-attention model (1-10, higher = premium)
+    -- Higher classified screens favor ads with higher weights
+    classification INTEGER NOT NULL DEFAULT 1,
     
     -- Timestamps
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),

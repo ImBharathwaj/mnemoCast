@@ -65,6 +65,7 @@ class ScreenRoutes(
                     location = request.location,
                     tags = request.tags,
                     metadata = request.metadata,
+                    classification = request.classification,
                     isOnline = true,
                     lastSeen = Some(now),
                     createdAt = now,

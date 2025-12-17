@@ -23,7 +23,9 @@ final case class CreateAdRequest(
   maxImpressionsPerUser: Option[Int] = None,
   frequencyCapWindowHours: Option[Int] = None,
   // OOH-specific fields
-  durationSeconds: Option[Int] = None  // Duration of the ad creative in seconds (for playlist generation)
+  durationSeconds: Option[Int] = None,  // Duration of the ad creative in seconds (for playlist generation)
+  // Weight/priority for ad serving (higher weight = more likely to be selected)
+  weight: Int = 1  // Default weight of 1 (equal probability)
 )
 
 object CreateAdRequest {

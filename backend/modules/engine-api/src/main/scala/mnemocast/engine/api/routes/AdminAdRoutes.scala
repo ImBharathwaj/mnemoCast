@@ -52,6 +52,7 @@ class AdminAdRoutes(
                 maxImpressionsPerUser = request.maxImpressionsPerUser,
                 frequencyCapWindowHours = request.frequencyCapWindowHours,
                 durationSeconds = request.durationSeconds,
+                weight = request.weight,
                 createdAt = now,
                 updatedAt = now
               )

@@ -35,6 +35,7 @@ export interface Screen {
   location: ScreenLocation;
   tags: string[];
   metadata: Record<string, string>;
+  classification: number; // Screen classification (1-10, higher = premium)
   isOnline: boolean;
   lastSeen?: string;
   createdAt: string;
