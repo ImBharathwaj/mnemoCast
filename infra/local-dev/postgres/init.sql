@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS delivery_events (
     event_id TEXT NOT NULL UNIQUE,
     request_id TEXT NOT NULL,
     ad_id TEXT NOT NULL REFERENCES ads(id) ON DELETE SET NULL,
-    event_type TEXT NOT NULL, -- 'impression' or 'click'
+    event_type TEXT NOT NULL, -- 'impression' (click tracking removed for OOH)
     occurred_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -116,18 +116,10 @@ CREATE TRIGGER update_ads_updated_at BEFORE UPDATE ON ads
 -- VIEWS (for analytics)
 -- ============================================
 
--- View for ad performance summary
+-- View for ad performance summary (impressions only, no clicks for OOH)
 CREATE OR REPLACE VIEW ad_performance AS
 SELECT 
     ad_id,
-    COUNT(*) FILTER (WHERE event_type = 'impression') as impressions,
-    COUNT(*) FILTER (WHERE event_type = 'click') as clicks,
-    CASE 
-        WHEN COUNT(*) FILTER (WHERE event_type = 'impression') > 0 
-        THEN (COUNT(*) FILTER (WHERE event_type = 'click')::FLOAT / 
-              COUNT(*) FILTER (WHERE event_type = 'impression')::FLOAT) * 100.0
-        ELSE 0.0
-    END as ctr
+    COUNT(*) FILTER (WHERE event_type = 'impression') as impressions
 FROM delivery_events
 GROUP BY ad_id;
-
