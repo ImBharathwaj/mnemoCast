@@ -55,31 +55,17 @@ Limit how often an ad is shown to the same device or user:
 }
 ```
 
-### 4. Click Tracking
-Track user clicks on ads:
-
-- **Click Event Logging**: All clicks are logged with metadata (IP, timestamp, etc.)
-- **Automatic Redirect**: Click tracking URLs redirect to the ad's target URL
-- **Click-Through Rate (CTR)**: Calculate CTR for analytics
-
-**Usage:**
-1. Ad delivery response includes `clickTrackingUrl`
-2. Client calls the click tracking URL when user clicks
-3. Server logs the click event and redirects to target URL
-
-### 5. Analytics & Reporting
+### 4. Analytics & Reporting
 Comprehensive analytics for ad performance:
 
-- **Ad Performance Metrics**: Impressions, clicks, CTR for individual ads
+- **Ad Performance Metrics**: Impressions for individual ads
 - **Campaign Performance**: Aggregated metrics across all ads
 - **Dashboard Summary**: Key metrics, top performers, recent activity
 - **Time Range Filtering**: Filter analytics by date range
 
 **Metrics Calculated:**
 - Total impressions
-- Total clicks
-- Click-through rate (CTR) = (clicks / impressions) × 100
-- Top performing ads (sorted by CTR and impressions)
+- Top performing ads (sorted by impressions)
 
 ---
 
@@ -94,7 +80,6 @@ Comprehensive analytics for ad performance:
 - `GET /admin/ads/{adId}/events` - Get events for an ad
 
 ### Event Tracking
-- `GET /api/v1/events/click` - Track click events
 - `GET /api/v1/events/impression` - Track impression events
 
 ### Analytics
@@ -116,18 +101,11 @@ Comprehensive analytics for ad performance:
 6. **Response Sent**: Ad details with tracking URLs returned
 7. **Event Logged**: Impression event logged automatically
 
-### Click Tracking Flow
-
-1. **User Clicks**: Client calls `clickTrackingUrl` from ad response
-2. **Click Logged**: Server logs click event with metadata
-3. **Redirect**: Server redirects to ad's `targetUrl`
-4. **Analytics Updated**: Click counted in analytics metrics
-
 ### Analytics Flow
 
 1. **Query Requested**: Client requests analytics via analytics endpoints
 2. **Events Retrieved**: Server queries event store for relevant events
-3. **Metrics Calculated**: Impressions, clicks, CTR calculated
+3. **Metrics Calculated**: Impressions calculated
 4. **Response Sent**: Metrics returned as JSON
 
 ---
@@ -201,8 +179,6 @@ curl "http://localhost:8080/api/v1/analytics/dashboard?topN=5"
 
 ### Analytics Calculation
 - Impressions: Count of events with `eventType == "impression"`
-- Clicks: Count of events with `eventType == "click"`
-- CTR: `(clicks / impressions) × 100` (0.0 if no impressions)
 - Time filtering: Events filtered by `occurredAt` timestamp
 
 ### Event Storage

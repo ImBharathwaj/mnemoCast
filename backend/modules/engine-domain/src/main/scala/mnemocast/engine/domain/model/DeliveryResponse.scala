@@ -8,8 +8,7 @@ final case class DeliveryResponse(
   adId: String,
   creativeUrl: String,
   targetUrl: Option[String],
-  impressionTrackingUrl: Option[String],
-  clickTrackingUrl: Option[String] = None
+  impressionTrackingUrl: Option[String]
 )
 
 object DeliveryResponse {

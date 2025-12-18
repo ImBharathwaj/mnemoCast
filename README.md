@@ -7,8 +7,7 @@ A smart ad serving engine built with Scala and Pekko HTTP.
 - ✅ **Ad Delivery**: Smart ad selection with targeting rules
 - ✅ **Budget Management**: Daily/hourly/total budget limits
 - ✅ **Frequency Capping**: Limit impressions per device/user
-- ✅ **Click Tracking**: Track clicks with automatic redirects
-- ✅ **Analytics**: Performance metrics, CTR, dashboard reports
+- ✅ **Analytics**: Performance metrics, dashboard reports
 
 ## Quick Start
 
@@ -32,7 +31,7 @@ See `docs/RUNNING.md` for detailed setup instructions.
 - `GET /ads/deliver` - Request an ad
 - `POST /admin/ads` - Create an ad
 - `GET /api/v1/analytics/dashboard` - Dashboard metrics
-- `GET /api/v1/events/click` - Click tracking
+- `GET /api/v1/events/impression` - Impression tracking
 
 See `docs/02-api-spec.md` for complete API documentation.
 

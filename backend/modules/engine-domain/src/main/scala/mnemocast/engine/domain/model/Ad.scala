@@ -20,6 +20,10 @@ final case class Ad(
   maxImpressionsPerDevice: Option[Int] = None,  // Max impressions per device
   maxImpressionsPerUser: Option[Int] = None,    // Max impressions per user
   frequencyCapWindowHours: Option[Int] = None,  // Time window for frequency cap (e.g., 24 hours)
+  // OOH-specific fields
+  durationSeconds: Option[Int] = None,  // Duration of the ad creative in seconds (for playlist generation)
+  // Weight/priority for ad serving (higher weight = more likely to be selected)
+  weight: Int = 1,  // Default weight of 1 (equal probability)
   createdAt: Instant,
   updatedAt: Instant
 )

@@ -1,0 +1,44 @@
+[debug] > Exec(early(addDefaultCommands), None, None)
+[debug] > Exec(addDefaultCommands, None, None)
+[debug] > Exec(early(initialize), None, None)
+[debug] > Exec(initialize, None, None)
+[debug] > Exec(boot, None, None)
+[debug] > Exec(writeSbtVersion, None, None)
+[debug] > Exec(reload, None, None)
+[debug] > Exec(sbtStashOnFailure, None, None)
+[debug] > Exec(onFailure loadFailed, None, None)
+[debug] > Exec(loadp, None, None)
+[info] welcome to sbt 1.9.0 (Ubuntu Java 11.0.29)
+[debug] Load.defaultLoad until apply took 363.735165ms
+[debug]           Load.loadUnit: plugins took 217.002317ms
+[debug]           Load.loadUnit: defsScala took 0.525566ms
+[debug] [Loading] Scanning directory /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/project
+[debug] [Loading] Found non-root projects 
+[debug] [Loading] Done in /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/project, returning: ()
+[debug] deducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.SbtPlugin),Set(Atom(sbt.ScriptedPlugin)))
+[debug] Clause(Atom(sbt.plugins.SemanticdbPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JUnitXmlReportPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.MiniDependencyTreePlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.IvyPlugin)))
+[debug] Clause(Atom(sbt.plugins.IvyPlugin),Set(Atom(sbt.plugins.JvmPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.SemanticdbPlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.JUnitXmlReportPlugin)))
+[debug] Clause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))
+[debug] Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))
+[debug]   :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)
+[debug] Plugins.deducer#function took 48.963542 ms
+[debug]               Load.resolveProject(backend-build) took 161.203101ms
+[debug]             Load.loadTransitive: finalizeProject(Project(id backend-build, base: /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/project, plugins: List(<none>))) took 275.091948ms
+[debug] [Loading] Done in /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/project, returning: (backend-build)
+[debug]           Load.loadUnit: loadedProjectsRaw took 326.19346ms
+[debug]           Load.loadUnit: cleanEvalClasses took 0.416697ms
+[debug]         Load.loadUnit(file:/home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/project/, ...) took 561.378506ms
+[debug]       Load.apply: load took 1086.726657ms
+[debug]       Load.apply: resolveProjects took 19.468528ms
+[debug]       Load.apply: finalTransforms took 421.650295ms
+[debug]       Load.apply: config.delegates took 26.80282ms
+[debug]       Load.apply: Def.make(settings)... took 1226.498541ms
+[debug]       Load.apply: structureIndex took 536.394703ms
+[debug]       Load.apply: mkStreams took 7.325781ms

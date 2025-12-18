@@ -1,0 +1,4 @@
+[error] /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/ErrorResponse.scala:39:8: in object ErrorResponse, multiple overloaded alternatives of method apply define default arguments.
+[error] object ErrorResponse {
+[error]        ^
+[error] one error found

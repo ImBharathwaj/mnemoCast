@@ -11,8 +11,6 @@ import io.circe.generic.semiauto._
 final case class AdPerformance(
   adId: String,
   impressions: Long,
-  clicks: Long,
-  ctr: Double,  // Click-through rate (clicks / impressions * 100)
   startTime: Option[Instant] = None,
   endTime: Option[Instant] = None
 )
@@ -29,8 +27,6 @@ object AdPerformance {
 final case class CampaignPerformance(
   campaignId: String,  // For MVP, this is the adId
   totalImpressions: Long,
-  totalClicks: Long,
-  overallCTR: Double,
   ads: List[AdPerformance] = Nil
 )
 
@@ -46,8 +42,6 @@ final case class DashboardMetrics(
   totalAds: Int,
   activeAds: Int,
   totalImpressions: Long,
-  totalClicks: Long,
-  overallCTR: Double,
   topPerformingAds: List[AdPerformance] = Nil,
   recentActivity: List[DeliveryEvent] = Nil
 )
@@ -55,5 +49,115 @@ final case class DashboardMetrics(
 object DashboardMetrics {
   implicit val dashboardMetricsCodec: Codec[DashboardMetrics] =
     deriveCodec[DashboardMetrics]
+}
+
+/**
+  * Campaign comparison result.
+  */
+final case class CampaignComparison(
+  campaignId: String,
+  campaignName: String,
+  impressions: Long,
+  startTime: Option[Instant] = None,
+  endTime: Option[Instant] = None
+)
+
+object CampaignComparison {
+  implicit val campaignComparisonCodec: Codec[CampaignComparison] =
+    deriveCodec[CampaignComparison]
+}
+
+/**
+  * Time-series data point for analytics.
+  */
+final case class TimeSeriesPoint(
+  timestamp: Instant,
+  value: Long
+)
+
+object TimeSeriesPoint {
+  implicit val timeSeriesPointCodec: Codec[TimeSeriesPoint] =
+    deriveCodec[TimeSeriesPoint]
+}
+
+/**
+  * Time-series analytics data.
+  */
+final case class TimeSeriesData(
+  metric: String,  // e.g., "impressions"
+  points: List[TimeSeriesPoint] = Nil
+)
+
+object TimeSeriesData {
+  implicit val timeSeriesDataCodec: Codec[TimeSeriesData] =
+    deriveCodec[TimeSeriesData]
+}
+
+/**
+  * ROI metrics for campaigns.
+  */
+final case class ROIMetrics(
+  campaignId: String,
+  campaignName: String,
+  impressions: Long,
+  budgetAllocated: Option[Long] = None,  // Budget in plays/impressions
+  budgetSpent: Long = 0L,               // Actual impressions delivered
+  costPerImpression: Option[Double] = None,  // If budget cost exists
+  impressionsPerDollar: Option[Double] = None, // If budget cost exists
+  budgetUtilization: Double = 0.0        // Percentage of budget used
+)
+
+object ROIMetrics {
+  implicit val roiMetricsCodec: Codec[ROIMetrics] =
+    deriveCodec[ROIMetrics]
+}
+
+/**
+  * Screen-level performance metrics.
+  */
+final case class ScreenPerformance(
+  screenId: String,
+  screenName: String,
+  impressions: Long,
+  city: Option[String] = None,
+  area: Option[String] = None,
+  classification: Int = 1
+)
+
+object ScreenPerformance {
+  implicit val screenPerformanceCodec: Codec[ScreenPerformance] =
+    deriveCodec[ScreenPerformance]
+}
+
+/**
+  * Creative performance metrics.
+  */
+final case class CreativePerformance(
+  creativeId: String,
+  creativeName: String,
+  campaignId: String,
+  campaignName: String,
+  impressions: Long,
+  playCount: Long = 0L
+)
+
+object CreativePerformance {
+  implicit val creativePerformanceCodec: Codec[CreativePerformance] =
+    deriveCodec[CreativePerformance]
+}
+
+/**
+  * Geographic performance metrics.
+  */
+final case class GeographicPerformance(
+  city: Option[String],
+  area: Option[String],
+  impressions: Long,
+  screenCount: Int = 0
+)
+
+object GeographicPerformance {
+  implicit val geographicPerformanceCodec: Codec[GeographicPerformance] =
+    deriveCodec[GeographicPerformance]
 }
 

@@ -1,6 +1,10 @@
-[error] /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/src/main/scala/mnemocast/engine/api/routes/EventRoutes.scala:84:25: type mismatch;
-[error]  found   : org.apache.pekko.http.scaladsl.server.StandardRoute
-[error]  required: scala.concurrent.Future[org.apache.pekko.http.scaladsl.server.RouteResult]
-[error]                 complete(StatusCodes.NoContent)
-[error]                         ^
-[error] one error found
+[warn] /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/src/main/scala/mnemocast/engine/api/HttpServer.scala:144:81: Reference to uninitialized value campaignStore
+[warn]   private val analyticsService = new AnalyticsService(adStore, eventStore, Some(campaignStore), Some(creativeStore), Some(screenStore))
+[warn]                                                                                 ^
+[warn] /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/src/main/scala/mnemocast/engine/api/HttpServer.scala:144:102: Reference to uninitialized value creativeStore
+[warn]   private val analyticsService = new AnalyticsService(adStore, eventStore, Some(campaignStore), Some(creativeStore), Some(screenStore))
+[warn]                                                                                                      ^
+[warn] /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/src/main/scala/mnemocast/engine/api/HttpServer.scala:180:81: Reference to uninitialized value mediaStorage
+[warn]   private val healthService = new HealthService(redisClient, postgresClientOpt, mediaStorage, serverStartTime)
+[warn]                                                                                 ^
+[warn] three warnings found
