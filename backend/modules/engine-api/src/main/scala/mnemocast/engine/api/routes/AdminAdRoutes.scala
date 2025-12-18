@@ -10,14 +10,25 @@ import org.apache.pekko.http.scaladsl.server.Directives._
 import org.apache.pekko.http.scaladsl.server.Route
 
 import mnemocast.engine.api.json.JsonSupport
+import mnemocast.engine.api.middleware.AuthMiddleware
 import mnemocast.engine.domain.model.{Ad, CreateAdRequest}
+import mnemocast.engine.infra.services.AuthService
 import mnemocast.engine.infra.store.{AdStore, EventStore}
 
 class AdminAdRoutes(
   adStore: AdStore,
-  eventStore: EventStore
+  eventStore: EventStore,
+  authServiceOpt: Option[AuthService] = None
 )(implicit ec: ExecutionContext)
     extends JsonSupport {
+  
+  // Helper to protect routes with authentication
+  private def requireAuth(route: Route): Route = {
+    authServiceOpt match {
+      case Some(authService) => AuthMiddleware.authenticate(authService).apply { _ => route }
+      case None => route // If auth is not available, allow access (backward compatibility)
+    }
+  }
 
   /**
     * Admin routes for ad management.
@@ -28,9 +39,10 @@ class AdminAdRoutes(
     */
   val routes: Route =
     pathPrefix("admin") {
-      pathPrefix("ads") {
-        concat(
-          post {
+      requireAuth {
+        pathPrefix("ads") {
+          concat(
+            post {
             entity(as[CreateAdRequest]) { request =>
               val now = Instant.now()
               
@@ -91,6 +103,7 @@ class AdminAdRoutes(
             }
           }
         )
+        }
       }
     }
 }

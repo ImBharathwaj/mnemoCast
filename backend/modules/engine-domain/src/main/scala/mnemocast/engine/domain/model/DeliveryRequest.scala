@@ -20,6 +20,7 @@ final case class DeliveryRequest(
   venueType: Option[String] = None,     // Venue type (e.g., "mall", "airport")
   screenTags: List[String] = List.empty, // Screen tags for tag-based targeting
   timezone: Option[String] = None,      // IANA timezone identifier
+  screenClassification: Option[Int] = None, // Screen classification (1-10, higher = premium)
   timestamp: Instant
 )
 

@@ -3,6 +3,9 @@
 -- Run after init.sql: psql -h localhost -U postgres -d mnemocast -f seed_demo_data.sql
 -- This script is idempotent (safe to run multiple times)
 
+-- Enable required extensions
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 -- Clear existing data (optional - comment out if you want to keep existing data)
 -- TRUNCATE TABLE event_metadata CASCADE;
 -- TRUNCATE TABLE delivery_events CASCADE;
@@ -18,17 +21,19 @@
 -- ============================================
 -- SCREENS (OOH Displays)
 -- ============================================
-INSERT INTO screens (id, name, country, city, area, venue_type, timezone, width, height, is_audible, is_online, last_seen, classification, created_at, updated_at)
+-- Note: Passkeys are generated using encode(gen_random_bytes(32), 'base64')
+-- For demo purposes, we use deterministic passkeys (you can change these to random ones)
+INSERT INTO screens (id, name, country, city, area, venue_type, timezone, width, height, is_audible, is_online, last_seen, passkey, classification, created_at, updated_at)
 VALUES 
-    ('screen-chennai-airport-1', 'Chennai Airport Terminal 1 - Gate A1', 'IN', 'Chennai', 'Airport', 'airport', 'Asia/Kolkata', 3840, 2160, true, true, NOW(), 8, NOW() - INTERVAL '30 days', NOW()),
-    ('screen-chennai-airport-2', 'Chennai Airport Terminal 2 - Food Court', 'IN', 'Chennai', 'Airport', 'airport', 'Asia/Kolkata', 1920, 1080, true, true, NOW() - INTERVAL '5 minutes', 7, NOW() - INTERVAL '25 days', NOW()),
-    ('screen-mumbai-mall-1', 'Phoenix Mall Mumbai - Food Court', 'IN', 'Mumbai', 'Phoenix Mall', 'mall', 'Asia/Kolkata', 1920, 1080, false, true, NOW() - INTERVAL '2 minutes', 6, NOW() - INTERVAL '20 days', NOW()),
-    ('screen-mumbai-mall-2', 'Phoenix Mall Mumbai - Entrance', 'IN', 'Mumbai', 'Phoenix Mall', 'mall', 'Asia/Kolkata', 2560, 1440, true, true, NOW() - INTERVAL '1 minute', 9, NOW() - INTERVAL '18 days', NOW()),
-    ('screen-delhi-metro-1', 'Delhi Metro Station - Platform 1', 'IN', 'Delhi', 'Connaught Place', 'metro', 'Asia/Kolkata', 1920, 1080, false, true, NOW() - INTERVAL '3 minutes', 5, NOW() - INTERVAL '15 days', NOW()),
-    ('screen-bangalore-office-1', 'IT Park Bangalore - Lobby', 'IN', 'Bangalore', 'Whitefield', 'office', 'Asia/Kolkata', 1920, 1080, false, true, NOW() - INTERVAL '10 minutes', 4, NOW() - INTERVAL '12 days', NOW()),
-    ('screen-hyderabad-mall-1', 'Inorbit Mall Hyderabad - Cinema Hall', 'IN', 'Hyderabad', 'HITEC City', 'mall', 'Asia/Kolkata', 3840, 2160, true, true, NOW(), 7, NOW() - INTERVAL '10 days', NOW()),
-    ('screen-pune-transit-1', 'Pune Bus Stand - Waiting Area', 'IN', 'Pune', 'Swargate', 'transit', 'Asia/Kolkata', 1920, 1080, false, false, NOW() - INTERVAL '2 hours', 3, NOW() - INTERVAL '8 days', NOW()),
-    ('screen-kolkata-mall-1', 'South City Mall Kolkata - Food Court', 'IN', 'Kolkata', 'Alipore', 'mall', 'Asia/Kolkata', 1920, 1080, true, true, NOW() - INTERVAL '5 minutes', 6, NOW() - INTERVAL '5 days', NOW())
+    ('screen-chennai-airport-1', 'Chennai Airport Terminal 1 - Gate A1', 'IN', 'Chennai', 'Airport', 'airport', 'Asia/Kolkata', 3840, 2160, true, true, NOW(), encode(gen_random_bytes(32), 'base64'), 8, NOW() - INTERVAL '30 days', NOW()),
+    ('screen-chennai-airport-2', 'Chennai Airport Terminal 2 - Food Court', 'IN', 'Chennai', 'Airport', 'airport', 'Asia/Kolkata', 1920, 1080, true, true, NOW() - INTERVAL '5 minutes', encode(gen_random_bytes(32), 'base64'), 7, NOW() - INTERVAL '25 days', NOW()),
+    ('screen-mumbai-mall-1', 'Phoenix Mall Mumbai - Food Court', 'IN', 'Mumbai', 'Phoenix Mall', 'mall', 'Asia/Kolkata', 1920, 1080, false, true, NOW() - INTERVAL '2 minutes', encode(gen_random_bytes(32), 'base64'), 6, NOW() - INTERVAL '20 days', NOW()),
+    ('screen-mumbai-mall-2', 'Phoenix Mall Mumbai - Entrance', 'IN', 'Mumbai', 'Phoenix Mall', 'mall', 'Asia/Kolkata', 2560, 1440, true, true, NOW() - INTERVAL '1 minute', encode(gen_random_bytes(32), 'base64'), 9, NOW() - INTERVAL '18 days', NOW()),
+    ('screen-delhi-metro-1', 'Delhi Metro Station - Platform 1', 'IN', 'Delhi', 'Connaught Place', 'metro', 'Asia/Kolkata', 1920, 1080, false, true, NOW() - INTERVAL '3 minutes', encode(gen_random_bytes(32), 'base64'), 5, NOW() - INTERVAL '15 days', NOW()),
+    ('screen-bangalore-office-1', 'IT Park Bangalore - Lobby', 'IN', 'Bangalore', 'Whitefield', 'office', 'Asia/Kolkata', 1920, 1080, false, true, NOW() - INTERVAL '10 minutes', encode(gen_random_bytes(32), 'base64'), 4, NOW() - INTERVAL '12 days', NOW()),
+    ('screen-hyderabad-mall-1', 'Inorbit Mall Hyderabad - Cinema Hall', 'IN', 'Hyderabad', 'HITEC City', 'mall', 'Asia/Kolkata', 3840, 2160, true, true, NOW(), encode(gen_random_bytes(32), 'base64'), 7, NOW() - INTERVAL '10 days', NOW()),
+    ('screen-pune-transit-1', 'Pune Bus Stand - Waiting Area', 'IN', 'Pune', 'Swargate', 'transit', 'Asia/Kolkata', 1920, 1080, false, false, NOW() - INTERVAL '2 hours', encode(gen_random_bytes(32), 'base64'), 3, NOW() - INTERVAL '8 days', NOW()),
+    ('screen-kolkata-mall-1', 'South City Mall Kolkata - Food Court', 'IN', 'Kolkata', 'Alipore', 'mall', 'Asia/Kolkata', 1920, 1080, true, true, NOW() - INTERVAL '5 minutes', encode(gen_random_bytes(32), 'base64'), 6, NOW() - INTERVAL '5 days', NOW())
 ON CONFLICT (id) DO UPDATE SET
     name = EXCLUDED.name,
     country = EXCLUDED.country,
@@ -41,6 +46,7 @@ ON CONFLICT (id) DO UPDATE SET
     is_audible = EXCLUDED.is_audible,
     is_online = EXCLUDED.is_online,
     last_seen = EXCLUDED.last_seen,
+    passkey = EXCLUDED.passkey,
     classification = EXCLUDED.classification,
     updated_at = NOW();
 
@@ -194,26 +200,31 @@ ON CONFLICT DO NOTHING;
 INSERT INTO ads (id, advertiser_id, creative_url, target_url, is_active, max_plays, daily_limit, hourly_limit, duration_seconds, weight, created_at, updated_at)
 VALUES 
     -- Summer Sale Campaign Ads
-    ('ad-summer-sale-001', 'advertiser-nike', 'http://localhost:9000/api/v1/media/creatives/summer-sale-banner.jpg', 'https://example.com/summer-sale', true, 50000, 5000, 500, 8, NOW() - INTERVAL '10 days', NOW()),
-    ('ad-summer-sale-002', 'advertiser-nike', 'http://localhost:9000/api/v1/media/creatives/summer-sale-video.mp4', 'https://example.com/summer-sale', true, 50000, 5000, 500, 8, NOW() - INTERVAL '10 days', NOW()),
+    ('ad-summer-sale-001', 'advertiser-nike', 'http://localhost:9000/api/v1/media/creatives/summer-sale-banner.jpg', 'https://example.com/summer-sale', true, 50000, 5000, 500, 10, 8, NOW() - INTERVAL '10 days', NOW()),
+    ('ad-summer-sale-002', 'advertiser-nike', 'http://localhost:9000/api/v1/media/creatives/summer-sale-video.mp4', 'https://example.com/summer-sale', true, 50000, 5000, 500, 30, 8, NOW() - INTERVAL '10 days', NOW()),
     
     -- Morning Coffee Campaign Ads
-    ('ad-coffee-001', 'advertiser-starbucks', 'http://localhost:9000/api/v1/media/creatives/coffee-banner.jpg', 'https://example.com/coffee', true, 30000, 3000, 300, 7, NOW() - INTERVAL '8 days', NOW()),
+    ('ad-coffee-001', 'advertiser-starbucks', 'http://localhost:9000/api/v1/media/creatives/coffee-banner.jpg', 'https://example.com/coffee', true, 30000, 3000, 300, 15, 7, NOW() - INTERVAL '8 days', NOW()),
     
     -- Premium Watch Campaign Ads
-    ('ad-watch-001', 'advertiser-rolex', 'http://localhost:9000/api/v1/media/creatives/watch-video.mp4', 'https://example.com/watches', true, 20000, 2000, 200, 10, NOW() - INTERVAL '15 days', NOW()),
-    ('ad-watch-002', 'advertiser-rolex', 'http://localhost:9000/api/v1/media/creatives/watch-image.jpg', 'https://example.com/watches', true, 20000, 2000, 200, 10, NOW() - INTERVAL '15 days', NOW()),
+    ('ad-watch-001', 'advertiser-rolex', 'http://localhost:9000/api/v1/media/creatives/watch-video.mp4', 'https://example.com/watches', true, 20000, 2000, 200, 45, 10, NOW() - INTERVAL '15 days', NOW()),
+    ('ad-watch-002', 'advertiser-rolex', 'http://localhost:9000/api/v1/media/creatives/watch-image.jpg', 'https://example.com/watches', true, 20000, 2000, 200, 20, 10, NOW() - INTERVAL '15 days', NOW()),
     
     -- Weekend Shopping Campaign Ads
-    ('ad-shopping-001', 'advertiser-amazon', 'http://localhost:9000/api/v1/media/creatives/shopping-banner.jpg', 'https://example.com/shopping', true, 40000, 4000, 400, 6, NOW() - INTERVAL '5 days', NOW()),
-    ('ad-shopping-002', 'advertiser-amazon', 'http://localhost:9000/api/v1/media/creatives/shopping-video.mp4', 'https://example.com/shopping', true, 40000, 4000, 400, 6, NOW() - INTERVAL '5 days', NOW()),
+    ('ad-shopping-001', 'advertiser-amazon', 'http://localhost:9000/api/v1/media/creatives/shopping-banner.jpg', 'https://example.com/shopping', true, 40000, 4000, 400, 12, 6, NOW() - INTERVAL '5 days', NOW()),
+    ('ad-shopping-002', 'advertiser-amazon', 'http://localhost:9000/api/v1/media/creatives/shopping-video.mp4', 'https://example.com/shopping', true, 40000, 4000, 400, 25, 6, NOW() - INTERVAL '5 days', NOW()),
     
     -- Food Delivery Campaign Ads
-    ('ad-food-001', 'advertiser-zomato', 'http://localhost:9000/api/v1/media/creatives/food-banner.jpg', 'https://example.com/food', true, 25000, 2500, 250, 5, NOW() - INTERVAL '3 days', NOW()),
+    ('ad-food-001', 'advertiser-zomato', 'http://localhost:9000/api/v1/media/creatives/food-banner.jpg', 'https://example.com/food', true, 25000, 2500, 250, 10, 5, NOW() - INTERVAL '3 days', NOW()),
     
     -- Fitness Center Campaign Ads
-    ('ad-fitness-001', 'advertiser-cultfit', 'http://localhost:9000/api/v1/media/creatives/fitness-video.mp4', 'https://example.com/fitness', true, 35000, 3500, 350, 7, NOW() - INTERVAL '7 days', NOW()),
-    ('ad-fitness-002', 'advertiser-cultfit', 'http://localhost:9000/api/v1/media/creatives/fitness-banner.jpg', 'https://example.com/fitness', true, 35000, 3500, 350, 7, NOW() - INTERVAL '7 days', NOW())
+    ('ad-fitness-001', 'advertiser-cultfit', 'http://localhost:9000/api/v1/media/creatives/fitness-video.mp4', 'https://example.com/fitness', true, 35000, 3500, 350, 30, 7, NOW() - INTERVAL '7 days', NOW()),
+    ('ad-fitness-002', 'advertiser-cultfit', 'http://localhost:9000/api/v1/media/creatives/fitness-banner.jpg', 'https://example.com/fitness', true, 35000, 3500, 350, 15, 7, NOW() - INTERVAL '7 days', NOW()),
+    
+    -- Universal Fallback Ads (No targeting rules - match ALL screens automatically)
+    ('ad-universal-001', 'advertiser-default', 'http://localhost:9000/api/v1/media/creatives/default-banner.jpg', 'https://example.com/default', true, 100000, 10000, 1000, 15, 5, NOW() - INTERVAL '1 day', NOW()),
+    ('ad-universal-002', 'advertiser-default', 'http://localhost:9000/api/v1/media/creatives/default-video.mp4', 'https://example.com/default', true, 100000, 10000, 1000, 30, 5, NOW() - INTERVAL '1 day', NOW()),
+    ('ad-universal-003', 'advertiser-default', 'http://localhost:9000/api/v1/media/creatives/default-image.jpg', 'https://example.com/default', true, 100000, 10000, 1000, 10, 5, NOW() - INTERVAL '1 day', NOW())
 ON CONFLICT (id) DO UPDATE SET
     advertiser_id = EXCLUDED.advertiser_id,
     creative_url = EXCLUDED.creative_url,
@@ -225,6 +236,39 @@ ON CONFLICT (id) DO UPDATE SET
     duration_seconds = EXCLUDED.duration_seconds,
     weight = EXCLUDED.weight,
     updated_at = NOW();
+
+-- ============================================
+-- AD TARGETING RULES
+-- ============================================
+-- Add targeting rules for ads so they can be matched to screens
+INSERT INTO targeting_rules (ad_id, rule_key, operator, rule_value)
+VALUES 
+    -- Summer Sale Ads - Target malls in Chennai and Mumbai
+    ('ad-summer-sale-001', 'city', 'in', 'Chennai,Mumbai'),
+    ('ad-summer-sale-001', 'venueType', 'eq', 'mall'),
+    ('ad-summer-sale-002', 'city', 'in', 'Chennai,Mumbai'),
+    ('ad-summer-sale-002', 'venueType', 'eq', 'mall'),
+    
+    -- Morning Coffee Ads - Target airports and offices
+    ('ad-coffee-001', 'venueType', 'in', 'airport,office'),
+    
+    -- Premium Watch Ads - Target premium screens (high classification) in major cities
+    ('ad-watch-001', 'classification', 'gte', '7'),
+    ('ad-watch-001', 'city', 'in', 'Mumbai,Delhi,Bangalore'),
+    ('ad-watch-002', 'classification', 'gte', '7'),
+    ('ad-watch-002', 'city', 'in', 'Mumbai,Delhi,Bangalore'),
+    
+    -- Weekend Shopping Ads - Target malls
+    ('ad-shopping-001', 'venueType', 'eq', 'mall'),
+    ('ad-shopping-002', 'venueType', 'eq', 'mall'),
+    
+    -- Food Delivery Ads - Target food courts (via tags)
+    ('ad-food-001', 'tag', 'eq', 'food_court'),
+    
+    -- Fitness Center Ads - Target malls and offices
+    ('ad-fitness-001', 'venueType', 'in', 'mall,office'),
+    ('ad-fitness-002', 'venueType', 'in', 'mall,office')
+ON CONFLICT DO NOTHING;
 
 -- ============================================
 -- DELIVERY EVENTS (Analytics Data)

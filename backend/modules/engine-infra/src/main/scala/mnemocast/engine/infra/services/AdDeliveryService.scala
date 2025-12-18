@@ -42,8 +42,18 @@ class AdDeliveryService(
 
     screenClassificationFut.flatMap { screenClassification =>
       adStore.listActive().flatMap { ads =>
+        val timestamp = java.time.LocalDateTime.now()
+        println(s"[$timestamp] [AdDelivery] Total active ads: ${ads.length}")
+        
         // Step 1: Filter ads using targeting rules
         val targetingEligible = ads.filter(ad => TargetingService.matches(ad, request))
+        println(s"[$timestamp] [AdDelivery] After targeting filter: ${targetingEligible.length} ads")
+        if (targetingEligible.isEmpty && ads.nonEmpty) {
+          println(s"[$timestamp] [AdDelivery] No ads matched targeting rules. Request context: country=${request.country}, city=${request.city}, area=${request.area}, venueType=${request.venueType}, tags=${request.screenTags}")
+          ads.take(3).foreach { ad =>
+            println(s"[$timestamp] [AdDelivery] Sample ad: ${ad.id}, targetingRules: ${ad.targetingRules}")
+          }
+        }
         
         // Step 2: Filter by budget constraints (async)
         Future.sequence(
@@ -52,6 +62,10 @@ class AdDeliveryService(
           )
         ).flatMap { budgetResults =>
           val budgetEligible = budgetResults.filter(_._2).map(_._1)
+          println(s"[$timestamp] [AdDelivery] After budget filter: ${budgetEligible.length} ads")
+          if (targetingEligible.nonEmpty && budgetEligible.isEmpty) {
+            println(s"[$timestamp] [AdDelivery] All ads filtered out by budget constraints")
+          }
           
           // Step 3: Filter by frequency capping (async)
           Future.sequence(
@@ -60,9 +74,14 @@ class AdDeliveryService(
             )
           ).flatMap { frequencyResults =>
             val eligible = frequencyResults.filter(_._2).map(_._1)
+            println(s"[$timestamp] [AdDelivery] After frequency cap filter: ${eligible.length} ads")
+            if (budgetEligible.nonEmpty && eligible.isEmpty) {
+              println(s"[$timestamp] [AdDelivery] All ads filtered out by frequency capping")
+            }
             
             pickAd(eligible, screenClassification) match {
             case Some(ad) =>
+              println(s"[$timestamp] [AdDelivery] Selected ad: ${ad.id} (weight: ${ad.weight}, screen classification: $screenClassification)")
               val response = DeliveryResponse(
                 requestId = request.requestId,
                 adId = ad.id,
@@ -77,6 +96,7 @@ class AdDeliveryService(
               eventStore.append(event).map(_ => Some(response))
 
             case None =>
+              println(s"[$timestamp] [AdDelivery] No eligible ads found after all filters")
               Future.successful(None)
           }
         }

@@ -19,6 +19,7 @@ import io.circe.generic.semiauto._
   * @param isAudible Whether the display supports audio playback
   * @param isOnline Whether the screen is currently online
   * @param lastSeen Timestamp of last heartbeat/contact
+  * @param passkey Authentication passkey for screen client (generated on registration)
   * @param createdAt When the screen was registered
   * @param updatedAt Last update timestamp
   */
@@ -34,6 +35,7 @@ final case class Screen(
   isAudible: Boolean = false,        // Whether the display supports audio
   isOnline: Boolean = false,
   lastSeen: Option[Instant] = None,
+  passkey: String,                   // Authentication passkey (generated on registration)
   createdAt: Instant,
   updatedAt: Instant
 )

@@ -1,0 +1,28 @@
+2025/12/19 00:34:29 [00:34:29.420] 🚀 Sending initial heartbeat...
+2025/12/19 00:34:29 [00:34:29.420] 💓 Starting heartbeat cycle for screen: d31f2fe7-16f3-4842-8db7-4b67868ecdc6
+2025/12/19 00:34:29 [00:34:29.420] 📡 Attempting heartbeat (attempt 1/4)...
+2025/12/19 00:34:29 [00:34:29.420] 🔄 Sending heartbeat request to: http://10.42.0.1:8080/api/v1/screens/d31f2fe7-16f3-4842-8db7-4b67868ecdc6/heartbeat
+2025/12/19 00:34:29 [00:34:29.420] 📤 Request Method: PUT | Screen ID: d31f2fe7-16f3-4842-8db7-4b67868ecdc6
+2025/12/19 00:34:29 [00:34:29.423] ❌ Heartbeat failed: Status 403 | Duration: 3.495205ms | Response: The supplied authentication is not authorized to access this resource
+2025/12/19 00:34:29 [00:34:29.424] ⚠️  Heartbeat attempt 1/4 failed: heartbeat failed with status 403: The supplied authentication is not authorized to access this resource
+2025/12/19 00:34:29 [00:34:29.424] 🔁 Retrying heartbeat (attempt 1/3) after 5s...
+2025/12/19 00:34:34 [00:34:34.424] 📡 Attempting heartbeat (attempt 2/4)...
+2025/12/19 00:34:34 [00:34:34.424] 🔄 Sending heartbeat request to: http://10.42.0.1:8080/api/v1/screens/d31f2fe7-16f3-4842-8db7-4b67868ecdc6/heartbeat
+2025/12/19 00:34:34 [00:34:34.424] 📤 Request Method: PUT | Screen ID: d31f2fe7-16f3-4842-8db7-4b67868ecdc6
+2025/12/19 00:34:34 [00:34:34.427] ❌ Heartbeat failed: Status 403 | Duration: 3.721925ms | Response: The supplied authentication is not authorized to access this resource
+2025/12/19 00:34:34 [00:34:34.427] ⚠️  Heartbeat attempt 2/4 failed: heartbeat failed with status 403: The supplied authentication is not authorized to access this resource
+2025/12/19 00:34:34 [00:34:34.427] 🔁 Retrying heartbeat (attempt 2/3) after 10s...
+2025/12/19 00:34:44 [00:34:44.428] 📡 Attempting heartbeat (attempt 3/4)...
+2025/12/19 00:34:44 [00:34:44.428] 🔄 Sending heartbeat request to: http://10.42.0.1:8080/api/v1/screens/d31f2fe7-16f3-4842-8db7-4b67868ecdc6/heartbeat
+2025/12/19 00:34:44 [00:34:44.428] 📤 Request Method: PUT | Screen ID: d31f2fe7-16f3-4842-8db7-4b67868ecdc6
+2025/12/19 00:34:44 [00:34:44.432] ❌ Heartbeat failed: Status 403 | Duration: 4.722072ms | Response: The supplied authentication is not authorized to access this resource
+2025/12/19 00:34:44 [00:34:44.432] ⚠️  Heartbeat attempt 3/4 failed: heartbeat failed with status 403: The supplied authentication is not authorized to access this resource
+2025/12/19 00:34:44 [00:34:44.432] 🔁 Retrying heartbeat (attempt 3/3) after 15s...
+[❌] Heartbeat Status: Unknown
+2025/12/19 00:34:59 [00:34:59.434] 📡 Attempting heartbeat (attempt 4/4)...
+2025/12/19 00:34:59 [00:34:59.434] 🔄 Sending heartbeat request to: http://10.42.0.1:8080/api/v1/screens/d31f2fe7-16f3-4842-8db7-4b67868ecdc6/heartbeat
+2025/12/19 00:34:59 [00:34:59.434] 📤 Request Method: PUT | Screen ID: d31f2fe7-16f3-4842-8db7-4b67868ecdc6
+2025/12/19 00:34:59 [00:34:59.450] ❌ Heartbeat failed: Status 403 | Duration: 16.627811ms | Response: The supplied authentication is not authorized to access this resource
+2025/12/19 00:34:59 [00:34:59.450] ⚠️  Heartbeat attempt 4/4 failed: heartbeat failed with status 403: The supplied authentication is not authorized to access this resource
+2025/12/19 00:34:59 [00:34:59.450] ❌ Heartbeat cycle failed after 4 attempts | Total duration: 30.030340515s | Error: heartbeat failed with status 403: The supplied authentication is not authorized to access this resource
+

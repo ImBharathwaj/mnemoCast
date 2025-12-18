@@ -1,2 +1,2 @@
-[0m[[0m[0mdebug[0m] [0m[0mCopy resource mappings: [0m
-[0m[[0m[0mdebug[0m] [0m[0m	(/home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/src/main/resources/openapi.yaml,/home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/target/scala-2.13/classes/openapi.yaml)[0m
+[debug] Copy resource mappings: 
+[debug] 	(/home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/src/main/resources/openapi.yaml,/home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/target/scala-2.13/classes/openapi.yaml)

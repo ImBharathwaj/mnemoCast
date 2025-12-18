@@ -148,6 +148,9 @@ CREATE TABLE IF NOT EXISTS screens (
     is_online BOOLEAN NOT NULL DEFAULT false,
     last_seen TIMESTAMPTZ,
     
+    -- Authentication
+    passkey TEXT NOT NULL,           -- Authentication passkey for screen client (generated on registration)
+    
     -- Classification for pay-per-attention model (1-10, higher = premium)
     -- Higher classified screens favor ads with higher weights
     classification INTEGER NOT NULL DEFAULT 1,
@@ -162,6 +165,7 @@ CREATE INDEX IF NOT EXISTS idx_screens_city ON screens(city);
 CREATE INDEX IF NOT EXISTS idx_screens_area ON screens(area);
 CREATE INDEX IF NOT EXISTS idx_screens_venue_type ON screens(venue_type);
 CREATE INDEX IF NOT EXISTS idx_screens_is_online ON screens(is_online) WHERE is_online = true;
+CREATE INDEX IF NOT EXISTS idx_screens_passkey ON screens(passkey);
 
 -- ============================================
 -- SCREEN TAGS TABLE (OOH)
@@ -268,6 +272,49 @@ CREATE TRIGGER update_creatives_updated_at BEFORE UPDATE ON creatives
 DROP TRIGGER IF EXISTS update_screens_updated_at ON screens;
 CREATE TRIGGER update_screens_updated_at BEFORE UPDATE ON screens
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================
+-- USERS TABLE (Authentication)
+-- ============================================
+CREATE TABLE IF NOT EXISTS users (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    email TEXT NOT NULL UNIQUE,
+    username TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    full_name TEXT,
+    role TEXT NOT NULL DEFAULT 'user',  -- 'user', 'admin', 'advertiser'
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    email_verified BOOLEAN NOT NULL DEFAULT false,
+    last_login TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Indexes for users
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+CREATE INDEX IF NOT EXISTS idx_users_is_active ON users(is_active) WHERE is_active = true;
+
+-- Trigger to auto-update updated_at for users
+DROP TRIGGER IF EXISTS update_users_updated_at ON users;
+CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================
+-- REFRESH TOKENS TABLE (Optional - for token refresh)
+-- ============================================
+CREATE TABLE IF NOT EXISTS refresh_tokens (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    token TEXT NOT NULL UNIQUE,
+    expires_at TIMESTAMPTZ NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Indexes for refresh_tokens
+CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id ON refresh_tokens(user_id);
+CREATE INDEX IF NOT EXISTS idx_refresh_tokens_token ON refresh_tokens(token);
+CREATE INDEX IF NOT EXISTS idx_refresh_tokens_expires_at ON refresh_tokens(expires_at);
 
 -- ============================================
 -- VIEWS (for analytics)

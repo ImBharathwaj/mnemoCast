@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import Logo from './Logo';
 
 interface LayoutProps {
@@ -13,8 +14,15 @@ interface NavItem {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   const isActive = (path: string) => location.pathname === path;
+  
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
 
   const navItems: NavItem[] = [
     { path: '/', label: 'Dashboard' },
@@ -52,6 +60,26 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </Link>
             ))}
           </nav>
+          
+          {/* User info and logout */}
+          <div className="px-4 py-4 border-t border-gray-200">
+            {user && (
+              <div className="mb-3">
+                <div className="text-sm font-medium text-gray-900 truncate" title={user.email}>
+                  {user.fullName || user.username}
+                </div>
+                <div className="text-xs text-gray-500 truncate" title={user.email}>
+                  {user.email}
+                </div>
+              </div>
+            )}
+            <button
+              onClick={handleLogout}
+              className="w-full px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
+            >
+              Logout
+            </button>
+          </div>
         </div>
       </div>
 

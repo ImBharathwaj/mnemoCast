@@ -23,8 +23,8 @@ class PostgresScreenStore(
         INSERT INTO screens (
           id, name, country, city, area, venue_type, timezone,
           width, height, is_audible,
-          is_online, last_seen, classification, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          is_online, last_seen, passkey, classification, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT (id) DO UPDATE SET
           name = EXCLUDED.name,
           country = EXCLUDED.country,
@@ -37,6 +37,7 @@ class PostgresScreenStore(
           is_audible = EXCLUDED.is_audible,
           is_online = EXCLUDED.is_online,
           last_seen = EXCLUDED.last_seen,
+          passkey = EXCLUDED.passkey,
           classification = EXCLUDED.classification,
           updated_at = EXCLUDED.updated_at
       """)
@@ -53,9 +54,10 @@ class PostgresScreenStore(
       screenStmt.setBoolean(10, screen.isAudible)
       screenStmt.setBoolean(11, screen.isOnline)
       screenStmt.setTimestamp(12, screen.lastSeen.map(Timestamp.from).orNull)
-      screenStmt.setInt(13, screen.classification)
-      screenStmt.setTimestamp(14, Timestamp.from(screen.createdAt))
-      screenStmt.setTimestamp(15, Timestamp.from(screen.updatedAt))
+      screenStmt.setString(13, screen.passkey)
+      screenStmt.setInt(14, screen.classification)
+      screenStmt.setTimestamp(15, Timestamp.from(screen.createdAt))
+      screenStmt.setTimestamp(16, Timestamp.from(screen.updatedAt))
       screenStmt.executeUpdate()
       screenStmt.close()
 
@@ -103,7 +105,7 @@ class PostgresScreenStore(
       val stmt = conn.prepareStatement("""
         SELECT id, name, country, city, area, venue_type, timezone,
                width, height, is_audible,
-               is_online, last_seen, classification, created_at, updated_at
+               is_online, last_seen, passkey, classification, created_at, updated_at
         FROM screens WHERE id = ?
       """)
       stmt.setString(1, id)
@@ -129,7 +131,7 @@ class PostgresScreenStore(
       val stmt = conn.prepareStatement("""
         SELECT id, name, country, city, area, venue_type, timezone,
                width, height, is_audible,
-               is_online, last_seen, classification, created_at, updated_at
+               is_online, last_seen, passkey, classification, created_at, updated_at
         FROM screens
         ORDER BY created_at DESC
       """)
@@ -213,6 +215,7 @@ class PostgresScreenStore(
       isAudible = rs.getBoolean("is_audible"),
       isOnline = rs.getBoolean("is_online"),
       lastSeen = Option(rs.getTimestamp("last_seen")).map(_.toInstant),
+      passkey = rs.getString("passkey"),
       createdAt = rs.getTimestamp("created_at").toInstant,
       updatedAt = rs.getTimestamp("updated_at").toInstant
     )

@@ -10,14 +10,25 @@ import org.apache.pekko.http.scaladsl.server.Directives._
 import org.apache.pekko.http.scaladsl.server.Route
 
 import mnemocast.engine.api.json.JsonSupport
+import mnemocast.engine.api.middleware.AuthMiddleware
 import mnemocast.engine.domain.model.{CreateCreativeRequest, Creative}
+import mnemocast.engine.infra.services.AuthService
 import mnemocast.engine.infra.store.{CampaignStore, CreativeStore}
 
 class CreativeRoutes(
   creativeStore: CreativeStore,
-  campaignStore: CampaignStore
+  campaignStore: CampaignStore,
+  authServiceOpt: Option[AuthService] = None
 )(implicit ec: ExecutionContext)
     extends JsonSupport {
+  
+  // Helper to protect routes with authentication
+  private def requireAuth(route: Route): Route = {
+    authServiceOpt match {
+      case Some(authService) => AuthMiddleware.authenticate(authService).apply { _ => route }
+      case None => route // If auth is not available, allow access (backward compatibility)
+    }
+  }
 
   /**
     * Creative management routes.
@@ -32,7 +43,8 @@ class CreativeRoutes(
         concat(
           pathEnd {
             post {
-              extractRequest { httpRequest =>
+              requireAuth {
+                extractRequest { httpRequest =>
                 val timestamp = java.time.LocalDateTime.now()
                 println(s"[$timestamp] [POST /api/v1/campaigns/$campaignId/creatives] Request received")
                 
@@ -92,20 +104,23 @@ class CreativeRoutes(
                   }
                 }
               }
+              }
             } ~
             get {
-              extractRequest { httpRequest =>
-                val timestamp = java.time.LocalDateTime.now()
-                println(s"[$timestamp] [GET /api/v1/campaigns/$campaignId/creatives] Request received")
-                val futureCreatives = creativeStore.findByCampaignId(campaignId)
-                onComplete(futureCreatives) {
-                  case scala.util.Success(creatives) =>
-                    println(s"[$timestamp] [GET /api/v1/campaigns/$campaignId/creatives] Success: Found ${creatives.length} creatives")
-                    complete(creatives)
-                  case scala.util.Failure(ex) =>
-                    println(s"[$timestamp] [GET /api/v1/campaigns/$campaignId/creatives] ERROR: ${ex.getMessage}")
-                    ex.printStackTrace()
-                    complete(StatusCodes.InternalServerError, s"Error listing creatives: ${ex.getMessage}")
+              requireAuth {
+                extractRequest { httpRequest =>
+                  val timestamp = java.time.LocalDateTime.now()
+                  println(s"[$timestamp] [GET /api/v1/campaigns/$campaignId/creatives] Request received")
+                  val futureCreatives = creativeStore.findByCampaignId(campaignId)
+                  onComplete(futureCreatives) {
+                    case scala.util.Success(creatives) =>
+                      println(s"[$timestamp] [GET /api/v1/campaigns/$campaignId/creatives] Success: Found ${creatives.length} creatives")
+                      complete(creatives)
+                    case scala.util.Failure(ex) =>
+                      println(s"[$timestamp] [GET /api/v1/campaigns/$campaignId/creatives] ERROR: ${ex.getMessage}")
+                      ex.printStackTrace()
+                      complete(StatusCodes.InternalServerError, s"Error listing creatives: ${ex.getMessage}")
+                  }
                 }
               }
             }
@@ -135,7 +150,8 @@ class CreativeRoutes(
           path(Segment) { creativeId =>
             concat(
               get {
-                extractRequest { httpRequest =>
+                requireAuth {
+                  extractRequest { httpRequest =>
                   val timestamp = java.time.LocalDateTime.now()
                   println(s"[$timestamp] [GET /api/v1/creatives/$creativeId] Request received")
                   val futureCreative = creativeStore.getById(creativeId)
@@ -152,9 +168,11 @@ class CreativeRoutes(
                       complete(StatusCodes.InternalServerError, s"Error retrieving creative: ${ex.getMessage}")
                   }
                 }
+                }
               },
               put {
-                extractRequest { httpRequest =>
+                requireAuth {
+                  extractRequest { httpRequest =>
                   val timestamp = java.time.LocalDateTime.now()
                   println(s"[$timestamp] [PUT /api/v1/creatives/$creativeId] Request received")
                   entity(as[CreateCreativeRequest]) { request =>
@@ -193,8 +211,10 @@ class CreativeRoutes(
                     }
                   }
                 }
+                }
               },
               delete {
+                requireAuth {
                 val timestamp = java.time.LocalDateTime.now()
                 println(s"[$timestamp] [DELETE /api/v1/creatives/$creativeId] Request received")
                 val futureDelete = creativeStore.delete(creativeId)
@@ -206,6 +226,7 @@ class CreativeRoutes(
                     println(s"[$timestamp] [DELETE /api/v1/creatives/$creativeId] ERROR: ${ex.getMessage}")
                     ex.printStackTrace()
                     complete(StatusCodes.InternalServerError, s"Failed to delete creative: ${ex.getMessage}")
+                }
                 }
               }
             )

@@ -13,16 +13,18 @@ import org.apache.pekko.http.scaladsl.model.headers.{
 }
 import org.apache.pekko.http.scaladsl.model.{HttpMethods, StatusCodes}
 import org.apache.pekko.http.scaladsl.server.Directives._
-import org.apache.pekko.http.scaladsl.server.{Directive0, Route}
+import org.apache.pekko.http.scaladsl.server.{AuthorizationFailedRejection, Directive0, Route}
 
 // Rate limiting and request ID middleware can be enabled when fully tested
 // import mnemocast.engine.api.middleware.{RateLimiter, RequestId}
-import mnemocast.engine.api.routes.{AdRoutes, AdminAdRoutes, AnalyticsRoutes, CampaignRoutes, CreativeRoutes, DocsRoutes, EventRoutes, HealthRoutes, MediaRoutes, MetricsRoutes, PlaylistRoutes, ScreenRoutes}
+import mnemocast.engine.api.routes.{AdRoutes, AdminAdRoutes, AnalyticsRoutes, AuthRoutes, CampaignRoutes, CreativeRoutes, DocsRoutes, EventRoutes, HealthRoutes, MediaRoutes, MetricsRoutes, PlaylistRoutes, ScreenAdRoutes, ScreenRoutes}
+import mnemocast.engine.api.middleware.AuthMiddleware
 import mnemocast.engine.infra.services.{AdDeliveryService, AnalyticsService, BudgetService, CampaignBudgetService, CampaignPlaylistService, FrequencyCapService, HealthService, MediaValidator, MetricsService, PlaylistService}
 import mnemocast.engine.infra.storage.{LocalFileStorage, MediaStorage, MinIOStorage}
 import mnemocast.engine.infra.store.redis.{RedisAdStore, RedisCampaignStore, RedisClient, RedisCreativeStore, RedisDecisionStore, RedisEventStore, RedisScreenStore}
-import mnemocast.engine.infra.store.postgres.{PostgresAdStore, PostgresCampaignStore, PostgresClient, PostgresCreativeStore, PostgresEventStore, PostgresScreenStore}
-import mnemocast.engine.infra.store.{AdStore, CampaignStore, CreativeStore, DecisionStore, EventStore, HybridAdStore, HybridCampaignStore, HybridCreativeStore, HybridEventStore, HybridScreenStore, ScreenStore}
+import mnemocast.engine.infra.store.postgres.{PostgresAdStore, PostgresCampaignStore, PostgresClient, PostgresCreativeStore, PostgresEventStore, PostgresScreenStore, PostgresUserStore}
+import mnemocast.engine.infra.store.{AdStore, CampaignStore, CreativeStore, DecisionStore, EventStore, HybridAdStore, HybridCampaignStore, HybridCreativeStore, HybridEventStore, HybridScreenStore, ScreenStore, UserStore}
+import mnemocast.engine.infra.services.AuthService
 
 object HttpServer extends App {
 
@@ -76,6 +78,7 @@ object HttpServer extends App {
   private val postgresScreenStoreOpt = postgresClientOpt.map(new PostgresScreenStore(_))
   private val postgresCampaignStoreOpt = postgresClientOpt.map(new PostgresCampaignStore(_))
   private val postgresCreativeStoreOpt = postgresClientOpt.map(new PostgresCreativeStore(_))
+  private val postgresUserStoreOpt = postgresClientOpt.map(new PostgresUserStore(_))
 
   // Choose storage based on strategy (with fallback to Redis if Postgres fails)
   private val adStore: AdStore = storageStrategy match {
@@ -180,16 +183,28 @@ object HttpServer extends App {
   private val healthService = new HealthService(redisClient, postgresClientOpt, mediaStorage, serverStartTime)
   private val metricsService = new MetricsService(campaignStore, creativeStore, screenStore, serverStartTime)
 
+  // User store and auth service (only available if Postgres is configured)
+  private val userStoreOpt: Option[UserStore] = postgresUserStoreOpt
+  private val authServiceOpt: Option[AuthService] = userStoreOpt.map(new AuthService(_))
+  
+  if (authServiceOpt.isEmpty) {
+    println("⚠️  Warning: Authentication is disabled. Postgres must be configured (STORAGE_STRATEGY=postgres or hybrid) to enable authentication.")
+  } else {
+    println("✅ Authentication enabled")
+  }
+  
   private val adRoutes = new AdRoutes(adDeliveryService)
-  private val adminAdRoutes = new AdminAdRoutes(adStore, eventStore)
+  private val adminAdRoutes = new AdminAdRoutes(adStore, eventStore, authServiceOpt)
   private val eventRoutes = new EventRoutes(eventStore)
-  private val analyticsRoutes = new AnalyticsRoutes(analyticsService)
-  private val screenRoutes = new ScreenRoutes(screenStore)
+  private val analyticsRoutes = new AnalyticsRoutes(analyticsService, authServiceOpt)
+  private val screenRoutes = new ScreenRoutes(screenStore, authServiceOpt)
+  private val screenAdRoutes = new ScreenAdRoutes(adDeliveryService, screenStore, adStore, eventStore, Some(campaignStore))
   private val playlistRoutes = new PlaylistRoutes(playlistService, campaignPlaylistService, screenStore)
-  private val campaignRoutes = new CampaignRoutes(campaignStore)
-  private val creativeRoutes = new CreativeRoutes(creativeStore, campaignStore)
+  private val campaignRoutes = new CampaignRoutes(campaignStore, authServiceOpt)
+  private val creativeRoutes = new CreativeRoutes(creativeStore, campaignStore, authServiceOpt)
   private val healthRoutes = new HealthRoutes(healthService)
-  private val metricsRoutes = new MetricsRoutes(metricsService)
+  private val metricsRoutes = new MetricsRoutes(metricsService, authServiceOpt)
+  private val authRoutesOpt = authServiceOpt.map(new AuthRoutes(_))
 
   // Media storage and upload
   // Storage type: "local" or "minio" (default: "minio" for dev)
@@ -289,41 +304,109 @@ object HttpServer extends App {
     maxImageSizeBytes = sys.env.getOrElse("MAX_IMAGE_SIZE_MB", "10").toLong * 1024 * 1024,
     maxVideoSizeBytes = sys.env.getOrElse("MAX_VIDEO_SIZE_MB", "500").toLong * 1024 * 1024
   )
-  private val mediaRoutes = new MediaRoutes(mediaStorage, mediaValidator)
+  private val mediaRoutes = new MediaRoutes(mediaStorage, mediaValidator, authServiceOpt)
+
+  // Helper to format request ID for logging (only include if not unknown)
+  private def formatRequestId(requestId: String): String = {
+    if (requestId != "unknown" && requestId.nonEmpty) s"[RequestID:$requestId] " else ""
+  }
+  
+  // Helper to format IP for logging (only include if not unknown)
+  private def formatIp(ip: String): String = {
+    if (ip != "unknown" && ip.nonEmpty) s"[IP:$ip] " else ""
+  }
+  
+  // Helper to format user info for logging (only include if user is authenticated)
+  private def formatUserInfo(userOpt: Option[mnemocast.engine.domain.model.User]): String = {
+    userOpt match {
+      case Some(user) => s"[User:${user.username}(${user.email})] "
+      case None => ""
+    }
+  }
 
   // Add logging and metrics tracking directive to all routes
   private def logRequestResponse: Directive0 = {
-    extractRequest.flatMap { request =>
-      val startTime = System.currentTimeMillis()
-      val timestamp = java.time.LocalDateTime.now()
-      val method = request.method.value
-      val path = request.uri.path.toString()
-      val query = if (request.uri.query().isEmpty) "" else s"?${request.uri.query()}"
-      
-      val requestId = request.headers.find(_.is("x-request-id")).map(_.value()).getOrElse("unknown")
-      val ip = request.headers.find(_.is("x-forwarded-for"))
-        .map(_.value())
-        .orElse(request.headers.find(_.is("remote-address")).map(_.value()))
-        .getOrElse("unknown")
-      
-      // Structured logging (can be enhanced to JSON format)
-      println(s"[$timestamp] [INFO] [RequestID:$requestId] [IP:$ip] ===> $method $path$query")
-      
-      mapResponse { response =>
-        val endTime = System.currentTimeMillis()
-        val responseTimeMs = endTime - startTime
-        val status = response.status.intValue()
-        val isError = status >= 400
-        val logLevel = if (isError) "ERROR" else if (responseTimeMs > 1000) "WARN" else "INFO"
-        
-        // Record metrics (exclude metrics endpoint itself to avoid recursion)
-        if (!path.contains("/api/v1/metrics")) {
-          metricsService.recordRequest(path, method, responseTimeMs, isError)
+    // Try to extract user info if auth is available
+    authServiceOpt match {
+      case Some(authService) =>
+        // Use optionalAuth to get user info without requiring authentication
+        AuthMiddleware.optionalAuth(authService).flatMap { userOpt =>
+          extractRequest.flatMap { request =>
+            val startTime = System.currentTimeMillis()
+            val timestamp = java.time.LocalDateTime.now()
+            val method = request.method.value
+            val path = request.uri.path.toString()
+            val query = if (request.uri.query().isEmpty) "" else s"?${request.uri.query()}"
+            
+            val requestId = request.headers.find(_.is("x-request-id")).map(_.value()).getOrElse("unknown")
+            val ip = request.headers.find(_.is("x-forwarded-for"))
+              .map(_.value())
+              .orElse(request.headers.find(_.is("remote-address")).map(_.value()))
+              .getOrElse("unknown")
+            
+            // Format log fields conditionally
+            val requestIdStr = formatRequestId(requestId)
+            val ipStr = formatIp(ip)
+            val userInfoStr = formatUserInfo(userOpt)
+            
+            // Structured logging (can be enhanced to JSON format)
+            println(s"[$timestamp] [INFO] $requestIdStr$ipStr$userInfoStr===> $method $path$query")
+            
+            mapResponse { response =>
+              val endTime = System.currentTimeMillis()
+              val responseTimeMs = endTime - startTime
+              val status = response.status.intValue()
+              val isError = status >= 400
+              val logLevel = if (isError) "ERROR" else if (responseTimeMs > 1000) "WARN" else "INFO"
+              
+              // Record metrics (exclude metrics endpoint itself to avoid recursion)
+              if (!path.contains("/api/v1/metrics")) {
+                metricsService.recordRequest(path, method, responseTimeMs, isError)
+              }
+              
+              println(s"[$timestamp] [$logLevel] $requestIdStr$ipStr$userInfoStr<=== $method $path$query -> $status (${responseTimeMs}ms)")
+              response
+            }
+          }
         }
-        
-        println(s"[$timestamp] [$logLevel] [RequestID:$requestId] [IP:$ip] <=== $method $path$query -> $status (${responseTimeMs}ms)")
-        response
-      }
+      case None =>
+        // Fallback to basic logging when auth is not available
+        extractRequest.flatMap { request =>
+          val startTime = System.currentTimeMillis()
+          val timestamp = java.time.LocalDateTime.now()
+          val method = request.method.value
+          val path = request.uri.path.toString()
+          val query = if (request.uri.query().isEmpty) "" else s"?${request.uri.query()}"
+          
+          val requestId = request.headers.find(_.is("x-request-id")).map(_.value()).getOrElse("unknown")
+          val ip = request.headers.find(_.is("x-forwarded-for"))
+            .map(_.value())
+            .orElse(request.headers.find(_.is("remote-address")).map(_.value()))
+            .getOrElse("unknown")
+          
+          // Format log fields conditionally
+          val requestIdStr = formatRequestId(requestId)
+          val ipStr = formatIp(ip)
+          
+          // Structured logging (can be enhanced to JSON format)
+          println(s"[$timestamp] [INFO] $requestIdStr$ipStr===> $method $path$query")
+          
+          mapResponse { response =>
+            val endTime = System.currentTimeMillis()
+            val responseTimeMs = endTime - startTime
+            val status = response.status.intValue()
+            val isError = status >= 400
+            val logLevel = if (isError) "ERROR" else if (responseTimeMs > 1000) "WARN" else "INFO"
+            
+            // Record metrics (exclude metrics endpoint itself to avoid recursion)
+            if (!path.contains("/api/v1/metrics")) {
+              metricsService.recordRequest(path, method, responseTimeMs, isError)
+            }
+            
+            println(s"[$timestamp] [$logLevel] $requestIdStr$ipStr<=== $method $path$query -> $status (${responseTimeMs}ms)")
+            response
+          }
+        }
     }
   }
 
@@ -331,6 +414,16 @@ object HttpServer extends App {
   // Important: Rejection handlers must also include CORS headers
   implicit val rejectionHandler: org.apache.pekko.http.scaladsl.server.RejectionHandler = org.apache.pekko.http.scaladsl.server.RejectionHandler.newBuilder()
     .handle {
+      case AuthorizationFailedRejection =>
+        val timestamp = java.time.LocalDateTime.now()
+        println(s"[$timestamp] REJECTION: AuthorizationFailedRejection - Authentication failed")
+        respondWithHeaders(
+          `Access-Control-Allow-Origin`.*,
+          `Access-Control-Allow-Methods`(HttpMethods.GET, HttpMethods.POST, HttpMethods.PUT, HttpMethods.DELETE, HttpMethods.OPTIONS),
+          `Access-Control-Allow-Headers`("Content-Type", "Authorization", "X-Requested-With", "X-Screen-Id", "X-Screen-Passkey")
+        ) {
+          complete(StatusCodes.Forbidden, """{"error":"Authentication failed. Please check your credentials."}""")
+        }
       case org.apache.pekko.http.scaladsl.server.MalformedRequestContentRejection(message, cause) =>
         val timestamp = java.time.LocalDateTime.now()
         println(s"[$timestamp] REJECTION: MalformedRequestContentRejection - $message")
@@ -341,7 +434,7 @@ object HttpServer extends App {
         respondWithHeaders(
           `Access-Control-Allow-Origin`.*,
           `Access-Control-Allow-Methods`(HttpMethods.GET, HttpMethods.POST, HttpMethods.PUT, HttpMethods.DELETE, HttpMethods.OPTIONS),
-          `Access-Control-Allow-Headers`("Content-Type", "Authorization", "X-Requested-With")
+          `Access-Control-Allow-Headers`("Content-Type", "Authorization", "X-Requested-With", "X-Screen-Id", "X-Screen-Passkey")
         ) {
           complete(StatusCodes.BadRequest, s"Invalid JSON: $message")
         }
@@ -351,7 +444,7 @@ object HttpServer extends App {
         respondWithHeaders(
           `Access-Control-Allow-Origin`.*,
           `Access-Control-Allow-Methods`(HttpMethods.GET, HttpMethods.POST, HttpMethods.PUT, HttpMethods.DELETE, HttpMethods.OPTIONS),
-          `Access-Control-Allow-Headers`("Content-Type", "Authorization", "X-Requested-With")
+          `Access-Control-Allow-Headers`("Content-Type", "Authorization", "X-Requested-With", "X-Screen-Id", "X-Screen-Passkey")
         ) {
           complete(StatusCodes.UnsupportedMediaType, s"Unsupported content type. Supported: ${supported.mkString(", ")}")
         }
@@ -361,7 +454,7 @@ object HttpServer extends App {
         respondWithHeaders(
           `Access-Control-Allow-Origin`.*,
           `Access-Control-Allow-Methods`(HttpMethods.GET, HttpMethods.POST, HttpMethods.PUT, HttpMethods.DELETE, HttpMethods.OPTIONS),
-          `Access-Control-Allow-Headers`("Content-Type", "Authorization", "X-Requested-With")
+          `Access-Control-Allow-Headers`("Content-Type", "Authorization", "X-Requested-With", "X-Screen-Id", "X-Screen-Passkey")
         ) {
           complete(StatusCodes.BadRequest, s"Request rejected: ${rejection.toString}")
         }
@@ -378,11 +471,13 @@ object HttpServer extends App {
         docsRoutes.routes,
         healthRoutes.routes,
         metricsRoutes.routes,
+        authRoutesOpt.map(_.routes).getOrElse(reject), // Auth routes (only if Postgres is available)
         adRoutes.routes,
         adminAdRoutes.routes,
         eventRoutes.routes,
         analyticsRoutes.routes,
         screenRoutes.routes,
+        screenAdRoutes.routes, // Screen-specific ad delivery (public endpoint)
         playlistRoutes.routes,
         campaignRoutes.routes,
         creativeRoutes.routes,
