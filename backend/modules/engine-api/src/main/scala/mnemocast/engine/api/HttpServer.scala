@@ -15,6 +15,8 @@ import org.apache.pekko.http.scaladsl.model.{HttpMethods, StatusCodes}
 import org.apache.pekko.http.scaladsl.server.Directives._
 import org.apache.pekko.http.scaladsl.server.{Directive0, Route}
 
+// Rate limiting and request ID middleware can be enabled when fully tested
+// import mnemocast.engine.api.middleware.{RateLimiter, RequestId}
 import mnemocast.engine.api.routes.{AdRoutes, AdminAdRoutes, AnalyticsRoutes, CampaignRoutes, CreativeRoutes, DocsRoutes, EventRoutes, HealthRoutes, MediaRoutes, MetricsRoutes, PlaylistRoutes, ScreenRoutes}
 import mnemocast.engine.infra.services.{AdDeliveryService, AnalyticsService, BudgetService, CampaignBudgetService, CampaignPlaylistService, FrequencyCapService, HealthService, MediaValidator, MetricsService, PlaylistService}
 import mnemocast.engine.infra.storage.{LocalFileStorage, MediaStorage, MinIOStorage}
@@ -253,20 +255,28 @@ object HttpServer extends App {
       val path = request.uri.path.toString()
       val query = if (request.uri.query().isEmpty) "" else s"?${request.uri.query()}"
       
-      println(s"[$timestamp] ===> $method $path$query")
+      val requestId = request.headers.find(_.is("x-request-id")).map(_.value()).getOrElse("unknown")
+      val ip = request.headers.find(_.is("x-forwarded-for"))
+        .map(_.value())
+        .orElse(request.headers.find(_.is("remote-address")).map(_.value()))
+        .getOrElse("unknown")
+      
+      // Structured logging (can be enhanced to JSON format)
+      println(s"[$timestamp] [INFO] [RequestID:$requestId] [IP:$ip] ===> $method $path$query")
       
       mapResponse { response =>
         val endTime = System.currentTimeMillis()
         val responseTimeMs = endTime - startTime
         val status = response.status.intValue()
         val isError = status >= 400
+        val logLevel = if (isError) "ERROR" else if (responseTimeMs > 1000) "WARN" else "INFO"
         
         // Record metrics (exclude metrics endpoint itself to avoid recursion)
         if (!path.contains("/api/v1/metrics")) {
           metricsService.recordRequest(path, method, responseTimeMs, isError)
         }
         
-        println(s"[$timestamp] <=== $method $path$query -> $status (${responseTimeMs}ms)")
+        println(s"[$timestamp] [$logLevel] [RequestID:$requestId] [IP:$ip] <=== $method $path$query -> $status (${responseTimeMs}ms)")
         response
       }
     }
@@ -315,6 +325,8 @@ object HttpServer extends App {
 
   private val docsRoutes = new DocsRoutes()
 
+  // Request ID tracking and rate limiting middleware can be enabled when fully tested
+  // For now, using basic logging which includes request tracking
   private val allRoutes: Route = 
     logRequestResponse {
       concat(
