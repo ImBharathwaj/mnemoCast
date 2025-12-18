@@ -3,6 +3,7 @@ import { creativeApi, campaignApi } from '../services/api';
 import { Creative, Campaign } from '../types';
 import CreateCreativeModal from '../components/CreateCreativeModal';
 import EditCreativeModal from '../components/EditCreativeModal';
+import { transformMediaUrl } from '../utils/urlTransform';
 
 const Creatives: React.FC = () => {
   const [creatives, setCreatives] = useState<Creative[]>([]);
@@ -190,7 +191,7 @@ const CreativeCard: React.FC<CreativeCardProps> = ({ creative, onEdit, onDelete 
         {creative.creativeUrl && (
           <div className="mb-4">
             <a
-              href={creative.creativeUrl}
+              href={transformMediaUrl(creative.creativeUrl)}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:text-blue-800 text-sm"

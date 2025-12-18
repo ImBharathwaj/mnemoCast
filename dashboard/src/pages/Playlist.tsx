@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { playlistApi, screenApi } from '../services/api';
 import { PlaylistResponse, Screen } from '../types';
+import { transformMediaUrl } from '../utils/urlTransform';
 
 const Playlist: React.FC = () => {
   const [screens, setScreens] = useState<Screen[]>([]);
@@ -166,7 +167,7 @@ const Playlist: React.FC = () => {
                   </div>
                   <div className="mt-2">
                     <a
-                      href={item.creativeUrl}
+                      href={transformMediaUrl(item.creativeUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600 hover:text-blue-800 text-sm"

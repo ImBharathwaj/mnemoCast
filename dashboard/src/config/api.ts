@@ -1,4 +1,27 @@
-export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+// Determine API base URL:
+// 1. Check environment variable (REACT_APP_API_URL)
+// 2. If in browser, try to detect from current host (for LAN access)
+// 3. Fallback to localhost
+const getApiBaseUrl = (): string => {
+  // Use environment variable if set
+  if (process.env.REACT_APP_API_URL) {
+    return process.env.REACT_APP_API_URL;
+  }
+  
+  // If running in browser, try to use current host
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    // If not localhost, use the same host for API (assuming backend runs on port 8080)
+    if (host !== 'localhost' && host !== '127.0.0.1') {
+      return `http://${host}:8080`;
+    }
+  }
+  
+  // Fallback to localhost
+  return 'http://localhost:8080';
+};
+
+export const API_BASE_URL = getApiBaseUrl();
 
 console.log('API Base URL:', API_BASE_URL);
 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { campaignApi, creativeApi } from '../services/api';
 import { Campaign, Creative } from '../types';
+import { transformMediaUrl } from '../utils/urlTransform';
 
 const CampaignDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -236,7 +237,7 @@ const CampaignDetail: React.FC = () => {
                     {creative.creativeUrl && (
                       <div className="mt-2">
                         <a
-                          href={creative.creativeUrl}
+                          href={transformMediaUrl(creative.creativeUrl)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-600 hover:text-blue-800 text-sm"

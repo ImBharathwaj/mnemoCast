@@ -202,17 +202,51 @@ object HttpServer extends App {
       val minioSecretKey = sys.env.getOrElse("MINIO_SECRET_KEY", "minioadmin")
       val minioBucket = sys.env.getOrElse("MINIO_BUCKET", "mnemocast-creatives")
       val minioUseSSL = sys.env.getOrElse("MINIO_USE_SSL", "false").toBoolean
-      val minioBaseUrl = sys.env.get("MINIO_BASE_URL") // Optional: for custom CDN/proxy URL
+      
+      // Get server host from environment or default to localhost
+      // For LAN access, set SERVER_HOST environment variable to your server's IP
+      val serverHost = sys.env.getOrElse("SERVER_HOST", "localhost")
       
       // MinIO client expects endpoint without protocol, just host:port
       // Remove http:// or https:// if present
       val minioEndpoint = minioEndpointRaw
         .replaceFirst("^https?://", "")
       
+      // Construct MinIO base URL for serving files
+      // If MINIO_BASE_URL is explicitly set, use it
+      // Otherwise, construct from SERVER_HOST (for LAN access)
+      // If SERVER_HOST is localhost, use the endpoint host (may still be localhost)
+      val minioBaseUrl = sys.env.get("MINIO_BASE_URL").orElse {
+        // Extract host from endpoint (in case endpoint has different host than server)
+        val endpointHost = {
+          val cleanEndpoint = minioEndpoint.replaceFirst("^https?://", "")
+          if (cleanEndpoint.contains(":")) cleanEndpoint.split(":", 2)(0) else cleanEndpoint
+        }
+        val finalHost = if (serverHost != "localhost") serverHost else endpointHost
+        val protocol = if (minioUseSSL) "https" else "http"
+        val endpointPort = if (minioEndpoint.contains(":")) {
+          minioEndpoint.split(":", 2)(1).toInt
+        } else {
+          if (minioUseSSL) 443 else 9000
+        }
+        val portSuffix = if ((minioUseSSL && endpointPort == 443) || (!minioUseSSL && endpointPort == 9000)) {
+          ""
+        } else {
+          s":$endpointPort"
+        }
+        Some(s"$protocol://$finalHost$portSuffix/$minioBucket")
+      }
+      
       println(s"📦 Media Storage: MinIO")
       println(s"   Endpoint: $minioEndpoint")
       println(s"   Bucket: $minioBucket")
       println(s"   Use SSL: $minioUseSSL")
+      println(s"   Base URL: ${minioBaseUrl.getOrElse("(auto-generated from endpoint)")}")
+      if (serverHost == "localhost" && !sys.env.contains("MINIO_BASE_URL")) {
+        println(s"⚠️  WARNING: Using localhost for MinIO URLs. For LAN access, set SERVER_HOST environment variable.")
+        println(s"⚠️  Example: export SERVER_HOST=192.168.1.100")
+        println(s"⚠️  Or set MINIO_BASE_URL explicitly: export MINIO_BASE_URL=http://192.168.1.100:9000/mnemocast-creatives")
+      }
       
       new MinIOStorage(
         endpoint = minioEndpoint,
@@ -225,18 +259,29 @@ object HttpServer extends App {
       
     case "local" =>
       val storageBasePath = sys.env.getOrElse("STORAGE_BASE_PATH", "storage/uploads")
-      val storageBaseUrl = sys.env.getOrElse("STORAGE_BASE_URL", "http://localhost:8080/api/v1/media")
+      // Get server host from environment or default to localhost
+      // For LAN access, set SERVER_HOST environment variable to your server's IP
+      val serverHost = sys.env.getOrElse("SERVER_HOST", "localhost")
+      val storageBaseUrl = sys.env.getOrElse("STORAGE_BASE_URL", s"http://$serverHost:8080/api/v1/media")
       
       println(s"📦 Media Storage: Local Filesystem")
       println(s"   Base Path: $storageBasePath")
       println(s"   Base URL: $storageBaseUrl")
+      if (serverHost == "localhost") {
+        println(s"⚠️  WARNING: Using localhost for media URLs. For LAN access, set SERVER_HOST environment variable.")
+        println(s"⚠️  Example: export SERVER_HOST=192.168.1.100")
+      }
       
       new LocalFileStorage(storageBasePath, storageBaseUrl)
       
     case other =>
       println(s"⚠️  Unknown media storage type: $other, falling back to local filesystem")
       val storageBasePath = sys.env.getOrElse("STORAGE_BASE_PATH", "storage/uploads")
-      val storageBaseUrl = sys.env.getOrElse("STORAGE_BASE_URL", "http://localhost:8080/api/v1/media")
+      val serverHost = sys.env.getOrElse("SERVER_HOST", "localhost")
+      val storageBaseUrl = sys.env.getOrElse("STORAGE_BASE_URL", s"http://$serverHost:8080/api/v1/media")
+      if (serverHost == "localhost") {
+        println(s"⚠️  WARNING: Using localhost for media URLs. For LAN access, set SERVER_HOST environment variable.")
+      }
       new LocalFileStorage(storageBasePath, storageBaseUrl)
   }
   
