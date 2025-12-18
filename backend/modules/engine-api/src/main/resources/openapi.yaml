@@ -1,0 +1,526 @@
+openapi: 3.0.3
+info:
+  title: Mnemocast Engine API
+  description: |
+    Enterprise-ready OOH (Out-of-Home) Ad Serving Platform API
+    
+    This API provides endpoints for:
+    - Campaign and creative management
+    - Screen registration and playlist generation
+    - Real-time analytics and reporting
+    - System health and metrics monitoring
+    
+  version: 1.0.0
+  contact:
+    name: Mnemocast API Support
+    email: support@mnemocast.com
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+  - url: https://api.mnemocast.com
+    description: Production server
+
+tags:
+  - name: Health
+    description: System health and monitoring endpoints
+  - name: Metrics
+    description: System performance metrics
+  - name: Campaigns
+    description: Campaign management
+  - name: Creatives
+    description: Creative asset management
+  - name: Screens
+    description: Screen registration and management
+  - name: Playlists
+    description: Dynamic playlist generation
+  - name: Analytics
+    description: Analytics and reporting
+  - name: Events
+    description: Event tracking and logging
+
+paths:
+  /api/v1/health:
+    get:
+      tags:
+        - Health
+      summary: System health check
+      description: Returns overall system health status with component-level details
+      responses:
+        '200':
+          description: System health information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '503':
+          description: System is unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /api/v1/metrics:
+    get:
+      tags:
+        - Metrics
+      summary: System metrics
+      description: Returns system performance metrics including request counts, response times, and error rates
+      responses:
+        '200':
+          description: System metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemMetrics'
+
+  /api/v1/campaigns:
+    get:
+      tags:
+        - Campaigns
+      summary: List all campaigns
+      description: Retrieve all campaigns with optional filtering
+      responses:
+        '200':
+          description: List of campaigns
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Campaign'
+    post:
+      tags:
+        - Campaigns
+      summary: Create a new campaign
+      description: Create a new advertising campaign with targeting rules
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampaignCreate'
+      responses:
+        '201':
+          description: Campaign created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+
+  /api/v1/campaigns/{campaignId}:
+    get:
+      tags:
+        - Campaigns
+      summary: Get campaign by ID
+      parameters:
+        - name: campaignId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Campaign details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        '404':
+          description: Campaign not found
+
+  /api/v1/creatives:
+    get:
+      tags:
+        - Creatives
+      summary: List all creatives
+      responses:
+        '200':
+          description: List of creatives
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Creative'
+    post:
+      tags:
+        - Creatives
+      summary: Create a new creative
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreativeCreate'
+      responses:
+        '201':
+          description: Creative created successfully
+
+  /api/v1/screens/register:
+    post:
+      tags:
+        - Screens
+      summary: Register a new screen
+      description: Register a digital screen with location and classification data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScreenRegister'
+      responses:
+        '201':
+          description: Screen registered successfully
+
+  /api/v1/screens/{screenId}/playlist:
+    get:
+      tags:
+        - Playlists
+      summary: Get playlist for a screen
+      description: Generate a dynamic playlist of creatives for a specific screen based on targeting rules
+      parameters:
+        - name: screenId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: durationMinutes
+          in: query
+          schema:
+            type: integer
+            default: 3
+          description: Duration of playlist in minutes
+      responses:
+        '200':
+          description: Playlist generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+        '404':
+          description: Screen not found
+
+  /api/v1/analytics/dashboard:
+    get:
+      tags:
+        - Analytics
+      summary: Get dashboard metrics
+      description: Get summary metrics for the analytics dashboard
+      parameters:
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Dashboard metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardMetrics'
+
+  /api/v1/analytics/campaigns/roi:
+    get:
+      tags:
+        - Analytics
+      summary: Get ROI metrics for campaigns
+      description: Get return on investment metrics including budget utilization
+      parameters:
+        - name: startTime
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: endTime
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum: [json, csv]
+            default: json
+      responses:
+        '200':
+          description: ROI metrics
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ROIMetrics'
+            text/csv:
+              schema:
+                type: string
+
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [UP, DOWN, DEGRADED]
+        timestamp:
+          type: string
+          format: date-time
+        uptimeSeconds:
+          type: integer
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComponentHealth'
+        version:
+          type: string
+
+    ComponentHealth:
+      type: object
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum: [healthy, unhealthy, unknown]
+        message:
+          type: string
+        responseTimeMs:
+          type: integer
+
+    SystemMetrics:
+      type: object
+      properties:
+        totalRequests:
+          type: integer
+        averageResponseTimeMs:
+          type: number
+        p95ResponseTimeMs:
+          type: number
+        p99ResponseTimeMs:
+          type: number
+        errorRate:
+          type: number
+        activeCampaigns:
+          type: integer
+        activeCreatives:
+          type: integer
+        activeScreens:
+          type: integer
+
+    Campaign:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+          enum: [active, paused, completed]
+        priority:
+          type: integer
+          minimum: 1
+          maximum: 10
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        totalBudget:
+          type: integer
+        targeting:
+          $ref: '#/components/schemas/Targeting'
+
+    CampaignCreate:
+      type: object
+      required:
+        - name
+        - status
+      properties:
+        name:
+          type: string
+        status:
+          type: string
+          enum: [active, paused]
+        priority:
+          type: integer
+          minimum: 1
+          maximum: 10
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        totalBudget:
+          type: integer
+        targeting:
+          $ref: '#/components/schemas/Targeting'
+
+    Targeting:
+      type: object
+      properties:
+        tags:
+          type: array
+          items:
+            type: string
+        cities:
+          type: array
+          items:
+            type: string
+        minClassification:
+          type: integer
+          minimum: 1
+          maximum: 8
+
+    Creative:
+      type: object
+      properties:
+        id:
+          type: string
+        campaignId:
+          type: string
+        name:
+          type: string
+        mediaUrl:
+          type: string
+        durationSeconds:
+          type: integer
+        status:
+          type: string
+          enum: [active, paused]
+        weight:
+          type: integer
+
+    CreativeCreate:
+      type: object
+      required:
+        - campaignId
+        - name
+        - mediaUrl
+      properties:
+        campaignId:
+          type: string
+        name:
+          type: string
+        mediaUrl:
+          type: string
+        durationSeconds:
+          type: integer
+        status:
+          type: string
+          enum: [active, paused]
+        weight:
+          type: integer
+
+    ScreenRegister:
+      type: object
+      required:
+        - screenId
+        - name
+        - location
+        - classification
+      properties:
+        screenId:
+          type: string
+        name:
+          type: string
+        location:
+          $ref: '#/components/schemas/Location'
+        classification:
+          type: integer
+          minimum: 1
+          maximum: 8
+        tags:
+          type: array
+          items:
+            type: string
+
+    Location:
+      type: object
+      properties:
+        city:
+          type: string
+        area:
+          type: string
+
+    Playlist:
+      type: object
+      properties:
+        screenId:
+          type: string
+        durationMinutes:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlaylistItem'
+
+    PlaylistItem:
+      type: object
+      properties:
+        creativeId:
+          type: string
+        campaignId:
+          type: string
+        mediaUrl:
+          type: string
+        durationSeconds:
+          type: integer
+        order:
+          type: integer
+
+    DashboardMetrics:
+      type: object
+      properties:
+        totalAds:
+          type: integer
+        activeAds:
+          type: integer
+        totalImpressions:
+          type: integer
+        topPerformingAds:
+          type: array
+          items:
+            $ref: '#/components/schemas/AdPerformance'
+
+    AdPerformance:
+      type: object
+      properties:
+        adId:
+          type: string
+        impressions:
+          type: integer
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+
+    ROIMetrics:
+      type: object
+      properties:
+        campaignId:
+          type: string
+        campaignName:
+          type: string
+        impressions:
+          type: integer
+        budgetAllocated:
+          type: integer
+        budgetSpent:
+          type: integer
+        budgetUtilization:
+          type: number
+          format: float
+

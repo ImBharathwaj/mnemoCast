@@ -5,10 +5,11 @@ import java.time.format.DateTimeFormatter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-import org.apache.pekko.http.scaladsl.model.StatusCodes
+import org.apache.pekko.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import org.apache.pekko.http.scaladsl.server.Directives._
 import org.apache.pekko.http.scaladsl.server.Route
 
+import io.circe.syntax._
 import mnemocast.engine.api.json.JsonSupport
 import mnemocast.engine.infra.services.AnalyticsService
 
@@ -17,6 +18,13 @@ import mnemocast.engine.infra.services.AnalyticsService
   *
   * GET /api/v1/analytics/ads/{adId} - Get performance metrics for a specific ad
   * GET /api/v1/analytics/campaigns - Get performance metrics for all campaigns
+  * GET /api/v1/analytics/campaigns/compare - Compare multiple campaigns
+  * GET /api/v1/analytics/campaigns/roi - Get ROI metrics for campaigns
+  * GET /api/v1/analytics/screens - Get screen-level performance analytics
+  * GET /api/v1/analytics/creatives - Get creative performance analytics
+  * GET /api/v1/analytics/geographic - Get geographic performance analytics
+  * GET /api/v1/analytics/timeseries - Get time-series data
+  * GET /api/v1/analytics/export - Export analytics data (CSV/JSON)
   * GET /api/v1/analytics/dashboard - Get dashboard summary metrics
   */
 class AnalyticsRoutes(
@@ -53,13 +61,96 @@ class AnalyticsRoutes(
         get {
           parameters(
             "startTime".?,
-            "endTime".?
-          ) { (startTimeOpt, endTimeOpt) =>
+            "endTime".?,
+            "format".?
+          ) { (startTimeOpt, endTimeOpt, formatOpt) =>
             val startTime = startTimeOpt.flatMap(parseInstant)
             val endTime = endTimeOpt.flatMap(parseInstant)
 
             onSuccess(analyticsService.getCampaignPerformance(startTime, endTime)) { campaigns =>
-              complete(campaigns)
+              formatOpt match {
+                case Some("csv") =>
+                  complete(HttpEntity(ContentTypes.`text/csv(UTF-8)`, toCsv(campaigns)))
+                case _ =>
+                  complete(campaigns)
+              }
+            }
+          }
+        }
+      } ~
+      // Campaign comparison endpoint
+      path("campaigns" / "compare") {
+        get {
+          parameters(
+            "campaignIds",
+            "startTime".?,
+            "endTime".?,
+            "format".?
+          ) { (campaignIdsStr, startTimeOpt, endTimeOpt, formatOpt) =>
+            val campaignIds = campaignIdsStr.split(",").toList.map(_.trim)
+            val startTime = startTimeOpt.flatMap(parseInstant)
+            val endTime = endTimeOpt.flatMap(parseInstant)
+
+            onSuccess(analyticsService.compareCampaigns(campaignIds, startTime, endTime)) { comparisons =>
+              formatOpt match {
+                case Some("csv") =>
+                  complete(HttpEntity(ContentTypes.`text/csv(UTF-8)`, comparisonsToCsv(comparisons)))
+                case _ =>
+                  complete(comparisons)
+              }
+            }
+          }
+        }
+      } ~
+      // Time-series endpoint
+      path("timeseries") {
+        get {
+          parameters(
+            "adId".?,
+            "startTime",
+            "endTime",
+            "intervalHours".as[Int].?(1),
+            "format".?
+          ) { (adIdOpt, startTimeStr, endTimeStr, intervalHours, formatOpt) =>
+            (parseInstant(startTimeStr), parseInstant(endTimeStr)) match {
+              case (Some(startTime), Some(endTime)) =>
+                onSuccess(analyticsService.getTimeSeries(adIdOpt, startTime, endTime, intervalHours)) { timeSeries =>
+                  formatOpt match {
+                    case Some("csv") =>
+                      complete(HttpEntity(ContentTypes.`text/csv(UTF-8)`, timeSeriesToCsv(timeSeries)))
+                    case _ =>
+                      complete(timeSeries)
+                  }
+                }
+              case _ =>
+                complete(StatusCodes.BadRequest, "Invalid startTime or endTime format")
+            }
+          }
+        }
+      } ~
+      // Export endpoint (general export)
+      path("export") {
+        get {
+          parameters(
+            "type".?,
+            "startTime".?,
+            "endTime".?,
+            "format".?
+          ) { (exportTypeOpt, startTimeOpt, endTimeOpt, formatOpt) =>
+            val format = formatOpt.getOrElse("json")
+            exportTypeOpt match {
+              case Some("campaigns") =>
+                val startTime = startTimeOpt.flatMap(parseInstant)
+                val endTime = endTimeOpt.flatMap(parseInstant)
+                onSuccess(analyticsService.getCampaignPerformance(startTime, endTime)) { campaigns =>
+                  if (format == "csv") {
+                    complete(HttpEntity(ContentTypes.`text/csv(UTF-8)`, toCsv(campaigns)))
+                  } else {
+                    complete(HttpEntity(ContentTypes.`application/json`, campaigns.asJson.noSpaces))
+                  }
+                }
+              case _ =>
+                complete(StatusCodes.BadRequest, "Invalid export type. Supported: campaigns")
             }
           }
         }
@@ -95,6 +186,90 @@ class AnalyticsRoutes(
           case _: Exception => None
         }
     }
+  }
+
+  /**
+    * Converts campaign performance to CSV format.
+    */
+  private def toCsv(campaigns: List[mnemocast.engine.domain.model.CampaignPerformance]): String = {
+    val header = "Campaign ID,Total Impressions,Ad Count\n"
+    val rows = campaigns.map { c =>
+      s"${c.campaignId},${c.totalImpressions},${c.ads.size}\n"
+    }.mkString
+    header + rows
+  }
+
+  /**
+    * Converts campaign comparisons to CSV format.
+    */
+  private def comparisonsToCsv(comparisons: List[mnemocast.engine.domain.model.CampaignComparison]): String = {
+    val header = "Campaign ID,Campaign Name,Impressions,Start Time,End Time\n"
+    val rows = comparisons.map { c =>
+      val startTime = c.startTime.map(_.toString).getOrElse("")
+      val endTime = c.endTime.map(_.toString).getOrElse("")
+      s"${c.campaignId},${c.campaignName},${c.impressions},$startTime,$endTime\n"
+    }.mkString
+    header + rows
+  }
+
+  /**
+    * Converts time-series data to CSV format.
+    */
+  private def timeSeriesToCsv(timeSeries: mnemocast.engine.domain.model.TimeSeriesData): String = {
+    val header = s"Timestamp,${timeSeries.metric}\n"
+    val rows = timeSeries.points.map { p =>
+      s"${p.timestamp.toString},${p.value}\n"
+    }.mkString
+    header + rows
+  }
+
+  /**
+    * Converts ROI metrics to CSV format.
+    */
+  private def roiMetricsToCsv(roiMetrics: List[mnemocast.engine.domain.model.ROIMetrics]): String = {
+    val header = "Campaign ID,Campaign Name,Impressions,Budget Allocated,Budget Spent,Budget Utilization %\n"
+    val rows = roiMetrics.map { r =>
+      val budgetAlloc = r.budgetAllocated.map(_.toString).getOrElse("")
+      s"${r.campaignId},${r.campaignName},${r.impressions},$budgetAlloc,${r.budgetSpent},${r.budgetUtilization}\n"
+    }.mkString
+    header + rows
+  }
+
+  /**
+    * Converts screen performance to CSV format.
+    */
+  private def screenPerfToCsv(screenPerf: List[mnemocast.engine.domain.model.ScreenPerformance]): String = {
+    val header = "Screen ID,Screen Name,Impressions,City,Area,Classification\n"
+    val rows = screenPerf.map { s =>
+      val city = s.city.getOrElse("")
+      val area = s.area.getOrElse("")
+      s"${s.screenId},${s.screenName},${s.impressions},$city,$area,${s.classification}\n"
+    }.mkString
+    header + rows
+  }
+
+  /**
+    * Converts creative performance to CSV format.
+    */
+  private def creativePerfToCsv(creativePerf: List[mnemocast.engine.domain.model.CreativePerformance]): String = {
+    val header = "Creative ID,Creative Name,Campaign ID,Campaign Name,Impressions,Play Count\n"
+    val rows = creativePerf.map { c =>
+      s"${c.creativeId},${c.creativeName},${c.campaignId},${c.campaignName},${c.impressions},${c.playCount}\n"
+    }.mkString
+    header + rows
+  }
+
+  /**
+    * Converts geographic performance to CSV format.
+    */
+  private def geographicPerfToCsv(geoPerf: List[mnemocast.engine.domain.model.GeographicPerformance]): String = {
+    val header = "City,Area,Impressions,Screen Count\n"
+    val rows = geoPerf.map { g =>
+      val city = g.city.getOrElse("")
+      val area = g.area.getOrElse("")
+      s"$city,$area,${g.impressions},${g.screenCount}\n"
+    }.mkString
+    header + rows
   }
 }
 

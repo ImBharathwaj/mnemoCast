@@ -120,13 +120,94 @@ export const analyticsApi = {
     return api.get(`${API_ENDPOINTS.analytics.ad(adId)}${query ? '?' + query : ''}`).then(res => res.data);
   },
   
-  campaigns: (startDate?: string, endDate?: string) => {
+  campaigns: (startDate?: string, endDate?: string, format?: string) => {
     const params = new URLSearchParams();
-    if (startDate) params.append('startDate', startDate);
-    if (endDate) params.append('endDate', endDate);
+    if (startDate) params.append('startTime', startDate);
+    if (endDate) params.append('endTime', endDate);
+    if (format) params.append('format', format);
     const query = params.toString();
     return api.get(`${API_ENDPOINTS.analytics.campaigns}${query ? '?' + query : ''}`).then(res => res.data);
   },
+  
+  compareCampaigns: (campaignIds: string[], startTime?: string, endTime?: string, format?: string) => {
+    const params = new URLSearchParams();
+    params.append('campaignIds', campaignIds.join(','));
+    if (startTime) params.append('startTime', startTime);
+    if (endTime) params.append('endTime', endTime);
+    if (format) params.append('format', format);
+    return api.get(`${API_ENDPOINTS.analytics.compareCampaigns}?${params.toString()}`).then(res => res.data);
+  },
+  
+  timeSeries: (adId: string | undefined, startTime: string, endTime: string, intervalHours: number = 1, format?: string) => {
+    const params = new URLSearchParams();
+    if (adId) params.append('adId', adId);
+    params.append('startTime', startTime);
+    params.append('endTime', endTime);
+    params.append('intervalHours', intervalHours.toString());
+    if (format) params.append('format', format);
+    return api.get(`${API_ENDPOINTS.analytics.timeSeries}?${params.toString()}`).then(res => res.data);
+  },
+  
+  roi: (startTime?: string, endTime?: string, format?: string) => {
+    const params = new URLSearchParams();
+    if (startTime) params.append('startTime', startTime);
+    if (endTime) params.append('endTime', endTime);
+    if (format) params.append('format', format);
+    return api.get(`${API_ENDPOINTS.analytics.roi}${params.toString() ? '?' + params.toString() : ''}`).then(res => res.data);
+  },
+  
+  screens: (startTime?: string, endTime?: string, format?: string) => {
+    const params = new URLSearchParams();
+    if (startTime) params.append('startTime', startTime);
+    if (endTime) params.append('endTime', endTime);
+    if (format) params.append('format', format);
+    return api.get(`${API_ENDPOINTS.analytics.screens}${params.toString() ? '?' + params.toString() : ''}`).then(res => res.data);
+  },
+  
+  creatives: (startTime?: string, endTime?: string, format?: string) => {
+    const params = new URLSearchParams();
+    if (startTime) params.append('startTime', startTime);
+    if (endTime) params.append('endTime', endTime);
+    if (format) params.append('format', format);
+    return api.get(`${API_ENDPOINTS.analytics.creatives}${params.toString() ? '?' + params.toString() : ''}`).then(res => res.data);
+  },
+  
+  geographic: (startTime?: string, endTime?: string, format?: string) => {
+    const params = new URLSearchParams();
+    if (startTime) params.append('startTime', startTime);
+    if (endTime) params.append('endTime', endTime);
+    if (format) params.append('format', format);
+    return api.get(`${API_ENDPOINTS.analytics.geographic}${params.toString() ? '?' + params.toString() : ''}`).then(res => res.data);
+  },
+  
+  export: (type: string, startTime?: string, endTime?: string, format: string = 'csv') => {
+    const params = new URLSearchParams();
+    params.append('type', type);
+    if (startTime) params.append('startTime', startTime);
+    if (endTime) params.append('endTime', endTime);
+    params.append('format', format);
+    return api.get(`${API_ENDPOINTS.analytics.export}?${params.toString()}`, {
+      responseType: 'blob',
+    }).then(res => {
+      const blob = new Blob([res.data], { type: format === 'csv' ? 'text/csv' : 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `analytics-export-${Date.now()}.${format}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    });
+  },
+};
+
+// Health and Metrics APIs
+export const healthApi = {
+  health: () => api.get(API_ENDPOINTS.health.health).then(res => res.data),
+  ready: () => api.get(API_ENDPOINTS.health.ready).then(res => res.data),
+  live: () => api.get(API_ENDPOINTS.health.live).then(res => res.data),
+  metrics: () => api.get(API_ENDPOINTS.health.metrics).then(res => res.data),
 };
 
 // Media Upload API

@@ -15,8 +15,8 @@ import org.apache.pekko.http.scaladsl.model.{HttpMethods, StatusCodes}
 import org.apache.pekko.http.scaladsl.server.Directives._
 import org.apache.pekko.http.scaladsl.server.{Directive0, Route}
 
-import mnemocast.engine.api.routes.{AdRoutes, AdminAdRoutes, AnalyticsRoutes, CampaignRoutes, CreativeRoutes, EventRoutes, MediaRoutes, PlaylistRoutes, ScreenRoutes}
-import mnemocast.engine.infra.services.{AdDeliveryService, AnalyticsService, BudgetService, CampaignBudgetService, CampaignPlaylistService, FrequencyCapService, MediaValidator, PlaylistService}
+import mnemocast.engine.api.routes.{AdRoutes, AdminAdRoutes, AnalyticsRoutes, CampaignRoutes, CreativeRoutes, DocsRoutes, EventRoutes, HealthRoutes, MediaRoutes, MetricsRoutes, PlaylistRoutes, ScreenRoutes}
+import mnemocast.engine.infra.services.{AdDeliveryService, AnalyticsService, BudgetService, CampaignBudgetService, CampaignPlaylistService, FrequencyCapService, HealthService, MediaValidator, MetricsService, PlaylistService}
 import mnemocast.engine.infra.storage.{LocalFileStorage, MediaStorage, MinIOStorage}
 import mnemocast.engine.infra.store.redis.{RedisAdStore, RedisCampaignStore, RedisClient, RedisCreativeStore, RedisDecisionStore, RedisEventStore, RedisScreenStore}
 import mnemocast.engine.infra.store.postgres.{PostgresAdStore, PostgresCampaignStore, PostgresClient, PostgresCreativeStore, PostgresEventStore, PostgresScreenStore}
@@ -26,6 +26,9 @@ object HttpServer extends App {
 
   implicit val system: ActorSystem  = ActorSystem("mnemocast-engine")
   implicit val ec: ExecutionContext = system.dispatcher
+  
+  // Track server start time for uptime calculation
+  private val serverStartTime = java.time.Instant.now()
 
   // --- Infra wiring (manual DI) ---
   // Storage strategy: Use environment variable STORAGE_STRATEGY
@@ -136,7 +139,7 @@ object HttpServer extends App {
 
   private val budgetService = new BudgetService(eventStore)
   private val frequencyCapService = new FrequencyCapService(eventStore)
-  private val analyticsService = new AnalyticsService(adStore, eventStore)
+  private val analyticsService = new AnalyticsService(adStore, eventStore, Some(campaignStore), Some(creativeStore), Some(screenStore))
 
   private val adDeliveryService =
     new AdDeliveryService(adStore, eventStore, budgetService, frequencyCapService, Some(screenStore))
@@ -171,6 +174,10 @@ object HttpServer extends App {
   private val campaignPlaylistService =
     new CampaignPlaylistService(campaignStore, creativeStore, campaignBudgetService, decisionStore)
 
+  // Health and Metrics services
+  private val healthService = new HealthService(redisClient, postgresClientOpt, mediaStorage, serverStartTime)
+  private val metricsService = new MetricsService(campaignStore, creativeStore, screenStore, serverStartTime)
+
   private val adRoutes = new AdRoutes(adDeliveryService)
   private val adminAdRoutes = new AdminAdRoutes(adStore, eventStore)
   private val eventRoutes = new EventRoutes(eventStore)
@@ -179,6 +186,8 @@ object HttpServer extends App {
   private val playlistRoutes = new PlaylistRoutes(playlistService, campaignPlaylistService, screenStore)
   private val campaignRoutes = new CampaignRoutes(campaignStore)
   private val creativeRoutes = new CreativeRoutes(creativeStore, campaignStore)
+  private val healthRoutes = new HealthRoutes(healthService)
+  private val metricsRoutes = new MetricsRoutes(metricsService)
 
   // Media storage and upload
   // Storage type: "local" or "minio" (default: "minio" for dev)
@@ -235,9 +244,10 @@ object HttpServer extends App {
   )
   private val mediaRoutes = new MediaRoutes(mediaStorage, mediaValidator)
 
-  // Add logging directive to all routes
+  // Add logging and metrics tracking directive to all routes
   private def logRequestResponse: Directive0 = {
     extractRequest.flatMap { request =>
+      val startTime = System.currentTimeMillis()
       val timestamp = java.time.LocalDateTime.now()
       val method = request.method.value
       val path = request.uri.path.toString()
@@ -246,8 +256,17 @@ object HttpServer extends App {
       println(s"[$timestamp] ===> $method $path$query")
       
       mapResponse { response =>
+        val endTime = System.currentTimeMillis()
+        val responseTimeMs = endTime - startTime
         val status = response.status.intValue()
-        println(s"[$timestamp] <=== $method $path$query -> $status")
+        val isError = status >= 400
+        
+        // Record metrics (exclude metrics endpoint itself to avoid recursion)
+        if (!path.contains("/api/v1/metrics")) {
+          metricsService.recordRequest(path, method, responseTimeMs, isError)
+        }
+        
+        println(s"[$timestamp] <=== $method $path$query -> $status (${responseTimeMs}ms)")
         response
       }
     }
@@ -294,9 +313,14 @@ object HttpServer extends App {
     }
     .result()
 
+  private val docsRoutes = new DocsRoutes()
+
   private val allRoutes: Route = 
     logRequestResponse {
       concat(
+        docsRoutes.routes,
+        healthRoutes.routes,
+        metricsRoutes.routes,
         adRoutes.routes,
         adminAdRoutes.routes,
         eventRoutes.routes,

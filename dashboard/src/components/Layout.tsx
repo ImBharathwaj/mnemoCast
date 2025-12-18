@@ -21,8 +21,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { path: '/campaigns', label: 'Campaigns' },
     { path: '/creatives', label: 'Creatives' },
     { path: '/screens', label: 'Screens' },
-    { path: '/upload', label: 'Media Upload' },
     { path: '/analytics', label: 'Analytics' },
+    { path: '/monitoring', label: 'Monitoring' },
     { path: '/playlist', label: 'Playlist' },
   ];
 

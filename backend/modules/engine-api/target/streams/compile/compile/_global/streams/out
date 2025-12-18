@@ -1,2 +1,10 @@
-[warn] 1 deprecation (since Akka 2.6.0); re-run with -deprecation for details
-[warn] one warning found
+[warn] /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/src/main/scala/mnemocast/engine/api/HttpServer.scala:142:81: Reference to uninitialized value campaignStore
+[warn]   private val analyticsService = new AnalyticsService(adStore, eventStore, Some(campaignStore), Some(creativeStore), Some(screenStore))
+[warn]                                                                                 ^
+[warn] /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/src/main/scala/mnemocast/engine/api/HttpServer.scala:142:102: Reference to uninitialized value creativeStore
+[warn]   private val analyticsService = new AnalyticsService(adStore, eventStore, Some(campaignStore), Some(creativeStore), Some(screenStore))
+[warn]                                                                                                      ^
+[warn] /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/src/main/scala/mnemocast/engine/api/HttpServer.scala:178:81: Reference to uninitialized value mediaStorage
+[warn]   private val healthService = new HealthService(redisClient, postgresClientOpt, mediaStorage, serverStartTime)
+[warn]                                                                                 ^
+[warn] three warnings found

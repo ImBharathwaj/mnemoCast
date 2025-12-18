@@ -1,7 +1,2 @@
-[error] /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/src/main/scala/mnemocast/engine/infra/storage/MinIOStorage.scala:217:7: Missing closing brace `}` assumed here
-[error]       val extension = if (originalName.contains(".")) {
-[error]       ^
-[error] /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/src/main/scala/mnemocast/engine/infra/storage/MinIOStorage.scala:265:7: ';' expected but 'catch' found.
-[error]     } catch {
-[error]       ^
-[error] two errors found
+[warn] 1 deprecation (since 2.13.0); re-run with -deprecation for details
+[warn] one warning found

@@ -7,8 +7,8 @@ import CampaignDetail from './pages/CampaignDetail';
 import Creatives from './pages/Creatives';
 import Screens from './pages/Screens';
 import Analytics from './pages/Analytics';
+import Monitoring from './pages/Monitoring';
 import Playlist from './pages/Playlist';
-import MediaUpload from './pages/MediaUpload';
 import './App.css';
 
 console.log('App component loading...');
@@ -27,8 +27,8 @@ function App() {
             <Route path="/creatives" element={<Creatives />} />
             <Route path="/screens" element={<Screens />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route path="/monitoring" element={<Monitoring />} />
             <Route path="/playlist" element={<Playlist />} />
-            <Route path="/upload" element={<MediaUpload />} />
           </Routes>
         </Layout>
       </Router>
