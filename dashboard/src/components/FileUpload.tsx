@@ -25,7 +25,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileSelect = (file: File) => {
+  const handleFileSelect = async (file: File) => {
     // Validate file type
     const isValidType = acceptedTypes.split(',').some(type => {
       const pattern = type.trim().replace('*', '.*');
@@ -66,6 +66,39 @@ const FileUpload: React.FC<FileUploadProps> = ({
       reader.readAsDataURL(file);
     } else {
       setPreview(null);
+    }
+
+    // Auto-upload the file when selected
+    // This makes the workflow smoother - just select file and it uploads automatically
+    try {
+      setUploading(true);
+      setError(null);
+      setUploadProgress(0);
+
+      const response = await mediaApi.upload(
+        file,
+        campaignId,
+        creativeId,
+        (progress) => setUploadProgress(progress)
+      );
+
+      setUploadProgress(100);
+      onFileUploaded(response.url, response.duration);
+      
+      // Reset state after successful upload (keep preview)
+      setTimeout(() => {
+        setUploadProgress(null);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+      }, 2000);
+    } catch (err: any) {
+      const errorMsg = err.response?.data || err.message || 'Failed to upload file';
+      setError(errorMsg);
+      onError?.(errorMsg);
+      // Don't clear selectedFile on error, so user can retry
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -211,21 +244,28 @@ const FileUpload: React.FC<FileUploadProps> = ({
         </div>
       )}
 
-      {/* Upload Button */}
-      {selectedFile && !uploading && uploadProgress === null && (
+      {/* Upload Button - Only show if upload failed and file is still selected */}
+      {selectedFile && !uploading && uploadProgress === null && error && (
         <button
           type="button"
           onClick={handleUpload}
           className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Upload File
+          Retry Upload
         </button>
       )}
 
       {/* Upload Complete */}
-      {uploadProgress === 100 && (
-        <div className="text-green-600 text-sm text-center">
-          ✓ File uploaded successfully!
+      {uploadProgress === 100 && !error && (
+        <div className="text-green-600 text-sm text-center font-medium">
+          ✓ File uploaded successfully! URL has been set automatically.
+        </div>
+      )}
+
+      {/* Uploading Status */}
+      {uploading && (
+        <div className="text-blue-600 text-sm text-center">
+          Uploading to MinIO...
         </div>
       )}
     </div>

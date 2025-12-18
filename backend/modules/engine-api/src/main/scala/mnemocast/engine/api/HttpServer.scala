@@ -17,7 +17,7 @@ import org.apache.pekko.http.scaladsl.server.{Directive0, Route}
 
 import mnemocast.engine.api.routes.{AdRoutes, AdminAdRoutes, AnalyticsRoutes, CampaignRoutes, CreativeRoutes, EventRoutes, MediaRoutes, PlaylistRoutes, ScreenRoutes}
 import mnemocast.engine.infra.services.{AdDeliveryService, AnalyticsService, BudgetService, CampaignBudgetService, CampaignPlaylistService, FrequencyCapService, MediaValidator, PlaylistService}
-import mnemocast.engine.infra.storage.{LocalFileStorage, MediaStorage}
+import mnemocast.engine.infra.storage.{LocalFileStorage, MediaStorage, MinIOStorage}
 import mnemocast.engine.infra.store.redis.{RedisAdStore, RedisCampaignStore, RedisClient, RedisCreativeStore, RedisDecisionStore, RedisEventStore, RedisScreenStore}
 import mnemocast.engine.infra.store.postgres.{PostgresAdStore, PostgresCampaignStore, PostgresClient, PostgresCreativeStore, PostgresEventStore, PostgresScreenStore}
 import mnemocast.engine.infra.store.{AdStore, CampaignStore, CreativeStore, DecisionStore, EventStore, HybridAdStore, HybridCampaignStore, HybridCreativeStore, HybridEventStore, HybridScreenStore, ScreenStore}
@@ -181,9 +181,54 @@ object HttpServer extends App {
   private val creativeRoutes = new CreativeRoutes(creativeStore, campaignStore)
 
   // Media storage and upload
-  private val storageBasePath = sys.env.getOrElse("STORAGE_BASE_PATH", "storage/uploads")
-  private val storageBaseUrl = sys.env.getOrElse("STORAGE_BASE_URL", "http://localhost:8080/api/v1/media")
-  private val mediaStorage: MediaStorage = new LocalFileStorage(storageBasePath, storageBaseUrl)
+  // Storage type: "local" or "minio" (default: "minio" for dev)
+  val mediaStorageType = sys.env.getOrElse("MEDIA_STORAGE_TYPE", "minio")
+  
+  private val mediaStorage: MediaStorage = mediaStorageType match {
+    case "minio" =>
+      val minioEndpointRaw = sys.env.getOrElse("MINIO_ENDPOINT", "localhost:9000")
+      val minioAccessKey = sys.env.getOrElse("MINIO_ACCESS_KEY", "minioadmin")
+      val minioSecretKey = sys.env.getOrElse("MINIO_SECRET_KEY", "minioadmin")
+      val minioBucket = sys.env.getOrElse("MINIO_BUCKET", "mnemocast-creatives")
+      val minioUseSSL = sys.env.getOrElse("MINIO_USE_SSL", "false").toBoolean
+      val minioBaseUrl = sys.env.get("MINIO_BASE_URL") // Optional: for custom CDN/proxy URL
+      
+      // MinIO client expects endpoint without protocol, just host:port
+      // Remove http:// or https:// if present
+      val minioEndpoint = minioEndpointRaw
+        .replaceFirst("^https?://", "")
+      
+      println(s"📦 Media Storage: MinIO")
+      println(s"   Endpoint: $minioEndpoint")
+      println(s"   Bucket: $minioBucket")
+      println(s"   Use SSL: $minioUseSSL")
+      
+      new MinIOStorage(
+        endpoint = minioEndpoint,
+        accessKey = minioAccessKey,
+        secretKey = minioSecretKey,
+        bucketName = minioBucket,
+        useSSL = minioUseSSL,
+        baseUrl = minioBaseUrl
+      )
+      
+    case "local" =>
+      val storageBasePath = sys.env.getOrElse("STORAGE_BASE_PATH", "storage/uploads")
+      val storageBaseUrl = sys.env.getOrElse("STORAGE_BASE_URL", "http://localhost:8080/api/v1/media")
+      
+      println(s"📦 Media Storage: Local Filesystem")
+      println(s"   Base Path: $storageBasePath")
+      println(s"   Base URL: $storageBaseUrl")
+      
+      new LocalFileStorage(storageBasePath, storageBaseUrl)
+      
+    case other =>
+      println(s"⚠️  Unknown media storage type: $other, falling back to local filesystem")
+      val storageBasePath = sys.env.getOrElse("STORAGE_BASE_PATH", "storage/uploads")
+      val storageBaseUrl = sys.env.getOrElse("STORAGE_BASE_URL", "http://localhost:8080/api/v1/media")
+      new LocalFileStorage(storageBasePath, storageBaseUrl)
+  }
+  
   private val mediaValidator = new MediaValidator(
     maxImageSizeBytes = sys.env.getOrElse("MAX_IMAGE_SIZE_MB", "10").toLong * 1024 * 1024,
     maxVideoSizeBytes = sys.env.getOrElse("MAX_VIDEO_SIZE_MB", "500").toLong * 1024 * 1024

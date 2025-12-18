@@ -9,6 +9,7 @@ lazy val pekkoHttpVersion  = "1.0.1"
 lazy val pekkoCirceVersion = "2.8.0"
 lazy val postgresVersion   = "42.7.1"
 lazy val hikariVersion     = "5.1.0"
+lazy val minioVersion      = "8.5.7"
 lazy val scalaTestVersion  = "3.2.17"
 
 lazy val root = (project in file("."))
@@ -44,6 +45,7 @@ lazy val engineInfra = (project in file("modules/engine-infra"))
       "redis.clients"     %  "jedis"         % jedisVersion,
       "org.postgresql"    %  "postgresql"    % postgresVersion,
       "com.zaxxer"        %  "HikariCP"      % hikariVersion,
+      "io.minio"          %  "minio"         % minioVersion,
       "io.circe"          %% "circe-core"    % circeVersion,
       "io.circe"          %% "circe-generic" % circeVersion,
       "io.circe"          %% "circe-parser"  % circeVersion,

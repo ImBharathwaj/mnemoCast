@@ -194,11 +194,11 @@ const CreateCreativeModal: React.FC<CreateCreativeModalProps> = ({ campaigns: pr
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Creative URL * (Upload file or enter URL)
+                Creative URL * {formData.campaignId ? '(Select file to upload automatically)' : '(Enter URL or upload file after selecting campaign)'}
               </label>
               
               {/* File Upload Component */}
-              {formData.campaignId && (
+              {formData.campaignId ? (
                 <div className="mb-3">
                   <FileUpload
                     campaignId={formData.campaignId}
@@ -219,12 +219,16 @@ const CreateCreativeModal: React.FC<CreateCreativeModalProps> = ({ campaigns: pr
                     }
                     maxSizeMB={formData.creativeType === 'video' ? 500 : 10}
                   />
+                  <p className="mt-2 text-xs text-gray-600">
+                    Select a file from your local filesystem - it will be automatically uploaded to MinIO and the URL will be set for you.
+                  </p>
                 </div>
-              )}
-              {!formData.campaignId && (
-                <p className="text-sm text-gray-500 mb-2">
-                  Select a campaign to enable file upload
-                </p>
+              ) : (
+                <div className="mb-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <p className="text-sm text-yellow-800">
+                    Please select a campaign first to enable file upload.
+                  </p>
+                </div>
               )}
               
               <input
@@ -232,11 +236,13 @@ const CreateCreativeModal: React.FC<CreateCreativeModalProps> = ({ campaigns: pr
                 required
                 value={formData.creativeUrl}
                 onChange={(e) => setFormData({ ...formData, creativeUrl: e.target.value })}
-                placeholder="https://example.com/ad.mp4 or upload file above"
+                placeholder={formData.campaignId ? "Auto-filled after file upload, or enter URL manually" : "Enter URL manually or select campaign to upload file"}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               />
               <p className="mt-1 text-xs text-gray-500">
-                Upload a file using the uploader above, or enter a URL manually.
+                {formData.campaignId 
+                  ? "The URL field will be automatically filled when you upload a file. You can also enter a URL manually if you have an external URL."
+                  : "Select a campaign above to enable file upload from your local filesystem."}
               </p>
             </div>
 
