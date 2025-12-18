@@ -9,9 +9,9 @@
 [0m[[0m[0mdebug[0m] [0m[0m> Exec(onFailure loadFailed, None, None)[0m
 [0m[[0m[0mdebug[0m] [0m[0m> Exec(loadp, None, None)[0m
 [0m[[0m[0minfo[0m] [0m[0mwelcome to sbt 1.9.0 (Ubuntu Java 11.0.29)[0m
-[0m[[0m[0mdebug[0m] [0m[0mLoad.defaultLoad until apply took 232.938237ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m          Load.loadUnit: plugins took 185.721855ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m          Load.loadUnit: defsScala took 0.504752ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mLoad.defaultLoad until apply took 243.528485ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m          Load.loadUnit: plugins took 177.605305ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m          Load.loadUnit: defsScala took 1.178476ms[0m
 [0m[[0m[0mdebug[0m] [0m[0m[Loading] Scanning directory /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/project[0m
 [0m[[0m[0mdebug[0m] [0m[0m[Loading] Found non-root projects [0m
 [0m[[0m[0mdebug[0m] [0m[0m[Loading] Done in /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/project, returning: ()[0m
@@ -28,26 +28,26 @@
 [0m[[0m[0mdebug[0m] [0m[0mClause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))[0m
 [0m[[0m[0mdebug[0m] [0m[0mClause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))[0m
 [0m[[0m[0mdebug[0m] [0m[0m  :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)[0m
-[0m[[0m[0mdebug[0m] [0m[0mPlugins.deducer#function took 56.640113 ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m              Load.resolveProject(backend-build) took 99.267829ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m            Load.loadTransitive: finalizeProject(Project(id backend-build, base: /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/project, plugins: List(<none>))) took 210.772823ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mPlugins.deducer#function took 72.575171 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m              Load.resolveProject(backend-build) took 149.138379ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m            Load.loadTransitive: finalizeProject(Project(id backend-build, base: /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/project, plugins: List(<none>))) took 306.842204ms[0m
 [0m[[0m[0mdebug[0m] [0m[0m[Loading] Done in /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/project, returning: (backend-build)[0m
-[0m[[0m[0mdebug[0m] [0m[0m          Load.loadUnit: loadedProjectsRaw took 265.04734ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m          Load.loadUnit: cleanEvalClasses took 0.494786ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m        Load.loadUnit(file:/home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/project/, ...) took 465.910934ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m      Load.apply: load took 1116.084892ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m      Load.apply: resolveProjects took 13.849381ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m      Load.apply: finalTransforms took 193.36811ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m      Load.apply: config.delegates took 25.397475ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m      Load.apply: Def.make(settings)... took 939.127696ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m      Load.apply: structureIndex took 197.848406ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m      Load.apply: mkStreams took 2.544105ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m          Load.loadUnit: loadedProjectsRaw took 374.282194ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m          Load.loadUnit: cleanEvalClasses took 0.492391ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m        Load.loadUnit(file:/home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/project/, ...) took 564.888956ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m      Load.apply: load took 1359.956558ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m      Load.apply: resolveProjects took 13.578195ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m      Load.apply: finalTransforms took 269.877707ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m      Load.apply: config.delegates took 27.192859ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m      Load.apply: Def.make(settings)... took 1521.126021ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m      Load.apply: structureIndex took 338.113424ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m      Load.apply: mkStreams took 3.035341ms[0m
 [0m[[0m[0minfo[0m] [0m[0mloading project definition from /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/project[0m
 [0m[[0m[0mdebug[0m] [0m[0mRunning task... Cancel: Signal, check cycles: false, forcegc: true[0m
-[0m[[0m[0mdebug[0m] [0m[0m    Load.loadUnit: plugins took 4331.984513ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m    Load.loadUnit: defsScala took 0.00623ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m    Load.loadUnit: plugins took 5797.227994ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m    Load.loadUnit: defsScala took 0.010609ms[0m
 [0m[[0m[0mdebug[0m] [0m[0m[Loading] Scanning directory /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend[0m
-[0m[[0m[0mdebug[0m] [0m[0m      Load.loadUnit: mkEval took 16.032591ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m      Load.loadUnit: mkEval took 13.493045ms[0m
 [0m[[0m[0mdebug[0m] [0m[0m[Loading] Found root project root w/ remaining engineDomain,engineInfra,engineApi[0m
 [0m[[0m[0mdebug[0m] [0m[0mdeducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))[0m
 [0m[[0m[0mdebug[0m] [0m[0mClause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))[0m
@@ -62,10 +62,10 @@
 [0m[[0m[0mdebug[0m] [0m[0mClause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))[0m
 [0m[[0m[0mdebug[0m] [0m[0mClause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))[0m
 [0m[[0m[0mdebug[0m] [0m[0m  :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)[0m
-[0m[[0m[0mdebug[0m] [0m[0mPlugins.deducer#function took 5.488164 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mPlugins.deducer#function took 3.895057 ms[0m
 [0m[[0m[0minfo[0m] [0m[0mloading settings for project root from build.sbt ...[0m
-[0m[[0m[0mdebug[0m] [0m[0m        Load.resolveProject(root) took 6.711389ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m      Load.loadTransitive: finalizeProject(Project(id root, base: /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend, aggregate: List(LocalProject(engineDomain), LocalProject(engineInfra), LocalProject(engineApi)), dependencies: List(ClasspathDependency(LocalProject(engineApi),None)), plugins: List(<none>))) took 13.831599ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m        Load.resolveProject(root) took 8.040293ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m      Load.loadTransitive: finalizeProject(Project(id root, base: /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend, aggregate: List(LocalProject(engineDomain), LocalProject(engineInfra), LocalProject(engineApi)), dependencies: List(ClasspathDependency(LocalProject(engineApi),None)), plugins: List(<none>))) took 13.79307ms[0m
 [0m[[0m[0mdebug[0m] [0m[0m[Loading] Loading project engineDomain @ /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-domain[0m
 [0m[[0m[0mdebug[0m] [0m[0mdeducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))[0m
 [0m[[0m[0mdebug[0m] [0m[0mClause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))[0m
@@ -80,8 +80,8 @@
 [0m[[0m[0mdebug[0m] [0m[0mClause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))[0m
 [0m[[0m[0mdebug[0m] [0m[0mClause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))[0m
 [0m[[0m[0mdebug[0m] [0m[0m  :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)[0m
-[0m[[0m[0mdebug[0m] [0m[0mPlugins.deducer#function took 4.04135 ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m      Load.resolveProject(engineDomain) took 1.900155ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mPlugins.deducer#function took 3.50119 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m      Load.resolveProject(engineDomain) took 1.965698ms[0m
 [0m[[0m[0mdebug[0m] [0m[0m[Loading] Loading project engineInfra @ /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra[0m
 [0m[[0m[0mdebug[0m] [0m[0mdeducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))[0m
 [0m[[0m[0mdebug[0m] [0m[0mClause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))[0m
@@ -96,8 +96,8 @@
 [0m[[0m[0mdebug[0m] [0m[0mClause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))[0m
 [0m[[0m[0mdebug[0m] [0m[0mClause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))[0m
 [0m[[0m[0mdebug[0m] [0m[0m  :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)[0m
-[0m[[0m[0mdebug[0m] [0m[0mPlugins.deducer#function took 3.339411 ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m      Load.resolveProject(engineInfra) took 1.655096ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mPlugins.deducer#function took 6.446417 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m      Load.resolveProject(engineInfra) took 3.480989ms[0m
 [0m[[0m[0mdebug[0m] [0m[0m[Loading] Loading project engineApi @ /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api[0m
 [0m[[0m[0mdebug[0m] [0m[0mdeducing auto plugins based on known facts Set(Atom(sbt.plugins.CorePlugin)) and clauses Clauses(Clause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.IvyPlugin)))[0m
 [0m[[0m[0mdebug[0m] [0m[0mClause(Atom(sbt.ScriptedPlugin),Set(Atom(sbt.plugins.JvmPlugin)))[0m
@@ -112,19 +112,19 @@
 [0m[[0m[0mdebug[0m] [0m[0mClause(Atom(sbt.plugins.CorePlugin),Set(Atom(sbt.plugins.Giter8TemplatePlugin)))[0m
 [0m[[0m[0mdebug[0m] [0m[0mClause(Atom(sbt.plugins.JvmPlugin),Set(Atom(sbt.plugins.MiniDependencyTreePlugin))))[0m
 [0m[[0m[0mdebug[0m] [0m[0m  :: deduced result: Matched(sbt.plugins.CorePlugin,sbt.plugins.Giter8TemplatePlugin,sbt.plugins.IvyPlugin,sbt.plugins.JvmPlugin,sbt.plugins.MiniDependencyTreePlugin,sbt.plugins.JUnitXmlReportPlugin,sbt.plugins.SemanticdbPlugin)[0m
-[0m[[0m[0mdebug[0m] [0m[0mPlugins.deducer#function took 3.209082 ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m      Load.resolveProject(engineApi) took 1.638635ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mPlugins.deducer#function took 5.870453 ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m      Load.resolveProject(engineApi) took 3.205734ms[0m
 [0m[[0m[0mdebug[0m] [0m[0m[Loading] Done in /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend, returning: (root, engineDomain, engineInfra, engineApi)[0m
-[0m[[0m[0mdebug[0m] [0m[0m    Load.loadUnit: loadedProjectsRaw took 409.475436ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m    Load.loadUnit: cleanEvalClasses took 6.931856ms[0m
-[0m[[0m[0mdebug[0m] [0m[0m  Load.loadUnit(file:/home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/, ...) took 4750.563389ms[0m
-[0m[[0m[0mdebug[0m] [0m[0mLoad.apply: load took 4806.720832ms[0m
-[0m[[0m[0mdebug[0m] [0m[0mLoad.apply: resolveProjects took 1.854219ms[0m
-[0m[[0m[0mdebug[0m] [0m[0mLoad.apply: finalTransforms took 88.362814ms[0m
-[0m[[0m[0mdebug[0m] [0m[0mLoad.apply: config.delegates took 2.061232ms[0m
-[0m[[0m[0mdebug[0m] [0m[0mLoad.apply: Def.make(settings)... took 656.633661ms[0m
-[0m[[0m[0mdebug[0m] [0m[0mLoad.apply: structureIndex took 364.328351ms[0m
-[0m[[0m[0mdebug[0m] [0m[0mLoad.apply: mkStreams took 0.003706ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m    Load.loadUnit: loadedProjectsRaw took 512.774827ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m    Load.loadUnit: cleanEvalClasses took 7.407155ms[0m
+[0m[[0m[0mdebug[0m] [0m[0m  Load.loadUnit(file:/home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/, ...) took 6322.61238ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mLoad.apply: load took 6381.481192ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mLoad.apply: resolveProjects took 6.405747ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mLoad.apply: finalTransforms took 104.928294ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mLoad.apply: config.delegates took 2.785498ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mLoad.apply: Def.make(settings)... took 805.853964ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mLoad.apply: structureIndex took 319.057412ms[0m
+[0m[[0m[0mdebug[0m] [0m[0mLoad.apply: mkStreams took 0.004479ms[0m
 [0m[[0m[0minfo[0m] [0m[0mset current project to mnemocast-engine (in build file:/home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/)[0m
 [0m[[0m[0mdebug[0m] [0m[0m> Exec(sbtPopOnFailure, None, None)[0m
 [0m[[0m[0mdebug[0m] [0m[0m> Exec(resumeFromFailure, None, None)[0m

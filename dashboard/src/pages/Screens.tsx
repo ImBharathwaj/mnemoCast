@@ -140,8 +140,8 @@ const ScreenCard: React.FC<ScreenCardProps> = ({ screen, onUpdate, onEdit, onDel
     <div className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
       <div className="p-6">
         <div className="flex justify-between items-start mb-4">
-          <h3 className="text-xl font-semibold text-gray-900">{screen.name}</h3>
-          <div className="flex flex-col items-end gap-2">
+          <h3 className="text-xl font-semibold text-gray-900 truncate flex-1 mr-2" title={screen.name}>{screen.name}</h3>
+          <div className="flex flex-col items-end gap-2 flex-shrink-0">
             <div className="flex items-center gap-2">
               <span className={`w-3 h-3 rounded-full ${screen.isOnline ? 'bg-green-500' : 'bg-gray-400'}`} />
               <span className="text-sm text-gray-600">{screen.isOnline ? 'Online' : 'Offline'}</span>
@@ -155,26 +155,44 @@ const ScreenCard: React.FC<ScreenCardProps> = ({ screen, onUpdate, onEdit, onDel
         <div className="space-y-2 text-sm text-gray-600 mb-4">
           <div className="flex justify-between">
             <span>ID:</span>
-            <span className="font-mono text-xs">{screen.id}</span>
+            <span className="font-mono text-xs truncate ml-2 max-w-[60%]" title={screen.id}>{screen.id}</span>
           </div>
           {screen.location.city && (
             <div className="flex justify-between">
               <span>City:</span>
-              <span className="font-medium">{screen.location.city}</span>
+              <span className="font-medium truncate ml-2 max-w-[60%]" title={screen.location.city}>{screen.location.city}</span>
             </div>
           )}
           {screen.location.area && (
             <div className="flex justify-between">
               <span>Area:</span>
-              <span className="font-medium">{screen.location.area}</span>
+              <span className="font-medium truncate ml-2 max-w-[60%]" title={screen.location.area}>{screen.location.area}</span>
             </div>
           )}
           {screen.location.venueType && (
             <div className="flex justify-between">
               <span>Venue:</span>
-              <span className="font-medium capitalize">{screen.location.venueType}</span>
+              <span className="font-medium capitalize truncate ml-2 max-w-[60%]" title={screen.location.venueType}>{screen.location.venueType}</span>
             </div>
           )}
+          {(screen.width || screen.height) && (
+            <div className="flex justify-between">
+              <span>Display Size:</span>
+              <span className="font-medium">
+                {screen.width && screen.height 
+                  ? `${screen.width} × ${screen.height} px`
+                  : screen.width 
+                    ? `${screen.width} px width`
+                    : `${screen.height} px height`}
+              </span>
+            </div>
+          )}
+          <div className="flex justify-between">
+            <span>Audio:</span>
+            <span className={`font-medium ${screen.isAudible ? 'text-green-600' : 'text-gray-400'}`}>
+              {screen.isAudible ? '✓ Supported' : 'Not Supported'}
+            </span>
+          </div>
           <div className="flex justify-between">
             <span>Classification:</span>
             <span className="font-medium">{screen.classification || 1}/10</span>

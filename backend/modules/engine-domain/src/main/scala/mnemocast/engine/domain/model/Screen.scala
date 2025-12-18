@@ -14,6 +14,9 @@ import io.circe.generic.semiauto._
   * @param tags Tags for targeting (e.g., "mall", "airport", "transit", "food-court")
   * @param metadata Additional metadata (JSON-like structure)
   * @param classification Screen classification/tier (1-10, higher = premium). Used for pay-per-attention model where higher classified screens favor higher weight ads.
+  * @param width Display width in pixels (e.g., 1920)
+  * @param height Display height in pixels (e.g., 1080)
+  * @param isAudible Whether the display supports audio playback
   * @param isOnline Whether the screen is currently online
   * @param lastSeen Timestamp of last heartbeat/contact
   * @param createdAt When the screen was registered
@@ -26,6 +29,9 @@ final case class Screen(
   tags: List[String] = List.empty,   // e.g., ["mall", "food-court", "premium"]
   metadata: Map[String, String] = Map.empty,
   classification: Int = 1,           // Screen classification (1-10, default 1). Higher = premium screen
+  width: Option[Int] = None,         // Display width in pixels
+  height: Option[Int] = None,       // Display height in pixels
+  isAudible: Boolean = false,        // Whether the display supports audio
   isOnline: Boolean = false,
   lastSeen: Option[Instant] = None,
   createdAt: Instant,

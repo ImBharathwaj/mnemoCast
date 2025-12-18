@@ -47,27 +47,7 @@ CREATE INDEX IF NOT EXISTS idx_ads_is_active ON ads(is_active) WHERE is_active =
 CREATE INDEX IF NOT EXISTS idx_ads_advertiser_id ON ads(advertiser_id);
 
 -- ============================================
--- TARGETING RULES TABLE (for ads)
--- ============================================
-CREATE TABLE IF NOT EXISTS targeting_rules (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    ad_id TEXT REFERENCES ads(id) ON DELETE CASCADE,
-    campaign_id TEXT REFERENCES campaigns(id) ON DELETE CASCADE,
-    rule_key TEXT NOT NULL,
-    operator TEXT NOT NULL,
-    rule_value TEXT NOT NULL,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    CHECK ((ad_id IS NOT NULL)::int + (campaign_id IS NOT NULL)::int = 1) -- Exactly one FK must be set
-);
-
--- Index for ad_id (most common query)
-CREATE INDEX IF NOT EXISTS idx_targeting_rules_ad_id ON targeting_rules(ad_id) WHERE ad_id IS NOT NULL;
-
--- Index for campaign_id
-CREATE INDEX IF NOT EXISTS idx_targeting_rules_campaign_id ON targeting_rules(campaign_id) WHERE campaign_id IS NOT NULL;
-
--- ============================================
--- CAMPAIGNS TABLE
+-- CAMPAIGNS TABLE (must be created before targeting_rules)
 -- ============================================
 CREATE TABLE IF NOT EXISTS campaigns (
     id TEXT PRIMARY KEY,
@@ -87,6 +67,26 @@ CREATE TABLE IF NOT EXISTS campaigns (
 CREATE INDEX IF NOT EXISTS idx_campaigns_status ON campaigns(status);
 CREATE INDEX IF NOT EXISTS idx_campaigns_dates ON campaigns(start_date, end_date);
 CREATE INDEX IF NOT EXISTS idx_campaigns_status_dates ON campaigns(status, start_date, end_date) WHERE status = 'active';
+
+-- ============================================
+-- TARGETING RULES TABLE (for ads and campaigns)
+-- ============================================
+CREATE TABLE IF NOT EXISTS targeting_rules (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    ad_id TEXT REFERENCES ads(id) ON DELETE CASCADE,
+    campaign_id TEXT REFERENCES campaigns(id) ON DELETE CASCADE,
+    rule_key TEXT NOT NULL,
+    operator TEXT NOT NULL,
+    rule_value TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CHECK ((ad_id IS NOT NULL)::int + (campaign_id IS NOT NULL)::int = 1) -- Exactly one FK must be set
+);
+
+-- Index for ad_id (most common query)
+CREATE INDEX IF NOT EXISTS idx_targeting_rules_ad_id ON targeting_rules(ad_id) WHERE ad_id IS NOT NULL;
+
+-- Index for campaign_id
+CREATE INDEX IF NOT EXISTS idx_targeting_rules_campaign_id ON targeting_rules(campaign_id) WHERE campaign_id IS NOT NULL;
 
 -- ============================================
 -- CREATIVES TABLE
@@ -139,6 +139,11 @@ CREATE TABLE IF NOT EXISTS screens (
     venue_type TEXT,
     timezone TEXT,
     
+    -- Display specifications
+    width INTEGER,              -- Display width in pixels (e.g., 1920)
+    height INTEGER,             -- Display height in pixels (e.g., 1080)
+    is_audible BOOLEAN NOT NULL DEFAULT false,  -- Whether the display supports audio playback
+    
     -- Status fields
     is_online BOOLEAN NOT NULL DEFAULT false,
     last_seen TIMESTAMPTZ,
@@ -187,17 +192,6 @@ CREATE TABLE IF NOT EXISTS screen_metadata (
 
 -- Index for screen_id queries
 CREATE INDEX IF NOT EXISTS idx_screen_metadata_screen_id ON screen_metadata(screen_id);
-
--- Trigger to auto-update updated_at for screens (safe creation)
-DO $$
-BEGIN
-    IF NOT EXISTS (
-        SELECT 1 FROM pg_trigger WHERE tgname = 'update_screens_updated_at'
-    ) THEN
-        CREATE TRIGGER update_screens_updated_at BEFORE UPDATE ON screens
-            FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-    END IF;
-END $$;
 
 -- ============================================
 -- DELIVERY EVENTS TABLE
@@ -253,6 +247,10 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+-- ============================================
+-- TRIGGERS
+-- ============================================
+
 -- Triggers to auto-update updated_at (idempotent: drop if exists, then create)
 DROP TRIGGER IF EXISTS update_ads_updated_at ON ads;
 CREATE TRIGGER update_ads_updated_at BEFORE UPDATE ON ads
@@ -264,6 +262,11 @@ CREATE TRIGGER update_campaigns_updated_at BEFORE UPDATE ON campaigns
 
 DROP TRIGGER IF EXISTS update_creatives_updated_at ON creatives;
 CREATE TRIGGER update_creatives_updated_at BEFORE UPDATE ON creatives
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Trigger to auto-update updated_at for screens (safe creation)
+DROP TRIGGER IF EXISTS update_screens_updated_at ON screens;
+CREATE TRIGGER update_screens_updated_at BEFORE UPDATE ON screens
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- ============================================

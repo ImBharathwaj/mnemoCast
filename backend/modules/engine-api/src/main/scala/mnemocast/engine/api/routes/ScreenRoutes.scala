@@ -66,6 +66,9 @@ class ScreenRoutes(
                     tags = request.tags,
                     metadata = request.metadata,
                     classification = request.classification,
+                    width = request.width,
+                    height = request.height,
+                    isAudible = request.isAudible,
                     isOnline = true,
                     lastSeen = Some(now),
                     createdAt = now,
@@ -143,6 +146,9 @@ class ScreenRoutes(
                               tags = request.tags,
                               metadata = request.metadata,
                               classification = request.classification,
+                              width = request.width,
+                              height = request.height,
+                              isAudible = request.isAudible,
                               updatedAt = now
                             )
                             screenStore.upsert(updatedScreen).map(_ => updatedScreen)

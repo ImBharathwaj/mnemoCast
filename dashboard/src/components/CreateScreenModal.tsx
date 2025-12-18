@@ -17,6 +17,9 @@ const CreateScreenModal: React.FC<CreateScreenModalProps> = ({ onClose, onSucces
     timezone: 'UTC',
     tags: '',
     classification: '1', // Default classification
+    width: '',
+    height: '',
+    isAudible: false,
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,6 +42,9 @@ const CreateScreenModal: React.FC<CreateScreenModalProps> = ({ onClose, onSucces
         },
         tags: formData.tags.split(',').map(t => t.trim()).filter(t => t.length > 0),
         classification: parseInt(formData.classification, 10) || 1, // Screen classification (1-10)
+        ...(formData.width && { width: parseInt(formData.width, 10) }),
+        ...(formData.height && { height: parseInt(formData.height, 10) }),
+        isAudible: formData.isAudible,
       };
 
       await screenApi.register(screenData);
@@ -51,19 +57,19 @@ const CreateScreenModal: React.FC<CreateScreenModalProps> = ({ onClose, onSucces
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-lg w-full mx-4">
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Register Screen</h2>
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 text-2xl"
-            >
-              ×
-            </button>
-          </div>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-lg w-full max-h-[90vh] flex flex-col">
+        <div className="flex justify-between items-center p-6 border-b border-gray-200 flex-shrink-0">
+          <h2 className="text-2xl font-bold text-gray-900">Register Screen</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 text-2xl"
+          >
+            ×
+          </button>
+        </div>
 
+        <div className="overflow-y-auto flex-1 p-6">
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
               {error}
@@ -178,6 +184,53 @@ const CreateScreenModal: React.FC<CreateScreenModalProps> = ({ onClose, onSucces
                 placeholder="mall, food_court, premium"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Width (pixels)
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  value={formData.width}
+                  onChange={(e) => setFormData({ ...formData, width: e.target.value })}
+                  placeholder="1920"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Height (pixels)
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  value={formData.height}
+                  onChange={(e) => setFormData({ ...formData, height: e.target.value })}
+                  placeholder="1080"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={formData.isAudible}
+                  onChange={(e) => setFormData({ ...formData, isAudible: e.target.checked })}
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  Supports Audio Playback
+                </span>
+              </label>
+              <p className="mt-1 text-xs text-gray-500 ml-6">
+                Check if this display can play audio/video with sound
+              </p>
             </div>
 
             <div>

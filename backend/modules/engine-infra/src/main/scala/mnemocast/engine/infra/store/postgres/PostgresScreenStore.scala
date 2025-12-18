@@ -22,8 +22,9 @@ class PostgresScreenStore(
       val screenStmt = conn.prepareStatement("""
         INSERT INTO screens (
           id, name, country, city, area, venue_type, timezone,
+          width, height, is_audible,
           is_online, last_seen, classification, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT (id) DO UPDATE SET
           name = EXCLUDED.name,
           country = EXCLUDED.country,
@@ -31,6 +32,9 @@ class PostgresScreenStore(
           area = EXCLUDED.area,
           venue_type = EXCLUDED.venue_type,
           timezone = EXCLUDED.timezone,
+          width = EXCLUDED.width,
+          height = EXCLUDED.height,
+          is_audible = EXCLUDED.is_audible,
           is_online = EXCLUDED.is_online,
           last_seen = EXCLUDED.last_seen,
           classification = EXCLUDED.classification,
@@ -44,11 +48,14 @@ class PostgresScreenStore(
       screenStmt.setString(5, screen.location.area.orNull)
       screenStmt.setString(6, screen.location.venueType.orNull)
       screenStmt.setString(7, screen.location.timezone.orNull)
-      screenStmt.setBoolean(8, screen.isOnline)
-      screenStmt.setTimestamp(9, screen.lastSeen.map(Timestamp.from).orNull)
-      screenStmt.setInt(10, screen.classification)
-      screenStmt.setTimestamp(11, Timestamp.from(screen.createdAt))
-      screenStmt.setTimestamp(12, Timestamp.from(screen.updatedAt))
+      screenStmt.setObject(8, screen.width.map(Int.box).orNull, java.sql.Types.INTEGER)
+      screenStmt.setObject(9, screen.height.map(Int.box).orNull, java.sql.Types.INTEGER)
+      screenStmt.setBoolean(10, screen.isAudible)
+      screenStmt.setBoolean(11, screen.isOnline)
+      screenStmt.setTimestamp(12, screen.lastSeen.map(Timestamp.from).orNull)
+      screenStmt.setInt(13, screen.classification)
+      screenStmt.setTimestamp(14, Timestamp.from(screen.createdAt))
+      screenStmt.setTimestamp(15, Timestamp.from(screen.updatedAt))
       screenStmt.executeUpdate()
       screenStmt.close()
 
@@ -95,6 +102,7 @@ class PostgresScreenStore(
     client.withConnectionAsync { conn =>
       val stmt = conn.prepareStatement("""
         SELECT id, name, country, city, area, venue_type, timezone,
+               width, height, is_audible,
                is_online, last_seen, classification, created_at, updated_at
         FROM screens WHERE id = ?
       """)
@@ -120,6 +128,7 @@ class PostgresScreenStore(
     client.withConnectionAsync { conn =>
       val stmt = conn.prepareStatement("""
         SELECT id, name, country, city, area, venue_type, timezone,
+               width, height, is_audible,
                is_online, last_seen, classification, created_at, updated_at
         FROM screens
         ORDER BY created_at DESC
@@ -183,6 +192,15 @@ class PostgresScreenStore(
       timezone = Option(rs.getString("timezone"))
     )
 
+    val widthValue = {
+      val w = rs.getInt("width")
+      if (rs.wasNull()) None else Some(w)
+    }
+    val heightValue = {
+      val h = rs.getInt("height")
+      if (rs.wasNull()) None else Some(h)
+    }
+    
     Screen(
       id = rs.getString("id"),
       name = rs.getString("name"),
@@ -190,6 +208,9 @@ class PostgresScreenStore(
       tags = Nil, // Loaded separately
       metadata = Map.empty, // Loaded separately
       classification = rs.getInt("classification"),
+      width = widthValue,
+      height = heightValue,
+      isAudible = rs.getBoolean("is_audible"),
       isOnline = rs.getBoolean("is_online"),
       lastSeen = Option(rs.getTimestamp("last_seen")).map(_.toInstant),
       createdAt = rs.getTimestamp("created_at").toInstant,

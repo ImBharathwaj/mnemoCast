@@ -36,6 +36,9 @@ export interface Screen {
   tags: string[];
   metadata: Record<string, string>;
   classification: number; // Screen classification (1-10, higher = premium)
+  width?: number;        // Display width in pixels
+  height?: number;       // Display height in pixels
+  isAudible: boolean;    // Whether the display supports audio playback
   isOnline: boolean;
   lastSeen?: string;
   createdAt: string;

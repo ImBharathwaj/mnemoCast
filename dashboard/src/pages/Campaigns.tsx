@@ -139,8 +139,8 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ campaign, onEdit, onDelete 
     <div className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
       <div className="p-6">
         <div className="flex justify-between items-start mb-4">
-          <h3 className="text-xl font-semibold text-gray-900">{campaign.name}</h3>
-          <span className={`px-2 py-1 text-xs font-semibold rounded ${statusColor}`}>
+          <h3 className="text-xl font-semibold text-gray-900 truncate flex-1 mr-2" title={campaign.name}>{campaign.name}</h3>
+          <span className={`px-2 py-1 text-xs font-semibold rounded flex-shrink-0 ${statusColor}`}>
             {campaign.status}
           </span>
         </div>
@@ -148,7 +148,7 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ campaign, onEdit, onDelete 
         <div className="space-y-2 text-sm text-gray-600 mb-4">
           <div className="flex justify-between">
             <span>Advertiser:</span>
-            <span className="font-medium">{campaign.advertiserId}</span>
+            <span className="font-medium truncate ml-2 max-w-[60%]" title={campaign.advertiserId}>{campaign.advertiserId}</span>
           </div>
           <div className="flex justify-between">
             <span>Priority:</span>

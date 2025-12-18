@@ -12,7 +12,10 @@ final case class CreateScreenRequest(
   location: ScreenLocation,
   tags: List[String] = List.empty,
   metadata: Map[String, String] = Map.empty,
-  classification: Int = 1                 // Screen classification (1-10, default 1). Higher = premium screen
+  classification: Int = 1,                 // Screen classification (1-10, default 1). Higher = premium screen
+  width: Option[Int] = None,               // Display width in pixels
+  height: Option[Int] = None,             // Display height in pixels
+  isAudible: Boolean = false               // Whether the display supports audio playback
 )
 
 object CreateScreenRequest {
@@ -24,7 +27,10 @@ object CreateScreenRequest {
       tags <- cursor.getOrElse[List[String]]("tags")(List.empty)
       metadata <- cursor.getOrElse[Map[String, String]]("metadata")(Map.empty)
       classification <- cursor.getOrElse[Int]("classification")(1)
-    } yield CreateScreenRequest(id, name, location, tags, metadata, classification)
+      width <- cursor.get[Option[Int]]("width")
+      height <- cursor.get[Option[Int]]("height")
+      isAudible <- cursor.getOrElse[Boolean]("isAudible")(false)
+    } yield CreateScreenRequest(id, name, location, tags, metadata, classification, width, height, isAudible)
   }
   
   implicit val createScreenRequestEncoder: Encoder[CreateScreenRequest] = deriveEncoder[CreateScreenRequest]
