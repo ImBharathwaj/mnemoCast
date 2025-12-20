@@ -11,7 +11,8 @@ import org.apache.pekko.http.scaladsl.server.Route
 
 import io.circe.syntax._
 import mnemocast.engine.api.json.JsonSupport
-import mnemocast.engine.infra.services.AnalyticsService
+import mnemocast.engine.api.middleware.AuthMiddleware
+import mnemocast.engine.infra.services.{AnalyticsService, AuthService}
 
 /**
   * Analytics and reporting routes.
@@ -28,16 +29,30 @@ import mnemocast.engine.infra.services.AnalyticsService
   * GET /api/v1/analytics/dashboard - Get dashboard summary metrics
   */
 class AnalyticsRoutes(
-  analyticsService: AnalyticsService
+  analyticsService: AnalyticsService,
+  authServiceOpt: Option[AuthService] = None
 )(implicit ec: ExecutionContext)
     extends JsonSupport {
+  
+  // Helper to protect routes with authentication
+  private def requireAuth(route: Route): Route = {
+    authServiceOpt match {
+      case Some(authService) => AuthMiddleware.authenticate(authService).apply { _ => route }
+      case None => route // If auth is not available, allow access (backward compatibility)
+    }
+  }
+  
+  // Wrap all analytics routes with authentication
+  private def protectedRoute(route: Route): Route = requireAuth(route)
 
   private val isoDateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME
 
   val routes: Route =
     pathPrefix("api" / "v1" / "analytics") {
-      // Ad performance endpoint
-      path("ads" / Segment) { adId =>
+      // All analytics routes require authentication
+      requireAuth {
+        // Ad performance endpoint
+        path("ads" / Segment) { adId =>
         get {
           parameters(
             "startTime".?,
@@ -164,6 +179,7 @@ class AnalyticsRoutes(
             }
           }
         }
+      }
       }
     }
 

@@ -10,13 +10,24 @@ import org.apache.pekko.http.scaladsl.server.Directives._
 import org.apache.pekko.http.scaladsl.server.Route
 
 import mnemocast.engine.api.json.JsonSupport
+import mnemocast.engine.api.middleware.AuthMiddleware
 import mnemocast.engine.domain.model.{Campaign, CreateCampaignRequest}
+import mnemocast.engine.infra.services.AuthService
 import mnemocast.engine.infra.store.CampaignStore
 
 class CampaignRoutes(
-  campaignStore: CampaignStore
+  campaignStore: CampaignStore,
+  authServiceOpt: Option[AuthService] = None
 )(implicit ec: ExecutionContext)
     extends JsonSupport {
+  
+  // Helper to protect routes with authentication
+  private def requireAuth(route: Route): Route = {
+    authServiceOpt match {
+      case Some(authService) => AuthMiddleware.authenticate(authService).apply { _ => route }
+      case None => route // If auth is not available, allow access (backward compatibility)
+    }
+  }
 
   /**
     * Campaign management routes.
@@ -30,6 +41,7 @@ class CampaignRoutes(
       concat(
         pathEnd {
           post {
+            requireAuth {
             extractRequest { httpRequest =>
               val timestamp = java.time.LocalDateTime.now()
               println(s"[$timestamp] [POST /api/v1/campaigns] Request received")
@@ -65,8 +77,10 @@ class CampaignRoutes(
                 }
               }
             }
+            }
           } ~
           get {
+            requireAuth {
             extractRequest { httpRequest =>
               val timestamp = java.time.LocalDateTime.now()
               parameters("activeOnly".as[Boolean].?(false)) { activeOnly =>
@@ -88,11 +102,13 @@ class CampaignRoutes(
                 }
               }
             }
+            }
           }
         },
         path(Segment) { campaignId =>
           concat(
             get {
+              requireAuth {
               val timestamp = java.time.LocalDateTime.now()
               println(s"[$timestamp] [GET /api/v1/campaigns/$campaignId] Request received")
               val futureCampaign = campaignStore.getById(campaignId)
@@ -108,8 +124,10 @@ class CampaignRoutes(
                   ex.printStackTrace()
                   complete(StatusCodes.InternalServerError, s"Error retrieving campaign: ${ex.getMessage}")
               }
+            }
             },
             put {
+              requireAuth {
               extractRequest { httpRequest =>
                 val timestamp = java.time.LocalDateTime.now()
                 println(s"[$timestamp] [PUT /api/v1/campaigns/$campaignId] Request received")
@@ -149,8 +167,10 @@ class CampaignRoutes(
                   }
                 }
               }
+            }
             },
             delete {
+              requireAuth {
               val timestamp = java.time.LocalDateTime.now()
               println(s"[$timestamp] [DELETE /api/v1/campaigns/$campaignId] Request received")
               val futureDelete = campaignStore.delete(campaignId)
@@ -163,6 +183,7 @@ class CampaignRoutes(
                   ex.printStackTrace()
                   complete(StatusCodes.InternalServerError, s"Failed to delete campaign: ${ex.getMessage}")
               }
+            }
             }
           )
         }

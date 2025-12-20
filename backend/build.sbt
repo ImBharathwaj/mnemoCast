@@ -11,6 +11,8 @@ lazy val postgresVersion   = "42.7.1"
 lazy val hikariVersion     = "5.1.0"
 lazy val minioVersion      = "8.5.7"
 lazy val scalaTestVersion  = "3.2.17"
+lazy val jbcryptVersion    = "0.4"
+lazy val jwtVersion        = "9.4.5"
 
 lazy val root = (project in file("."))
   .aggregate(engineDomain, engineInfra, engineApi)
@@ -49,6 +51,8 @@ lazy val engineInfra = (project in file("modules/engine-infra"))
       "io.circe"          %% "circe-core"    % circeVersion,
       "io.circe"          %% "circe-generic" % circeVersion,
       "io.circe"          %% "circe-parser"  % circeVersion,
+      "org.mindrot"       %  "jbcrypt"       % jbcryptVersion,
+      "com.github.jwt-scala" %% "jwt-circe"  % jwtVersion,
       "org.scalatest"     %% "scalatest"     % scalaTestVersion % Test,
       "org.apache.pekko"  %% "pekko-stream-testkit" % pekkoVersion % Test
     )

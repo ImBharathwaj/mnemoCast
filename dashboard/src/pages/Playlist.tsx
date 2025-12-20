@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { playlistApi, screenApi } from '../services/api';
 import { PlaylistResponse, Screen } from '../types';
+import { transformMediaUrl } from '../utils/urlTransform';
 
 const Playlist: React.FC = () => {
   const [screens, setScreens] = useState<Screen[]>([]);
@@ -119,8 +120,8 @@ const Playlist: React.FC = () => {
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-semibold text-gray-900">Generated Playlist</h2>
               <div className="flex items-center gap-4">
-                <div className="text-sm text-gray-600">
-                  Request ID: <span className="font-mono">{playlist.requestId}</span>
+                <div className="text-sm text-gray-600 min-w-0">
+                  Request ID: <span className="font-mono truncate block" title={playlist.requestId}>{playlist.requestId}</span>
                 </div>
                 <button
                   onClick={() => setPlaylist(null)}
@@ -131,9 +132,9 @@ const Playlist: React.FC = () => {
               </div>
             </div>
             <div className="grid grid-cols-3 gap-4 text-sm">
-              <div>
+              <div className="min-w-0">
                 <span className="text-gray-600">Screen ID:</span>
-                <span className="ml-2 font-medium">{playlist.screenId}</span>
+                <span className="ml-2 font-medium truncate block" title={playlist.screenId}>{playlist.screenId}</span>
               </div>
               <div>
                 <span className="text-gray-600">Total Duration:</span>
@@ -152,8 +153,8 @@ const Playlist: React.FC = () => {
               {playlist.items.map((item, index) => (
                 <div key={index} className="border rounded-lg p-4 hover:bg-gray-50">
                   <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <div className="font-semibold text-gray-900">
+                    <div className="flex-1 min-w-0 mr-2">
+                      <div className="font-semibold text-gray-900 truncate" title={`Position #${item.position + 1} - ${item.adId}`}>
                         Position #{item.position + 1} - {item.adId}
                       </div>
                       <div className="text-sm text-gray-600 mt-1">
@@ -166,7 +167,7 @@ const Playlist: React.FC = () => {
                   </div>
                   <div className="mt-2">
                     <a
-                      href={item.creativeUrl}
+                      href={transformMediaUrl(item.creativeUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600 hover:text-blue-800 text-sm"
@@ -190,7 +191,7 @@ const Playlist: React.FC = () => {
                   {item.impressionTrackingUrl && (
                     <div className="mt-2">
                       <span className="text-xs text-gray-500">Tracking: </span>
-                      <span className="text-xs font-mono text-gray-600">{item.impressionTrackingUrl}</span>
+                      <span className="text-xs font-mono text-gray-600 truncate block" title={item.impressionTrackingUrl}>{item.impressionTrackingUrl}</span>
                     </div>
                   )}
                 </div>

@@ -3,6 +3,7 @@ import { creativeApi, campaignApi } from '../services/api';
 import { Creative, Campaign } from '../types';
 import CreateCreativeModal from '../components/CreateCreativeModal';
 import EditCreativeModal from '../components/EditCreativeModal';
+import { transformMediaUrl } from '../utils/urlTransform';
 
 const Creatives: React.FC = () => {
   const [creatives, setCreatives] = useState<Creative[]>([]);
@@ -160,8 +161,8 @@ const CreativeCard: React.FC<CreativeCardProps> = ({ creative, onEdit, onDelete 
     <div className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
       <div className="p-6">
         <div className="flex justify-between items-start mb-4">
-          <h3 className="text-xl font-semibold text-gray-900">{creative.name}</h3>
-          <span className={`px-2 py-1 text-xs font-semibold rounded ${statusColor}`}>
+          <h3 className="text-xl font-semibold text-gray-900 truncate flex-1 mr-2" title={creative.name}>{creative.name}</h3>
+          <span className={`px-2 py-1 text-xs font-semibold rounded flex-shrink-0 ${statusColor}`}>
             {creative.status}
           </span>
         </div>
@@ -169,7 +170,7 @@ const CreativeCard: React.FC<CreativeCardProps> = ({ creative, onEdit, onDelete 
         <div className="space-y-2 text-sm text-gray-600 mb-4">
           <div className="flex justify-between">
             <span>Type:</span>
-            <span className="font-medium capitalize">{creative.creativeType}</span>
+            <span className="font-medium capitalize truncate ml-2 max-w-[60%]">{creative.creativeType}</span>
           </div>
           <div className="flex justify-between">
             <span>Duration:</span>
@@ -177,7 +178,7 @@ const CreativeCard: React.FC<CreativeCardProps> = ({ creative, onEdit, onDelete 
           </div>
           <div className="flex justify-between">
             <span>Campaign ID:</span>
-            <span className="font-mono text-xs">{creative.campaignId}</span>
+            <span className="font-mono text-xs truncate ml-2 max-w-[60%]" title={creative.campaignId}>{creative.campaignId}</span>
           </div>
           {creative.shareOfVoice && (
             <div className="flex justify-between">
@@ -190,7 +191,7 @@ const CreativeCard: React.FC<CreativeCardProps> = ({ creative, onEdit, onDelete 
         {creative.creativeUrl && (
           <div className="mb-4">
             <a
-              href={creative.creativeUrl}
+              href={transformMediaUrl(creative.creativeUrl)}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 hover:text-blue-800 text-sm"

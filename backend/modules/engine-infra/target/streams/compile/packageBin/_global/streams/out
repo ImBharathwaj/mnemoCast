@@ -30,10 +30,14 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/HealthService$$anonfun$$nestedInanonfun$checkMediaStorage$1$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/AnalyticsService.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/AnalyticsService.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/PasswordService$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/PasswordService$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/AnalyticsService$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/AnalyticsService$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/PlaylistService$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/PlaylistService$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/PasskeyService.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/PasskeyService.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/MediaValidator$MediaMetadata$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/MediaValidator$MediaMetadata$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/PlaylistService.class[0m
@@ -46,6 +50,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/CampaignPlaylistService.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/HealthService$$anonfun$$nestedInanonfun$checkPostgres$1$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/HealthService$$anonfun$$nestedInanonfun$checkPostgres$1$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/AuthService.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/AuthService.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/FrequencyCapService.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/FrequencyCapService.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/MetricsService.class[0m
@@ -58,8 +64,14 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/MetricsService$EndpointStats.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/MediaValidator$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/MediaValidator$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/JwtService.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/JwtService.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/MediaValidator.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/MediaValidator.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/PasswordService.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/PasswordService.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/PasskeyService$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/PasskeyService$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/MediaValidator$MediaMetadata.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/MediaValidator$MediaMetadata.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/MetricsService$.class[0m
@@ -68,6 +80,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/MediaValidator$ValidationResult$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/CampaignPlaylistService$$anonfun$$nestedInanonfun$generatePlaylist$8$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/CampaignPlaylistService$$anonfun$$nestedInanonfun$generatePlaylist$8$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/JwtService$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/JwtService$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/MetricsService$EndpointStats$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/services/MetricsService$EndpointStats$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/services/CampaignPlaylistService$.class[0m
@@ -94,6 +108,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/store/postgres/PostgresEventStore.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/store/postgres/PostgresAdStore.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/store/postgres/PostgresAdStore.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/store/postgres/PostgresUserStore.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/store/postgres/PostgresUserStore.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/store/postgres/PostgresClient$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/store/postgres/PostgresClient$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/store/postgres/PostgresCreativeStore.class[0m
@@ -110,6 +126,8 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/store/CreativeStore.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/store/HybridScreenStore$$anonfun$updateLastSeen$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/store/HybridScreenStore$$anonfun$updateLastSeen$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/store/UserStore.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/store/UserStore.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/store/CampaignStore.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes/mnemocast/engine/infra/store/CampaignStore.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	mnemocast/engine/infra/store/HybridAdStore$$anonfun$upsert$1.class[0m

@@ -42,8 +42,54 @@ class AdDeliveryService(
 
     screenClassificationFut.flatMap { screenClassification =>
       adStore.listActive().flatMap { ads =>
+        val timestamp = java.time.LocalDateTime.now()
+        println(s"[$timestamp] [AdDelivery] ========== AD DELIVERY REQUEST ==========")
+        println(s"[$timestamp] [AdDelivery] Request ID: ${request.requestId}")
+        println(s"[$timestamp] [AdDelivery] Screen ID: ${request.screenId.getOrElse("N/A")}")
+        println(s"[$timestamp] [AdDelivery] Screen Classification: $screenClassification")
+        println(s"[$timestamp] [AdDelivery] Request Context: country=${request.country.getOrElse("N/A")}, city=${request.city.getOrElse("N/A")}, area=${request.area.getOrElse("N/A")}, venueType=${request.venueType.getOrElse("N/A")}, tags=[${request.screenTags.mkString(", ")}]")
+        println(s"[$timestamp] [AdDelivery] Total active ads in store: ${ads.length}")
+        
+        if (ads.isEmpty) {
+          println(s"[$timestamp] [AdDelivery] ❌ NO ACTIVE ADS IN DATABASE!")
+          println(s"[$timestamp] [AdDelivery] ==========================================")
+        } else {
+          println(s"[$timestamp] [AdDelivery] Active ads: ${ads.map(_.id).mkString(", ")}")
+        }
+        
         // Step 1: Filter ads using targeting rules
-        val targetingEligible = ads.filter(ad => TargetingService.matches(ad, request))
+        val targetingEligible = ads.filter { ad =>
+          val matches = TargetingService.matches(ad, request)
+          if (!matches && ads.length <= 10) {
+            // Log why each ad was rejected (only if we have few ads to avoid spam)
+            println(s"[$timestamp] [AdDelivery] ❌ Ad '${ad.id}' rejected by targeting:")
+            if (ad.targetingRules.isEmpty) {
+              println(s"[$timestamp] [AdDelivery]   → Ad has no targeting rules (should match all)")
+            } else {
+              ad.targetingRules.foreach { rule =>
+                val requestValue = TargetingService.extractRequestValue(rule.key, request)
+                println(s"[$timestamp] [AdDelivery]   → Rule: ${rule.key} ${rule.operator} ${rule.value}")
+                println(s"[$timestamp] [AdDelivery]   → Request value: ${requestValue.getOrElse("MISSING")}")
+                val ruleMatches = TargetingService.evaluateRule(rule, request)
+                println(s"[$timestamp] [AdDelivery]   → Rule result: ${if (ruleMatches) "✓ PASS" else "✗ FAIL"}")
+              }
+            }
+          }
+          matches
+        }
+        println(s"[$timestamp] [AdDelivery] After targeting filter: ${targetingEligible.length}/${ads.length} ads eligible")
+        
+        if (targetingEligible.isEmpty && ads.nonEmpty) {
+          println(s"[$timestamp] [AdDelivery] ⚠️  ALL ADS REJECTED BY TARGETING RULES!")
+          println(s"[$timestamp] [AdDelivery] Checking for ads with no targeting rules (fallback ads)...")
+          val fallbackAds = ads.filter(_.targetingRules.isEmpty)
+          if (fallbackAds.nonEmpty) {
+            println(s"[$timestamp] [AdDelivery] Found ${fallbackAds.length} fallback ads (no targeting rules): ${fallbackAds.map(_.id).mkString(", ")}")
+            println(s"[$timestamp] [AdDelivery] These should match all screens. Investigating why they didn't pass...")
+          } else {
+            println(s"[$timestamp] [AdDelivery] No fallback ads found. All ads have targeting rules.")
+          }
+        }
         
         // Step 2: Filter by budget constraints (async)
         Future.sequence(
@@ -52,6 +98,14 @@ class AdDeliveryService(
           )
         ).flatMap { budgetResults =>
           val budgetEligible = budgetResults.filter(_._2).map(_._1)
+          val budgetRejected = budgetResults.filter(!_._2).map(_._1)
+          println(s"[$timestamp] [AdDelivery] After budget filter: ${budgetEligible.length}/${targetingEligible.length} ads eligible")
+          if (budgetRejected.nonEmpty) {
+            println(s"[$timestamp] [AdDelivery] Budget rejected ads: ${budgetRejected.map(_.id).mkString(", ")}")
+          }
+          if (targetingEligible.nonEmpty && budgetEligible.isEmpty) {
+            println(s"[$timestamp] [AdDelivery] ⚠️  ALL ADS FILTERED OUT BY BUDGET CONSTRAINTS!")
+          }
           
           // Step 3: Filter by frequency capping (async)
           Future.sequence(
@@ -60,9 +114,21 @@ class AdDeliveryService(
             )
           ).flatMap { frequencyResults =>
             val eligible = frequencyResults.filter(_._2).map(_._1)
+            val frequencyRejected = frequencyResults.filter(!_._2).map(_._1)
+            println(s"[$timestamp] [AdDelivery] After frequency cap filter: ${eligible.length}/${budgetEligible.length} ads eligible")
+            if (frequencyRejected.nonEmpty) {
+              println(s"[$timestamp] [AdDelivery] Frequency cap rejected ads: ${frequencyRejected.map(_.id).mkString(", ")}")
+            }
+            if (budgetEligible.nonEmpty && eligible.isEmpty) {
+              println(s"[$timestamp] [AdDelivery] ⚠️  ALL ADS FILTERED OUT BY FREQUENCY CAPPING!")
+            }
+            
+            println(s"[$timestamp] [AdDelivery] Final eligible ads: ${eligible.map(_.id).mkString(", ")}")
             
             pickAd(eligible, screenClassification) match {
             case Some(ad) =>
+              println(s"[$timestamp] [AdDelivery] ✅ Selected ad: ${ad.id} (weight: ${ad.weight}, screen classification: $screenClassification)")
+              println(s"[$timestamp] [AdDelivery] ==========================================")
               val response = DeliveryResponse(
                 requestId = request.requestId,
                 adId = ad.id,
@@ -77,6 +143,13 @@ class AdDeliveryService(
               eventStore.append(event).map(_ => Some(response))
 
             case None =>
+              println(s"[$timestamp] [AdDelivery] ❌ NO ELIGIBLE ADS FOUND AFTER ALL FILTERS")
+              println(s"[$timestamp] [AdDelivery] Summary:")
+              println(s"[$timestamp] [AdDelivery]   - Total active ads: ${ads.length}")
+              println(s"[$timestamp] [AdDelivery]   - After targeting: ${targetingEligible.length}")
+              println(s"[$timestamp] [AdDelivery]   - After budget: ${budgetEligible.length}")
+              println(s"[$timestamp] [AdDelivery]   - After frequency cap: ${eligible.length}")
+              println(s"[$timestamp] [AdDelivery] ==========================================")
               Future.successful(None)
           }
         }

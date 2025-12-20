@@ -1,6 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import Layout from './components/Layout';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Campaigns from './pages/Campaigns';
 import CampaignDetail from './pages/CampaignDetail';
@@ -18,20 +22,94 @@ function App() {
   
   try {
     return (
-      <Router>
-        <Layout>
+      <AuthProvider>
+        <Router>
           <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/campaigns" element={<Campaigns />} />
-            <Route path="/campaigns/:id" element={<CampaignDetail />} />
-            <Route path="/creatives" element={<Creatives />} />
-            <Route path="/screens" element={<Screens />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/monitoring" element={<Monitoring />} />
-            <Route path="/playlist" element={<Playlist />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Dashboard />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/campaigns"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Campaigns />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/campaigns/:id"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <CampaignDetail />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/creatives"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Creatives />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/screens"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Screens />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/analytics"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Analytics />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/monitoring"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Monitoring />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/playlist"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Playlist />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
           </Routes>
-        </Layout>
-      </Router>
+        </Router>
+      </AuthProvider>
     );
   } catch (error) {
     console.error('Error in App component:', error);

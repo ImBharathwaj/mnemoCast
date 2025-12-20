@@ -1,17 +1,2 @@
-[debug] Created transactional ClassFileManager with tempDir = /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/target/scala-2.13/classes.bak
-[debug] About to delete class files:
-[debug] 	HttpServer$$anonfun$1.class
-[debug] 	HttpServer$.class
-[debug] 	HttpServer$delayedInit$body.class
-[debug] 	HttpServer.class
-[debug] We backup class files:
-[debug] 	HttpServer$$anonfun$1.class
-[debug] 	HttpServer$.class
-[debug] 	HttpServer$delayedInit$body.class
-[debug] 	HttpServer.class
-[debug] Registering generated classes:
-[debug] 	HttpServer$.class
-[debug] 	HttpServer$$anonfun$1.class
-[debug] 	HttpServer.class
-[debug] 	HttpServer$delayedInit$body.class
-[debug] Removing the temporary directory used for backing up class files: /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/target/scala-2.13/classes.bak
+[0m[[0m[0mdebug[0m] [0m[0mCreated transactional ClassFileManager with tempDir = /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/target/scala-2.13/classes.bak[0m
+[0m[[0m[0mdebug[0m] [0m[0mRemoving the temporary directory used for backing up class files: /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-api/target/scala-2.13/classes.bak[0m

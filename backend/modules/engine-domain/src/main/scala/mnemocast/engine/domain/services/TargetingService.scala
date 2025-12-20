@@ -64,7 +64,7 @@ object TargetingService {
     * @param request The delivery request
     * @return true if the rule matches, false otherwise
     */
-  private def evaluateRule(rule: TargetingRule, request: DeliveryRequest): Boolean = {
+  def evaluateRule(rule: TargetingRule, request: DeliveryRequest): Boolean = {
     // Extract the request field value by key
     val requestValueOpt = extractRequestValue(rule.key, request)
 
@@ -75,6 +75,10 @@ object TargetingService {
         rule.operator.toLowerCase match {
           case "eq" => evaluateEq(rule.value, requestValue)
           case "in" => evaluateIn(rule.value, requestValue)
+          case "gte" => evaluateGte(rule.value, requestValue)
+          case "lte" => evaluateLte(rule.value, requestValue)
+          case "gt" => evaluateGt(rule.value, requestValue)
+          case "lt" => evaluateLt(rule.value, requestValue)
           case "daypart" | "timeband" => evaluateTimeBand(rule.value, request)
           case _    => false // Unknown operator = rule fails
         }
@@ -104,7 +108,7 @@ object TargetingService {
     * @return Some(value) if the field exists and has a value, None otherwise
     *         For screenTag/tag, returns comma-separated list of tags for "in" operator matching
     */
-  private def extractRequestValue(key: String, request: DeliveryRequest): Option[String] = {
+  def extractRequestValue(key: String, request: DeliveryRequest): Option[String] = {
     val normalizedKey = key.toLowerCase.trim
 
     normalizedKey match {
@@ -121,6 +125,7 @@ object TargetingService {
         if (request.screenTags.nonEmpty) Some(request.screenTags.mkString(","))
         else None
       case "timezone" => request.timezone
+      case "classification" => request.screenClassification.map(_.toString)
       case _          => None // Unknown key
     }
   }
@@ -171,6 +176,62 @@ object TargetingService {
     // Check if any requestValue matches any allowedValue
     requestValues.exists { rv =>
       allowedValues.exists(_.equalsIgnoreCase(rv))
+    }
+  }
+
+  /**
+    * Evaluates "gte" (greater than or equal) operator for numeric comparisons.
+    * 
+    * @param ruleValue    The threshold value from the targeting rule
+    * @param requestValue The value from the delivery request
+    * @return true if requestValue >= ruleValue (numeric comparison), false otherwise
+    */
+  private def evaluateGte(ruleValue: String, requestValue: String): Boolean = {
+    try {
+      val ruleNum = ruleValue.trim.toInt
+      val requestNum = requestValue.trim.toInt
+      requestNum >= ruleNum
+    } catch {
+      case _: NumberFormatException => false
+    }
+  }
+
+  /**
+    * Evaluates "lte" (less than or equal) operator for numeric comparisons.
+    */
+  private def evaluateLte(ruleValue: String, requestValue: String): Boolean = {
+    try {
+      val ruleNum = ruleValue.trim.toInt
+      val requestNum = requestValue.trim.toInt
+      requestNum <= ruleNum
+    } catch {
+      case _: NumberFormatException => false
+    }
+  }
+
+  /**
+    * Evaluates "gt" (greater than) operator for numeric comparisons.
+    */
+  private def evaluateGt(ruleValue: String, requestValue: String): Boolean = {
+    try {
+      val ruleNum = ruleValue.trim.toInt
+      val requestNum = requestValue.trim.toInt
+      requestNum > ruleNum
+    } catch {
+      case _: NumberFormatException => false
+    }
+  }
+
+  /**
+    * Evaluates "lt" (less than) operator for numeric comparisons.
+    */
+  private def evaluateLt(ruleValue: String, requestValue: String): Boolean = {
+    try {
+      val ruleNum = ruleValue.trim.toInt
+      val requestNum = requestValue.trim.toInt
+      requestNum < ruleNum
+    } catch {
+      case _: NumberFormatException => false
     }
   }
 

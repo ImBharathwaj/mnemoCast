@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_ENDPOINTS } from '../config/api';
+import { authService } from './authService';
 
 const api = axios.create({
   baseURL: '',
@@ -9,9 +10,14 @@ const api = axios.create({
   timeout: 10000, // 10 second timeout
 });
 
-// Add request interceptor for debugging
+// Add request interceptor for auth headers and debugging
 api.interceptors.request.use(
   (config) => {
+    // Add auth token to all requests
+    const authHeaders = authService.getAuthHeaders();
+    if (authHeaders.Authorization) {
+      config.headers.Authorization = authHeaders.Authorization;
+    }
     console.log(`API Request: ${config.method?.toUpperCase()} ${config.url}`);
     return config;
   },

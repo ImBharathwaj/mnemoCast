@@ -16,20 +16,30 @@ import org.apache.pekko.stream.{ActorMaterializer, Materializer}
 import org.apache.pekko.util.ByteString
 
 import mnemocast.engine.api.json.JsonSupport
+import mnemocast.engine.api.middleware.AuthMiddleware
 import mnemocast.engine.domain.model.MediaUploadResponse
-import mnemocast.engine.infra.services.MediaValidator
+import mnemocast.engine.infra.services.{AuthService, MediaValidator}
 import mnemocast.engine.infra.storage.MediaStorage
 
 /**
   * Media file upload and serving routes.
   * 
-  * POST /api/v1/creatives/upload - Upload a media file
-  * GET /api/v1/media/creatives/{filename} - Serve a media file
+  * POST /api/v1/creatives/upload - Upload a media file (protected)
+  * GET /api/v1/media/creatives/{filename} - Serve a media file (public)
   */
 class MediaRoutes(
   mediaStorage: MediaStorage,
-  mediaValidator: MediaValidator
+  mediaValidator: MediaValidator,
+  authServiceOpt: Option[AuthService] = None
 )(implicit ec: ExecutionContext, system: ActorSystem) extends JsonSupport {
+  
+  // Helper to protect routes with authentication
+  private def requireAuth(route: Route): Route = {
+    authServiceOpt match {
+      case Some(authService) => AuthMiddleware.authenticate(authService).apply { _ => route }
+      case None => route // If auth is not available, allow access (backward compatibility)
+    }
+  }
 
   implicit val materializer: Materializer = ActorMaterializer()
 
@@ -55,11 +65,12 @@ class MediaRoutes(
 
   val routes: Route =
     concat(
-      // File upload endpoint
+      // File upload endpoint (protected)
       pathPrefix("api" / "v1" / "creatives") {
         path("upload") {
           post {
-            extractRequest { httpRequest =>
+            requireAuth {
+              extractRequest { httpRequest =>
               val timestamp = java.time.LocalDateTime.now()
               println(s"[$timestamp] [POST /api/v1/creatives/upload] Request received")
               println(s"[$timestamp] [POST /api/v1/creatives/upload] Content-Type: ${httpRequest.entity.contentType}")
@@ -195,6 +206,7 @@ class MediaRoutes(
                   }
                 }
               }
+            }
             }
           }
         }

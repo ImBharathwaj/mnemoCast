@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { campaignApi, creativeApi } from '../services/api';
 import { Campaign, Creative } from '../types';
+import { transformMediaUrl } from '../utils/urlTransform';
 
 const CampaignDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -94,9 +95,9 @@ const CampaignDetail: React.FC = () => {
       </div>
 
       <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">{campaign.name}</h1>
-          <p className="text-gray-500 mt-1">Campaign ID: {campaign.id}</p>
+        <div className="flex-1 min-w-0 mr-4">
+          <h1 className="text-3xl font-bold text-gray-900 truncate" title={campaign.name}>{campaign.name}</h1>
+          <p className="text-gray-500 mt-1 truncate" title={`Campaign ID: ${campaign.id}`}>Campaign ID: {campaign.id}</p>
         </div>
         <span className={`px-4 py-2 text-sm font-semibold rounded ${statusColor}`}>
           {campaign.status.toUpperCase()}
@@ -112,7 +113,7 @@ const CampaignDetail: React.FC = () => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium text-gray-500">Advertiser ID</label>
-                <p className="text-gray-900 font-medium mt-1">{campaign.advertiserId}</p>
+                <p className="text-gray-900 font-medium mt-1 truncate" title={campaign.advertiserId}>{campaign.advertiserId}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-gray-500">Priority</label>
@@ -168,17 +169,17 @@ const CampaignDetail: React.FC = () => {
                 {campaign.targetingRules.map((rule, index) => (
                   <div key={index} className="border border-gray-200 rounded-lg p-4">
                     <div className="grid grid-cols-3 gap-4">
-                      <div>
+                      <div className="min-w-0">
                         <label className="text-xs font-medium text-gray-500">Key</label>
-                        <p className="text-gray-900 font-medium mt-1">{rule.key}</p>
+                        <p className="text-gray-900 font-medium mt-1 truncate" title={rule.key}>{rule.key}</p>
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <label className="text-xs font-medium text-gray-500">Operator</label>
-                        <p className="text-gray-900 font-medium mt-1">{rule.operator}</p>
+                        <p className="text-gray-900 font-medium mt-1 truncate" title={rule.operator}>{rule.operator}</p>
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <label className="text-xs font-medium text-gray-500">Value</label>
-                        <p className="text-gray-900 font-medium mt-1">{rule.value}</p>
+                        <p className="text-gray-900 font-medium mt-1 truncate" title={rule.value}>{rule.value}</p>
                       </div>
                     </div>
                   </div>
@@ -199,9 +200,9 @@ const CampaignDetail: React.FC = () => {
                 {creatives.map((creative) => (
                   <div key={creative.id} className="border border-gray-200 rounded-lg p-4">
                     <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h3 className="font-semibold text-gray-900">{creative.name}</h3>
-                        <p className="text-sm text-gray-500">ID: {creative.id}</p>
+                      <div className="flex-1 min-w-0 mr-2">
+                        <h3 className="font-semibold text-gray-900 truncate" title={creative.name}>{creative.name}</h3>
+                        <p className="text-sm text-gray-500 truncate" title={creative.id}>ID: {creative.id}</p>
                       </div>
                       <span className={`px-2 py-1 text-xs font-semibold rounded ${
                         creative.status === 'active' ? 'bg-green-100 text-green-800' : 
@@ -236,7 +237,7 @@ const CampaignDetail: React.FC = () => {
                     {creative.creativeUrl && (
                       <div className="mt-2">
                         <a
-                          href={creative.creativeUrl}
+                          href={transformMediaUrl(creative.creativeUrl)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-600 hover:text-blue-800 text-sm"

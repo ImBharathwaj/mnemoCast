@@ -47,27 +47,7 @@ CREATE INDEX IF NOT EXISTS idx_ads_is_active ON ads(is_active) WHERE is_active =
 CREATE INDEX IF NOT EXISTS idx_ads_advertiser_id ON ads(advertiser_id);
 
 -- ============================================
--- TARGETING RULES TABLE (for ads)
--- ============================================
-CREATE TABLE IF NOT EXISTS targeting_rules (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    ad_id TEXT REFERENCES ads(id) ON DELETE CASCADE,
-    campaign_id TEXT REFERENCES campaigns(id) ON DELETE CASCADE,
-    rule_key TEXT NOT NULL,
-    operator TEXT NOT NULL,
-    rule_value TEXT NOT NULL,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    CHECK ((ad_id IS NOT NULL)::int + (campaign_id IS NOT NULL)::int = 1) -- Exactly one FK must be set
-);
-
--- Index for ad_id (most common query)
-CREATE INDEX IF NOT EXISTS idx_targeting_rules_ad_id ON targeting_rules(ad_id) WHERE ad_id IS NOT NULL;
-
--- Index for campaign_id
-CREATE INDEX IF NOT EXISTS idx_targeting_rules_campaign_id ON targeting_rules(campaign_id) WHERE campaign_id IS NOT NULL;
-
--- ============================================
--- CAMPAIGNS TABLE
+-- CAMPAIGNS TABLE (must be created before targeting_rules)
 -- ============================================
 CREATE TABLE IF NOT EXISTS campaigns (
     id TEXT PRIMARY KEY,
@@ -87,6 +67,26 @@ CREATE TABLE IF NOT EXISTS campaigns (
 CREATE INDEX IF NOT EXISTS idx_campaigns_status ON campaigns(status);
 CREATE INDEX IF NOT EXISTS idx_campaigns_dates ON campaigns(start_date, end_date);
 CREATE INDEX IF NOT EXISTS idx_campaigns_status_dates ON campaigns(status, start_date, end_date) WHERE status = 'active';
+
+-- ============================================
+-- TARGETING RULES TABLE (for ads and campaigns)
+-- ============================================
+CREATE TABLE IF NOT EXISTS targeting_rules (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    ad_id TEXT REFERENCES ads(id) ON DELETE CASCADE,
+    campaign_id TEXT REFERENCES campaigns(id) ON DELETE CASCADE,
+    rule_key TEXT NOT NULL,
+    operator TEXT NOT NULL,
+    rule_value TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    CHECK ((ad_id IS NOT NULL)::int + (campaign_id IS NOT NULL)::int = 1) -- Exactly one FK must be set
+);
+
+-- Index for ad_id (most common query)
+CREATE INDEX IF NOT EXISTS idx_targeting_rules_ad_id ON targeting_rules(ad_id) WHERE ad_id IS NOT NULL;
+
+-- Index for campaign_id
+CREATE INDEX IF NOT EXISTS idx_targeting_rules_campaign_id ON targeting_rules(campaign_id) WHERE campaign_id IS NOT NULL;
 
 -- ============================================
 -- CREATIVES TABLE
@@ -139,9 +139,17 @@ CREATE TABLE IF NOT EXISTS screens (
     venue_type TEXT,
     timezone TEXT,
     
+    -- Display specifications
+    width INTEGER,              -- Display width in pixels (e.g., 1920)
+    height INTEGER,             -- Display height in pixels (e.g., 1080)
+    is_audible BOOLEAN NOT NULL DEFAULT false,  -- Whether the display supports audio playback
+    
     -- Status fields
     is_online BOOLEAN NOT NULL DEFAULT false,
     last_seen TIMESTAMPTZ,
+    
+    -- Authentication
+    passkey TEXT NOT NULL,           -- Authentication passkey for screen client (generated on registration)
     
     -- Classification for pay-per-attention model (1-10, higher = premium)
     -- Higher classified screens favor ads with higher weights
@@ -157,6 +165,7 @@ CREATE INDEX IF NOT EXISTS idx_screens_city ON screens(city);
 CREATE INDEX IF NOT EXISTS idx_screens_area ON screens(area);
 CREATE INDEX IF NOT EXISTS idx_screens_venue_type ON screens(venue_type);
 CREATE INDEX IF NOT EXISTS idx_screens_is_online ON screens(is_online) WHERE is_online = true;
+CREATE INDEX IF NOT EXISTS idx_screens_passkey ON screens(passkey);
 
 -- ============================================
 -- SCREEN TAGS TABLE (OOH)
@@ -187,17 +196,6 @@ CREATE TABLE IF NOT EXISTS screen_metadata (
 
 -- Index for screen_id queries
 CREATE INDEX IF NOT EXISTS idx_screen_metadata_screen_id ON screen_metadata(screen_id);
-
--- Trigger to auto-update updated_at for screens (safe creation)
-DO $$
-BEGIN
-    IF NOT EXISTS (
-        SELECT 1 FROM pg_trigger WHERE tgname = 'update_screens_updated_at'
-    ) THEN
-        CREATE TRIGGER update_screens_updated_at BEFORE UPDATE ON screens
-            FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-    END IF;
-END $$;
 
 -- ============================================
 -- DELIVERY EVENTS TABLE
@@ -253,6 +251,10 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+-- ============================================
+-- TRIGGERS
+-- ============================================
+
 -- Triggers to auto-update updated_at (idempotent: drop if exists, then create)
 DROP TRIGGER IF EXISTS update_ads_updated_at ON ads;
 CREATE TRIGGER update_ads_updated_at BEFORE UPDATE ON ads
@@ -265,6 +267,54 @@ CREATE TRIGGER update_campaigns_updated_at BEFORE UPDATE ON campaigns
 DROP TRIGGER IF EXISTS update_creatives_updated_at ON creatives;
 CREATE TRIGGER update_creatives_updated_at BEFORE UPDATE ON creatives
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Trigger to auto-update updated_at for screens (safe creation)
+DROP TRIGGER IF EXISTS update_screens_updated_at ON screens;
+CREATE TRIGGER update_screens_updated_at BEFORE UPDATE ON screens
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================
+-- USERS TABLE (Authentication)
+-- ============================================
+CREATE TABLE IF NOT EXISTS users (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    email TEXT NOT NULL UNIQUE,
+    username TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    full_name TEXT,
+    role TEXT NOT NULL DEFAULT 'user',  -- 'user', 'admin', 'advertiser'
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    email_verified BOOLEAN NOT NULL DEFAULT false,
+    last_login TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Indexes for users
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+CREATE INDEX IF NOT EXISTS idx_users_is_active ON users(is_active) WHERE is_active = true;
+
+-- Trigger to auto-update updated_at for users
+DROP TRIGGER IF EXISTS update_users_updated_at ON users;
+CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================
+-- REFRESH TOKENS TABLE (Optional - for token refresh)
+-- ============================================
+CREATE TABLE IF NOT EXISTS refresh_tokens (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    token TEXT NOT NULL UNIQUE,
+    expires_at TIMESTAMPTZ NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Indexes for refresh_tokens
+CREATE INDEX IF NOT EXISTS idx_refresh_tokens_user_id ON refresh_tokens(user_id);
+CREATE INDEX IF NOT EXISTS idx_refresh_tokens_token ON refresh_tokens(token);
+CREATE INDEX IF NOT EXISTS idx_refresh_tokens_expires_at ON refresh_tokens(expires_at);
 
 -- ============================================
 -- VIEWS (for analytics)
