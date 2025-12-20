@@ -77,8 +77,10 @@ class ScreenAdRoutes(
                     )
                     
                     // Request ad delivery and fetch full ad details for metadata
+                    println(s"[$timestamp] [GET /api/v1/screens/$screenId/ads/deliver] Requesting ad delivery...")
                     val futureResponse = adDeliveryService.deliver(request).flatMap {
                       case Some(response) =>
+                        println(s"[$timestamp] [GET /api/v1/screens/$screenId/ads/deliver] AdDeliveryService returned ad: ${response.adId}")
                         // Fetch full ad details for metadata
                         adStore.getById(response.adId).flatMap {
                           case Some(ad) =>
@@ -100,7 +102,8 @@ class ScreenAdRoutes(
                                 Future.successful("unknown")
                             }
                             
-                            campaignIdFut.map { campaignId =>
+                            // Use flatMap to properly chain the Future
+                            campaignIdFut.flatMap { campaignId =>
                               // Generate title from ad ID or use advertiser
                               val title = generateAdTitle(ad.id, ad.advertiserId)
                               
@@ -121,8 +124,8 @@ class ScreenAdRoutes(
                                 if (locations.nonEmpty) locations else "targeted"
                               }
                               
-                              // Return screen client compatible format
-                              Some(ScreenClientAdResponse(
+                              // Return screen client compatible format wrapped in Future
+                              Future.successful(Some(ScreenClientAdResponse(
                                 id = ad.id,
                                 title = title,
                                 `type` = creativeType,
@@ -135,7 +138,7 @@ class ScreenAdRoutes(
                                   campaignId = campaignId,
                                   targetAudience = targetAudience
                                 )
-                              ))
+                              )))
                             }
                           case None =>
                             println(s"[$timestamp] [GET /api/v1/screens/$screenId/ads/deliver] Ad delivered but not found in store: ${response.adId}")
@@ -164,8 +167,11 @@ class ScreenAdRoutes(
                 
                     onComplete(futureResponse) {
                       case scala.util.Success(Some(response)) =>
+                        println(s"[$timestamp] [GET /api/v1/screens/$screenId/ads/deliver] Successfully returning ad: ${response.id} (${response.title})")
+                        println(s"[$timestamp] [GET /api/v1/screens/$screenId/ads/deliver] Response: id=${response.id}, type=${response.`type`}, contentUrl=${response.contentUrl}, duration=${response.duration}")
                         complete(response)
                       case scala.util.Success(None) =>
+                        println(s"[$timestamp] [GET /api/v1/screens/$screenId/ads/deliver] No ad available after processing")
                         complete(StatusCodes.NoContent, Map("message" -> "No ad available for this screen at this time"))
                       case scala.util.Failure(ex) =>
                         println(s"[$timestamp] [GET /api/v1/screens/$screenId/ads/deliver] Internal error: ${ex.getMessage}")
@@ -221,22 +227,23 @@ class ScreenAdRoutes(
                       )
                       
                       // Fetch multiple ads with deduplication
+                      println(s"[$timestamp] [GET /api/v1/screens/$screenId/ads/batch] Fetching $count ads...")
                       val futureBatch = fetchBatchAdsForClient(baseRequest, count, Set.empty, campaignStore).map { ads =>
+                        val now = java.time.Instant.now()
+                        println(s"[$timestamp] [GET /api/v1/screens/$screenId/ads/batch] Fetched ${ads.length} ads")
                         BatchAdResponse(
-                          screenId = screenId,
-                          screenName = screen.name,
                           ads = ads,
-                          totalDurationSeconds = ads.map(_.duration.getOrElse(0)).sum,
-                          requestedCount = count,
-                          actualCount = ads.length,
-                          requestedDurationMinutes = durationMinutesOpt
+                          updatedAt = now.toString // ISO 8601 format
                         )
                       }
                       
                       onComplete(futureBatch) {
                         case scala.util.Success(batch) =>
+                          println(s"[$timestamp] [GET /api/v1/screens/$screenId/ads/batch] Returning ${batch.ads.length} ads")
                           if (batch.ads.isEmpty) {
-                            complete(StatusCodes.NoContent, Map("message" -> "No ads available for this screen at this time"))
+                            println(s"[$timestamp] [GET /api/v1/screens/$screenId/ads/batch] No ads available, returning empty list")
+                            // Return empty list instead of NoContent
+                            complete(BatchAdResponse(ads = List.empty, updatedAt = java.time.Instant.now().toString))
                           } else {
                             complete(batch)
                           }
@@ -457,7 +464,7 @@ class ScreenAdRoutes(
                   Future.successful("unknown")
               }
               
-              campaignIdFut.map { campaignId =>
+              campaignIdFut.flatMap { campaignId =>
                 val title = generateAdTitle(ad.id, ad.advertiserId)
                 val now = java.time.Instant.now()
                 val endTime = duration match {
@@ -472,7 +479,7 @@ class ScreenAdRoutes(
                   if (locations.nonEmpty) locations else "targeted"
                 }
                 
-                ScreenClientAdResponse(
+                Future.successful(ScreenClientAdResponse(
                   id = ad.id,
                   title = title,
                   `type` = creativeType,
@@ -485,7 +492,7 @@ class ScreenAdRoutes(
                     campaignId = campaignId,
                     targetAudience = targetAudience
                   )
-                )
+                ))
               }
             case None =>
               val creativeType = getCreativeTypeFromUrl(response.creativeUrl)
@@ -685,13 +692,21 @@ class ScreenAdRoutes(
     io.circe.generic.semiauto.deriveCodec[EnhancedScreenAdResponse]
   
   /**
-    * Batch ad delivery response model.
-    * Can contain either ScreenClientAdResponse (new format) or BatchAdItem (legacy format).
+    * Batch ad delivery response model for screen clients.
+    * Matches the expected format: { "ads": [...], "updatedAt": "..." }
     */
   case class BatchAdResponse(
+    ads: List[ScreenClientAdResponse],  // List of ads in screen client format
+    updatedAt: String                   // ISO 8601 timestamp
+  )
+  
+  /**
+    * Legacy batch ad delivery response model (kept for backward compatibility).
+    */
+  case class LegacyBatchAdResponse(
     screenId: String,
     screenName: String,
-    ads: List[ScreenClientAdResponse],  // Updated to use screen client format
+    ads: List[ScreenClientAdResponse],
     totalDurationSeconds: Int,
     requestedCount: Int,
     actualCount: Int,
@@ -700,6 +715,9 @@ class ScreenAdRoutes(
   
   implicit val batchAdResponseCodec: io.circe.Codec[BatchAdResponse] =
     io.circe.generic.semiauto.deriveCodec[BatchAdResponse]
+  
+  implicit val legacyBatchAdResponseCodec: io.circe.Codec[LegacyBatchAdResponse] =
+    io.circe.generic.semiauto.deriveCodec[LegacyBatchAdResponse]
   
   /**
     * Single ad item in batch response.

@@ -64,7 +64,7 @@ object TargetingService {
     * @param request The delivery request
     * @return true if the rule matches, false otherwise
     */
-  private def evaluateRule(rule: TargetingRule, request: DeliveryRequest): Boolean = {
+  def evaluateRule(rule: TargetingRule, request: DeliveryRequest): Boolean = {
     // Extract the request field value by key
     val requestValueOpt = extractRequestValue(rule.key, request)
 
@@ -108,7 +108,7 @@ object TargetingService {
     * @return Some(value) if the field exists and has a value, None otherwise
     *         For screenTag/tag, returns comma-separated list of tags for "in" operator matching
     */
-  private def extractRequestValue(key: String, request: DeliveryRequest): Option[String] = {
+  def extractRequestValue(key: String, request: DeliveryRequest): Option[String] = {
     val normalizedKey = key.toLowerCase.trim
 
     normalizedKey match {
