@@ -38,10 +38,10 @@ object HttpServer extends App {
   // Storage strategy: Use environment variable STORAGE_STRATEGY
   // Options: "redis", "postgres", "hybrid" (default: "redis" for easy startup)
   val storageStrategy = sys.env.getOrElse("STORAGE_STRATEGY", "redis")
-  println(s"📦 Storage Strategy: $storageStrategy")
+  println(s"Storage Strategy: $storageStrategy")
   if (storageStrategy == "redis") {
-    println("⚠️  NOTE: Using Redis-only mode. Data will NOT be stored in Postgres.")
-    println("⚠️  To store in Postgres, set STORAGE_STRATEGY=hybrid or STORAGE_STRATEGY=postgres")
+    println("NOTE: Using Redis-only mode. Data will NOT be stored in Postgres.")
+    println("To store in Postgres, set STORAGE_STRATEGY=hybrid or STORAGE_STRATEGY=postgres")
   }
 
   private val redisClient = new RedisClient("localhost", 6379)
@@ -65,8 +65,8 @@ object HttpServer extends App {
         ))
       } catch {
         case ex: Exception =>
-          println(s"⚠️  Warning: Failed to initialize Postgres client: ${ex.getMessage}")
-          println(s"⚠️  Falling back to Redis-only mode. Set STORAGE_STRATEGY=redis to suppress this warning.")
+          println(s"WARNING: Failed to initialize Postgres client: ${ex.getMessage}")
+          println(s"Falling back to Redis-only mode. Set STORAGE_STRATEGY=redis to suppress this warning.")
           None
       }
     } else {
@@ -86,18 +86,18 @@ object HttpServer extends App {
       redisAdStore
     case "postgres" => 
       postgresAdStoreOpt.getOrElse {
-        println("⚠️  Postgres unavailable, falling back to Redis")
+        println("WARNING: Postgres unavailable, falling back to Redis")
         redisAdStore
       }
     case "hybrid" => 
       postgresAdStoreOpt match {
         case Some(pgStore) => new HybridAdStore(pgStore, redisAdStore)
         case None =>
-          println("⚠️  Postgres unavailable for hybrid mode, using Redis-only")
+          println("WARNING: Postgres unavailable for hybrid mode, using Redis-only")
           redisAdStore
       }
     case _ => 
-      println(s"⚠️  Unknown storage strategy: $storageStrategy, using Redis")
+      println(s"WARNING: Unknown storage strategy: $storageStrategy, using Redis")
       redisAdStore
   }
 
@@ -106,18 +106,18 @@ object HttpServer extends App {
       redisEventStore
     case "postgres" => 
       postgresEventStoreOpt.getOrElse {
-        println("⚠️  Postgres unavailable, falling back to Redis")
+        println("WARNING: Postgres unavailable, falling back to Redis")
         redisEventStore
       }
     case "hybrid" => 
       postgresEventStoreOpt match {
         case Some(pgStore) => new HybridEventStore(pgStore, redisEventStore)
         case None =>
-          println("⚠️  Postgres unavailable for hybrid mode, using Redis-only")
+          println("WARNING: Postgres unavailable for hybrid mode, using Redis-only")
           redisEventStore
       }
     case _ => 
-      println(s"⚠️  Unknown storage strategy: $storageStrategy, using Redis")
+      println(s"WARNING: Unknown storage strategy: $storageStrategy, using Redis")
       redisEventStore
   }
 
@@ -127,18 +127,18 @@ object HttpServer extends App {
       redisScreenStore
     case "postgres" => 
       postgresScreenStoreOpt.getOrElse {
-        println("⚠️  Postgres unavailable, falling back to Redis")
+        println("WARNING: Postgres unavailable, falling back to Redis")
         redisScreenStore
       }
     case "hybrid" => 
       postgresScreenStoreOpt match {
         case Some(pgStore) => new HybridScreenStore(pgStore, redisScreenStore)
         case None =>
-          println("⚠️  Postgres unavailable for hybrid mode, using Redis-only")
+          println("WARNING: Postgres unavailable for hybrid mode, using Redis-only")
           redisScreenStore
       }
     case _ => 
-      println(s"⚠️  Unknown storage strategy: $storageStrategy, using Redis")
+      println(s"WARNING: Unknown storage strategy: $storageStrategy, using Redis")
       redisScreenStore
   }
 
@@ -188,9 +188,9 @@ object HttpServer extends App {
   private val authServiceOpt: Option[AuthService] = userStoreOpt.map(new AuthService(_))
   
   if (authServiceOpt.isEmpty) {
-    println("⚠️  Warning: Authentication is disabled. Postgres must be configured (STORAGE_STRATEGY=postgres or hybrid) to enable authentication.")
+    println("WARNING: Authentication is disabled. Postgres must be configured (STORAGE_STRATEGY=postgres or hybrid) to enable authentication.")
   } else {
-    println("✅ Authentication enabled")
+    println("Authentication enabled")
   }
   
   private val adRoutes = new AdRoutes(adDeliveryService)
@@ -252,15 +252,15 @@ object HttpServer extends App {
         Some(s"$protocol://$finalHost$portSuffix/$minioBucket")
       }
       
-      println(s"📦 Media Storage: MinIO")
+      println(s"Media Storage: MinIO")
       println(s"   Endpoint: $minioEndpoint")
       println(s"   Bucket: $minioBucket")
       println(s"   Use SSL: $minioUseSSL")
       println(s"   Base URL: ${minioBaseUrl.getOrElse("(auto-generated from endpoint)")}")
       if (serverHost == "localhost" && !sys.env.contains("MINIO_BASE_URL")) {
-        println(s"⚠️  WARNING: Using localhost for MinIO URLs. For LAN access, set SERVER_HOST environment variable.")
-        println(s"⚠️  Example: export SERVER_HOST=192.168.1.100")
-        println(s"⚠️  Or set MINIO_BASE_URL explicitly: export MINIO_BASE_URL=http://192.168.1.100:9000/mnemocast-creatives")
+        println(s"WARNING: Using localhost for MinIO URLs. For LAN access, set SERVER_HOST environment variable.")
+        println(s"Example: export SERVER_HOST=192.168.1.100")
+        println(s"Or set MINIO_BASE_URL explicitly: export MINIO_BASE_URL=http://192.168.1.100:9000/mnemocast-creatives")
       }
       
       new MinIOStorage(
@@ -279,23 +279,23 @@ object HttpServer extends App {
       val serverHost = sys.env.getOrElse("SERVER_HOST", "localhost")
       val storageBaseUrl = sys.env.getOrElse("STORAGE_BASE_URL", s"http://$serverHost:8080/api/v1/media")
       
-      println(s"📦 Media Storage: Local Filesystem")
+      println(s"Media Storage: Local Filesystem")
       println(s"   Base Path: $storageBasePath")
       println(s"   Base URL: $storageBaseUrl")
       if (serverHost == "localhost") {
-        println(s"⚠️  WARNING: Using localhost for media URLs. For LAN access, set SERVER_HOST environment variable.")
-        println(s"⚠️  Example: export SERVER_HOST=192.168.1.100")
+        println(s"WARNING: Using localhost for media URLs. For LAN access, set SERVER_HOST environment variable.")
+        println(s"Example: export SERVER_HOST=192.168.1.100")
       }
       
       new LocalFileStorage(storageBasePath, storageBaseUrl)
       
     case other =>
-      println(s"⚠️  Unknown media storage type: $other, falling back to local filesystem")
+      println(s"WARNING: Unknown media storage type: $other, falling back to local filesystem")
       val storageBasePath = sys.env.getOrElse("STORAGE_BASE_PATH", "storage/uploads")
       val serverHost = sys.env.getOrElse("SERVER_HOST", "localhost")
       val storageBaseUrl = sys.env.getOrElse("STORAGE_BASE_URL", s"http://$serverHost:8080/api/v1/media")
       if (serverHost == "localhost") {
-        println(s"⚠️  WARNING: Using localhost for media URLs. For LAN access, set SERVER_HOST environment variable.")
+        println(s"WARNING: Using localhost for media URLs. For LAN access, set SERVER_HOST environment variable.")
       }
       new LocalFileStorage(storageBasePath, storageBaseUrl)
   }

@@ -18,8 +18,8 @@ class HybridAdStore(
     // Write to both: Postgres (persistent) and Redis (cache)
     // If Postgres fails, still write to Redis (graceful degradation)
     postgresStore.upsert(ad).recover { case ex: Exception =>
-      println(s"⚠️  Warning: Failed to write to Postgres: ${ex.getMessage}")
-      println(s"⚠️  Continuing with Redis-only write for ad ${ad.id}")
+      println(s"WARNING: Failed to write to Postgres: ${ex.getMessage}")
+      println(s"Continuing with Redis-only write for ad ${ad.id}")
     }.flatMap { _ =>
       redisStore.upsert(ad)
     }

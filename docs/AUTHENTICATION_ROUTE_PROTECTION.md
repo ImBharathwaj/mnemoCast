@@ -1,4 +1,4 @@
-# 🔒 API Route Protection Strategy
+#  API Route Protection Strategy
 
 ## Overview
 
@@ -6,7 +6,7 @@ This document outlines which API endpoints should be public vs protected with au
 
 ---
 
-## 🌐 Public Routes (No Authentication Required)
+##  Public Routes (No Authentication Required)
 
 These routes are called by screens/clients and monitoring systems:
 
@@ -31,7 +31,7 @@ These routes are called by screens/clients and monitoring systems:
 
 ---
 
-## 🔐 Protected Routes (Authentication Required)
+##  Protected Routes (Authentication Required)
 
 These routes are admin/management functions and should require authentication:
 
@@ -71,7 +71,7 @@ These routes are admin/management functions and should require authentication:
 
 ---
 
-## 🛠️ Implementation Strategy
+##  Implementation Strategy
 
 1. **Create a route wrapper** that applies authentication conditionally
 2. **Update each route class** to use authentication where needed
@@ -80,7 +80,7 @@ These routes are admin/management functions and should require authentication:
 
 ---
 
-## 📝 Notes
+##  Notes
 
 - Screen registration could potentially be public if screens self-register, but typically this is an admin function
 - Media serving (`/api/v1/media/*`) can be public for serving creative assets to screens

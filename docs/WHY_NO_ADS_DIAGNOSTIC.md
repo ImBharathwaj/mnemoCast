@@ -1,4 +1,4 @@
-# 🔍 Why No Ads Are Being Delivered - Diagnostic Guide
+#  Why No Ads Are Being Delivered - Diagnostic Guide
 
 ## Overview
 
@@ -12,7 +12,7 @@ If **any** filter removes all ads, the screen receives an empty response.
 
 ---
 
-## 📊 Enhanced Logging
+##  Enhanced Logging
 
 The system now logs detailed information at each filtering stage. When you request ads, check the server logs for:
 
@@ -30,7 +30,7 @@ The system now logs detailed information at each filtering stage. When you reque
 
 ---
 
-## 🔍 Common Reasons for Empty Ads
+##  Common Reasons for Empty Ads
 
 ### 1. **No Active Ads in Database**
 
@@ -53,7 +53,7 @@ WHERE is_active = true;
 
 ---
 
-### 2. **Ads Don't Match Targeting Rules** ⚠️ **MOST COMMON**
+### 2. **Ads Don't Match Targeting Rules**  **MOST COMMON**
 
 **Symptom:** Log shows `After targeting filter: 0/X ads eligible`
 
@@ -66,10 +66,10 @@ WHERE is_active = true;
 **Check Logs:**
 The system now logs why each ad was rejected:
 ```
-[AdDelivery] ❌ Ad 'ad-123' rejected by targeting:
+[AdDelivery]  Ad 'ad-123' rejected by targeting:
 [AdDelivery]   → Rule: city eq Chennai
 [AdDelivery]   → Request value: Mumbai
-[AdDelivery]   → Rule result: ✗ FAIL
+[AdDelivery]   → Rule result:  FAIL
 ```
 
 **Check Database:**
@@ -207,7 +207,7 @@ WHERE id = 'ad-123';
 
 ---
 
-## 🛠️ Diagnostic Steps
+##  Diagnostic Steps
 
 ### Step 1: Check Server Logs
 
@@ -231,10 +231,10 @@ When a screen requests ads, look for the detailed log output:
 
 For targeting rejections, the logs now show:
 ```
-[AdDelivery] ❌ Ad 'ad-123' rejected by targeting:
+[AdDelivery]  Ad 'ad-123' rejected by targeting:
 [AdDelivery]   → Rule: city eq Chennai
 [AdDelivery]   → Request value: Mumbai
-[AdDelivery]   → Rule result: ✗ FAIL
+[AdDelivery]   → Rule result:  FAIL
 ```
 
 ### Step 4: Verify Screen Context
@@ -260,7 +260,7 @@ WHERE a.is_active = true;
 
 ---
 
-## ✅ Quick Fixes
+##  Quick Fixes
 
 ### Fix 1: Create Universal Fallback Ads
 
@@ -309,7 +309,7 @@ WHERE ad_id = 'ad-123' AND key = 'city';
 
 ---
 
-## 📋 Checklist
+##  Checklist
 
 When ads aren't being delivered, check:
 
@@ -322,7 +322,7 @@ When ads aren't being delivered, check:
 
 ---
 
-## 🎯 Best Practices
+##  Best Practices
 
 1. **Always Create Fallback Ads**
    - Create at least 3-5 ads with no targeting rules
@@ -345,7 +345,7 @@ When ads aren't being delivered, check:
 
 ---
 
-## 📝 Summary
+##  Summary
 
 **Most Common Issue:** Ads don't match targeting rules
 
@@ -357,7 +357,7 @@ When ads aren't being delivered, check:
 
 ---
 
-**Status:** ✅ Enhanced logging added  
+**Status:**  Enhanced logging added  
 **Date:** 2025-12-19
 
 

@@ -102,7 +102,7 @@ sbt "project engineApi" run
 
 You should see:
 ```
-✅ Mnemocast Engine API running at http://0.0.0.0:8080/
+ Mnemocast Engine API running at http://0.0.0.0:8080/
 Press ENTER to stop...
 ```
 
@@ -379,10 +379,10 @@ See `docs/02-api-spec.md` for full API documentation.
 
 ## Next Steps
 
-1. ✅ Application is running
-2. 📖 Read `docs/demo-script.md` for demo walkthrough
-3. 📚 Check `docs/02-api-spec.md` for API details
-4. 🧪 Test endpoints using curl or Postman
+1.  Application is running
+2.  Read `docs/demo-script.md` for demo walkthrough
+3.  Check `docs/02-api-spec.md` for API details
+4.  Test endpoints using curl or Postman
 
-**Happy coding!** 🚀
+**Happy coding!** 
 

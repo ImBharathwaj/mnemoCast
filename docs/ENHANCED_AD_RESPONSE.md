@@ -1,6 +1,6 @@
-# 📺 Screen Client Ad Response Format
+#  Screen Client Ad Response Format
 
-## ✅ Screen Client Compatible Response
+##  Screen Client Compatible Response
 
 The ad delivery endpoints now return responses in the exact format expected by screen clients, including:
 - Ad identification and metadata
@@ -10,7 +10,7 @@ The ad delivery endpoints now return responses in the exact format expected by s
 
 ---
 
-## 📊 Response Structure
+##  Response Structure
 
 ### Single Ad Delivery Response
 
@@ -84,7 +84,7 @@ The ad delivery endpoints now return responses in the exact format expected by s
 
 ---
 
-## 📋 Field Descriptions
+##  Field Descriptions
 
 ### Ad Identification
 - **`id`**: Unique ad identifier (e.g., `"ad-summer-sale-001"`)
@@ -125,7 +125,7 @@ The ad delivery endpoints now return responses in the exact format expected by s
 
 ---
 
-## 🔄 Screen Client Workflow
+##  Screen Client Workflow
 
 ### 1. Request Ad
 
@@ -179,7 +179,7 @@ GET http://localhost:8080/api/v1/events/impression?adId={id}&requestId={requestI
 
 ---
 
-## 📥 Creative Download
+##  Creative Download
 
 ### Download URL Format
 
@@ -233,7 +233,7 @@ display_ad(
 
 ---
 
-## 🎯 Creative Type Detection
+##  Creative Type Detection
 
 The system automatically detects creative type from URL:
 
@@ -248,7 +248,7 @@ Screen clients can use `type` field to:
 
 ---
 
-## 📊 Metadata Usage
+##  Metadata Usage
 
 ### Campaign Information
 - **`campaignId`**: Links ad to its parent campaign
@@ -268,7 +268,7 @@ Screen clients can use `type` field to:
 
 ---
 
-## ✅ Benefits
+##  Benefits
 
 1. **Screen Client Compatible**
    - Exact JSON format expected by screen clients
@@ -292,7 +292,7 @@ Screen clients can use `type` field to:
 
 ---
 
-## 🔍 Example Usage
+##  Example Usage
 
 ### Single Ad Request
 
@@ -358,27 +358,27 @@ curl -X GET "http://localhost:8080/api/v1/screens/screen-123/ads/batch?count=5" 
 
 ---
 
-## 📝 Summary
+##  Summary
 
-✅ **Screen Client Response Format:**
+ **Screen Client Response Format:**
 - Ad identification (`id`, `title`)
 - Creative information (`type`, `contentUrl`)
 - Display timing (`duration`, `startTime`, `endTime`)
 - Priority (`priority`)
 - Metadata (`campaignId`, `targetAudience`)
 
-✅ **Screen Client Can:**
+ **Screen Client Can:**
 - Download creatives using `contentUrl`
 - Choose appropriate player using `type`
 - Schedule playback using `startTime`, `endTime`, and `duration`
 - Order playlist using `priority`
 - Link to campaigns using `metadata.campaignId`
 
-**The response format now exactly matches what screen clients expect!** 🎉
+**The response format now exactly matches what screen clients expect!** 
 
 ---
 
-**Status:** ✅ Complete  
+**Status:**  Complete  
 **Date:** 2025-12-19  
 **Version:** 4.3.0
 

@@ -1,4 +1,4 @@
-# 🔧 Dashboard LAN Access Fix
+#  Dashboard LAN Access Fix
 
 **Issue:** Dashboard accessible from another machine but shows no data.
 
@@ -6,7 +6,7 @@
 
 ---
 
-## ✅ Solution Applied
+##  Solution Applied
 
 The API configuration has been updated to automatically detect the host when accessed from another machine. The dashboard will now:
 
@@ -16,7 +16,7 @@ The API configuration has been updated to automatically detect the host when acc
 
 ---
 
-## 🚀 Quick Fix Steps
+##  Quick Fix Steps
 
 ### Option 1: Automatic Detection (Already Applied)
 The code now automatically detects the host. Just rebuild and restart:
@@ -53,7 +53,7 @@ export const API_BASE_URL = 'http://YOUR_SERVER_IP:8080';
 
 ---
 
-## 🔍 Verification Steps
+##  Verification Steps
 
 1. **Check Backend is Accessible:**
    ```bash
@@ -76,7 +76,7 @@ export const API_BASE_URL = 'http://YOUR_SERVER_IP:8080';
 
 ---
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Issue: Still shows "localhost:8080" in console
 
@@ -130,7 +130,7 @@ curl -v http://SERVER_IP:8080/api/v1/health
 
 ---
 
-## 📝 Environment Variables
+##  Environment Variables
 
 ### For Development
 
@@ -154,7 +154,7 @@ REACT_APP_API_URL=http://YOUR_SERVER_IP:8080
 
 ---
 
-## 🔐 Security Note
+##  Security Note
 
 For production, consider:
 1. Using HTTPS instead of HTTP
@@ -163,7 +163,7 @@ For production, consider:
 
 ---
 
-## ✅ Expected Behavior After Fix
+##  Expected Behavior After Fix
 
 1. Dashboard loads from any machine on LAN
 2. API calls go to correct backend IP
@@ -173,7 +173,7 @@ For production, consider:
 
 ---
 
-## 🧪 Test Checklist
+##  Test Checklist
 
 - [ ] Dashboard loads from another machine
 - [ ] Browser console shows correct API URL (not localhost)

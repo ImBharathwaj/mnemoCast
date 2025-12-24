@@ -1,11 +1,11 @@
-# 🏗️ Mnemocast Architecture
+#  Mnemocast Architecture
 
 **Version:** 1.0.0  
 **Last Updated:** December 2024
 
 ---
 
-## 📐 System Overview
+##  System Overview
 
 Mnemocast is an enterprise-ready OOH (Out-of-Home) ad serving platform built with a microservices-ready architecture, designed for scalability, reliability, and performance.
 
@@ -51,7 +51,7 @@ Mnemocast is an enterprise-ready OOH (Out-of-Home) ad serving platform built wit
 
 ---
 
-## 🧩 Component Architecture
+##  Component Architecture
 
 ### **1. Domain Layer** (`engine-domain`)
 **Purpose:** Pure business logic, no dependencies on infrastructure
@@ -143,7 +143,7 @@ Mnemocast is an enterprise-ready OOH (Out-of-Home) ad serving platform built wit
 
 ---
 
-## 🔄 Data Flow
+##  Data Flow
 
 ### **Playlist Generation Flow**
 ```
@@ -192,7 +192,7 @@ Mnemocast is an enterprise-ready OOH (Out-of-Home) ad serving platform built wit
 
 ---
 
-## 🗄️ Data Storage
+##  Data Storage
 
 ### **Redis (Cache Layer)**
 - **Purpose:** Fast data access, caching
@@ -213,7 +213,7 @@ Mnemocast is an enterprise-ready OOH (Out-of-Home) ad serving platform built wit
 
 ---
 
-## 🔌 API Endpoints
+##  API Endpoints
 
 ### **Core Endpoints**
 - `GET /api/v1/screens/{id}/playlist` - Generate playlist
@@ -245,7 +245,7 @@ Mnemocast is an enterprise-ready OOH (Out-of-Home) ad serving platform built wit
 
 ---
 
-## 🎨 Frontend Architecture
+##  Frontend Architecture
 
 ### **Technology Stack**
 - **React 18** - UI framework
@@ -269,7 +269,7 @@ Mnemocast is an enterprise-ready OOH (Out-of-Home) ad serving platform built wit
 
 ---
 
-## 🔐 Security
+##  Security
 
 ### **Current Implementation**
 - CORS configuration
@@ -285,7 +285,7 @@ Mnemocast is an enterprise-ready OOH (Out-of-Home) ad serving platform built wit
 
 ---
 
-## 📊 Performance Characteristics
+##  Performance Characteristics
 
 ### **Response Times**
 - Health check: < 10ms
@@ -306,7 +306,7 @@ Mnemocast is an enterprise-ready OOH (Out-of-Home) ad serving platform built wit
 
 ---
 
-## 🚀 Deployment Architecture
+##  Deployment Architecture
 
 ### **Development**
 ```
@@ -330,7 +330,7 @@ Kubernetes Cluster
 
 ---
 
-## 🔄 Technology Stack
+##  Technology Stack
 
 ### **Backend**
 - **Language:** Scala 2.13
@@ -355,27 +355,27 @@ Kubernetes Cluster
 
 ---
 
-## 📈 Scalability Considerations
+##  Scalability Considerations
 
 ### **Horizontal Scaling**
-- ✅ Stateless API design
-- ✅ Shared state via Redis/PostgreSQL
-- ✅ Load balancer ready
-- ✅ Kubernetes deployment ready
+-  Stateless API design
+-  Shared state via Redis/PostgreSQL
+-  Load balancer ready
+-  Kubernetes deployment ready
 
 ### **Vertical Scaling**
-- ✅ Efficient resource usage
-- ✅ Connection pooling
-- ✅ Async request handling
+-  Efficient resource usage
+-  Connection pooling
+-  Async request handling
 
 ### **Database Scaling**
-- ✅ Read replicas for PostgreSQL
-- ✅ Redis cluster support
-- ✅ Query optimization
+-  Read replicas for PostgreSQL
+-  Redis cluster support
+-  Query optimization
 
 ---
 
-## 🔍 Monitoring & Observability
+##  Monitoring & Observability
 
 ### **Health Checks**
 - Component-level health
@@ -395,7 +395,7 @@ Kubernetes Cluster
 
 ---
 
-## 📚 Additional Documentation
+##  Additional Documentation
 
 - **API Documentation:** `/api/docs` (Swagger UI)
 - **Performance Benchmarks:** `docs/PERFORMANCE_BENCHMARKS.md`

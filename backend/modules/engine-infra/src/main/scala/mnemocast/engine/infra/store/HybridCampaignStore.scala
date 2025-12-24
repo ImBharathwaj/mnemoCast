@@ -16,7 +16,7 @@ class HybridCampaignStore(
 
   override def upsert(campaign: Campaign): Future[Unit] = {
     postgresStore.upsert(campaign).recover { case ex: Exception =>
-      println(s"⚠️  Warning: Failed to write campaign to Postgres: ${ex.getMessage}")
+      println(s"WARNING: Failed to write campaign to Postgres: ${ex.getMessage}")
     }.flatMap { _ =>
       redisStore.upsert(campaign)
     }

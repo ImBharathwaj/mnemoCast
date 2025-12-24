@@ -126,16 +126,16 @@ psql -U postgres -d mnemocast -f infra/local-dev/postgres/init.sql
 ## What's Stored in Postgres
 
 ### Already Implemented (Before OOH)
-- ✅ **Ads** - Complete ad data with targeting rules
-- ✅ **Targeting Rules** - Ad targeting configuration
-- ✅ **Delivery Events** - Impression and event tracking
-- ✅ **Event Metadata** - Additional event information
+-  **Ads** - Complete ad data with targeting rules
+-  **Targeting Rules** - Ad targeting configuration
+-  **Delivery Events** - Impression and event tracking
+-  **Event Metadata** - Additional event information
 
 ### Newly Added (OOH Features)
-- ✅ **Screens** - OOH screen/device registration
-- ✅ **Screen Tags** - Tags for screen targeting
-- ✅ **Screen Metadata** - Custom screen metadata
-- ✅ **Ad duration_seconds** - Duration field for playlist generation
+-  **Screens** - OOH screen/device registration
+-  **Screen Tags** - Tags for screen targeting
+-  **Screen Metadata** - Custom screen metadata
+-  **Ad duration_seconds** - Duration field for playlist generation
 
 ## Storage Strategy Recommendations
 
@@ -200,10 +200,10 @@ SELECT * FROM screen_tags;
 ## Summary
 
 All OOH features now support Postgres storage:
-- ✅ Screens stored in Postgres
-- ✅ Screen tags and metadata stored in Postgres
-- ✅ Ad duration_seconds stored in Postgres
-- ✅ Hybrid storage strategy available (Postgres + Redis cache)
-- ✅ Migration script provided for existing databases
-- ✅ Full backward compatibility with Redis-only mode
+-  Screens stored in Postgres
+-  Screen tags and metadata stored in Postgres
+-  Ad duration_seconds stored in Postgres
+-  Hybrid storage strategy available (Postgres + Redis cache)
+-  Migration script provided for existing databases
+-  Full backward compatibility with Redis-only mode
 

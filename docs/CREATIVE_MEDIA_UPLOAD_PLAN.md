@@ -332,24 +332,24 @@ MINIO_BUCKET_NAME=creatives
 
 ## Phase 7: Implementation Steps (Recommended Order)
 
-### Step 1: Storage Abstraction ✅ COMPLETED
-1. ✅ Create `MediaStorage` trait - `backend/modules/engine-infra/src/main/scala/mnemocast/engine/infra/storage/MediaStorage.scala`
-2. ✅ Implement `LocalFileStorage` - `backend/modules/engine-infra/src/main/scala/mnemocast/engine/infra/storage/LocalFileStorage.scala`
-3. ✅ Add configuration support via environment variables
+### Step 1: Storage Abstraction  COMPLETED
+1.  Create `MediaStorage` trait - `backend/modules/engine-infra/src/main/scala/mnemocast/engine/infra/storage/MediaStorage.scala`
+2.  Implement `LocalFileStorage` - `backend/modules/engine-infra/src/main/scala/mnemocast/engine/infra/storage/LocalFileStorage.scala`
+3.  Add configuration support via environment variables
 
-### Step 2: Backend Upload Endpoint ✅ COMPLETED
-1. ✅ Create file upload route - `POST /api/v1/creatives/upload`
-2. ✅ Add file validation - `MediaValidator` service
-3. ✅ Integrate with `LocalFileStorage`
-4. ✅ Add file serving endpoint - `GET /api/v1/media/creatives/{filename}`
-5. ✅ Wire routes in `HttpServer`
+### Step 2: Backend Upload Endpoint  COMPLETED
+1.  Create file upload route - `POST /api/v1/creatives/upload`
+2.  Add file validation - `MediaValidator` service
+3.  Integrate with `LocalFileStorage`
+4.  Add file serving endpoint - `GET /api/v1/media/creatives/{filename}`
+5.  Wire routes in `HttpServer`
 
-### Step 3: Frontend Upload UI ✅ COMPLETED
-1. ✅ Create `FileUpload` component - `dashboard/src/components/FileUpload.tsx`
-2. ✅ Update `CreateCreativeModal` - Integrated FileUpload component
-3. ✅ Add file preview - Image and video preview support
-4. ✅ Add progress indication - Upload progress bar
-5. ✅ Add file validation - Client-side file type and size validation
+### Step 3: Frontend Upload UI  COMPLETED
+1.  Create `FileUpload` component - `dashboard/src/components/FileUpload.tsx`
+2.  Update `CreateCreativeModal` - Integrated FileUpload component
+3.  Add file preview - Image and video preview support
+4.  Add progress indication - Upload progress bar
+5.  Add file validation - Client-side file type and size validation
 
 ### Step 4: Testing & Validation (PENDING)
 1. ⏳ Test image uploads
@@ -455,37 +455,37 @@ dashboard/
 
 ## Success Criteria
 
-✅ Users can upload images/videos through the dashboard
-✅ Files are stored in a centralized location
-✅ Files are served via URLs that work in ad players
-✅ File validation prevents invalid uploads
-✅ File size limits are enforced
-✅ System handles concurrent uploads
-✅ Files persist across server restarts
+ Users can upload images/videos through the dashboard
+ Files are stored in a centralized location
+ Files are served via URLs that work in ad players
+ File validation prevents invalid uploads
+ File size limits are enforced
+ System handles concurrent uploads
+ Files persist across server restarts
 
 ## Implementation Summary
 
 ### Completed Features (MVP)
 
 **Backend:**
-1. ✅ `MediaStorage` trait abstraction for storage layer
-2. ✅ `LocalFileStorage` implementation using local filesystem
-3. ✅ `MediaValidator` service for file validation (type, size)
-4. ✅ `POST /api/v1/creatives/upload` endpoint for file uploads
-5. ✅ `GET /api/v1/media/creatives/{filename}` endpoint for serving files
-6. ✅ Multipart form data handling with Pekko HTTP
-7. ✅ File validation (MIME types, file sizes)
-8. ✅ UUID-based filename generation to prevent conflicts
-9. ✅ Support for nested file paths (creativeId-organized storage)
+1.  `MediaStorage` trait abstraction for storage layer
+2.  `LocalFileStorage` implementation using local filesystem
+3.  `MediaValidator` service for file validation (type, size)
+4.  `POST /api/v1/creatives/upload` endpoint for file uploads
+5.  `GET /api/v1/media/creatives/{filename}` endpoint for serving files
+6.  Multipart form data handling with Pekko HTTP
+7.  File validation (MIME types, file sizes)
+8.  UUID-based filename generation to prevent conflicts
+9.  Support for nested file paths (creativeId-organized storage)
 
 **Frontend:**
-1. ✅ `FileUpload` React component with drag & drop support
-2. ✅ File preview for images and videos
-3. ✅ Upload progress indicator
-4. ✅ Client-side file validation
-5. ✅ Integration with `CreateCreativeModal`
-6. ✅ Automatic URL population after upload
-7. ✅ Error handling and user feedback
+1.  `FileUpload` React component with drag & drop support
+2.  File preview for images and videos
+3.  Upload progress indicator
+4.  Client-side file validation
+5.  Integration with `CreateCreativeModal`
+6.  Automatic URL population after upload
+7.  Error handling and user feedback
 
 **Configuration:**
 - Storage base path: `STORAGE_BASE_PATH` (default: `storage/uploads`)

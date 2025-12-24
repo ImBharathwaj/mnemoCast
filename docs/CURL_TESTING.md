@@ -606,34 +606,34 @@ chmod +x test-system.sh
 
 Use these commands to verify each capability:
 
-### ✅ Ad Delivery
+###  Ad Delivery
 - [ ] Basic ad delivery works
 - [ ] Targeting rules filter correctly
 - [ ] Multiple targeting rules (AND logic)
 
-### ✅ Budget Management
+###  Budget Management
 - [ ] maxPlays limit enforced
 - [ ] dailyLimit enforced
 - [ ] hourlyLimit enforced
 - [ ] Budget exhaustion handled
 
-### ✅ Frequency Capping
+###  Frequency Capping
 - [ ] Per-device capping works
 - [ ] Per-user capping works
 - [ ] Time window respected
 
-### ✅ Click Tracking
+###  Click Tracking
 - [ ] Click events logged
 - [ ] Redirect to target URL works
 - [ ] Click counted in analytics
 
-### ✅ Analytics
+###  Analytics
 - [ ] Ad performance metrics accurate
 - [ ] Campaign performance calculated
 - [ ] Dashboard shows correct data
 - [ ] Time range filtering works
 
-### ✅ Event Tracking
+###  Event Tracking
 - [ ] Impressions logged
 - [ ] Clicks logged
 - [ ] Events queryable by ad

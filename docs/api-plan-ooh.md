@@ -277,7 +277,7 @@ Example Response
 }
 ```
 Very strong in pitch:
-👉 “Our engine keeps your screens monetized; here’s your fill-rate over time.”
+ “Our engine keeps your screens monetized; here’s your fill-rate over time.”
 
 ## 5. System / Debug (Same, Just OOH Context)
 | Endpoint                  | Description                  |

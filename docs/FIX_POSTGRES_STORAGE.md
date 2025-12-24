@@ -80,7 +80,7 @@ psql -h localhost -U postgres -d mnemocast -c "SELECT COUNT(*) FROM ads;"
 **Check 1: Storage Strategy**
 ```bash
 # When server starts, look for this message:
-# "⚠️  Postgres unavailable for hybrid mode, using Redis-only"
+# "  Postgres unavailable for hybrid mode, using Redis-only"
 # This means Postgres connection failed
 
 # Check Postgres is running
@@ -133,16 +133,16 @@ psql -h localhost -U postgres -d mnemocast -c "SELECT id, advertiser_id FROM ads
 ## Expected Behavior
 
 ### With STORAGE_STRATEGY=redis (Default)
-- ✅ Data stored in Redis
-- ❌ Data NOT stored in Postgres
+-  Data stored in Redis
+-  Data NOT stored in Postgres
 
 ### With STORAGE_STRATEGY=hybrid
-- ✅ Data stored in Redis (cache)
-- ✅ Data stored in Postgres (persistent)
+-  Data stored in Redis (cache)
+-  Data stored in Postgres (persistent)
 
 ### With STORAGE_STRATEGY=postgres
-- ❌ Data NOT stored in Redis
-- ✅ Data stored in Postgres
+-  Data NOT stored in Redis
+-  Data stored in Postgres
 
 ---
 
@@ -157,8 +157,8 @@ Mnemocast Engine API running at http://0.0.0.0:8080/
 
 **Hybrid Mode (Postgres Failed):**
 ```
-⚠️  Warning: Failed to initialize Postgres client: ...
-⚠️  Postgres unavailable for hybrid mode, using Redis-only
+  Warning: Failed to initialize Postgres client: ...
+  Postgres unavailable for hybrid mode, using Redis-only
 Mnemocast Engine API running at http://0.0.0.0:8080/
 ```
 

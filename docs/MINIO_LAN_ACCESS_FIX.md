@@ -6,7 +6,7 @@
 
 ---
 
-## ✅ Solution
+##  Solution
 
 The backend now automatically uses the `SERVER_HOST` environment variable to construct MinIO URLs that are accessible from other machines.
 
@@ -36,7 +36,7 @@ This makes media files accessible from any machine on your LAN.
 
 ---
 
-## 🔧 Configuration Options
+##  Configuration Options
 
 ### Option 1: SERVER_HOST (Recommended - Automatic)
 Sets the host for both MinIO URLs and local storage URLs.
@@ -46,9 +46,9 @@ export SERVER_HOST=192.168.1.100
 ```
 
 **Benefits:**
-- ✅ Works for both MinIO and local storage
-- ✅ Single configuration point
-- ✅ Automatically constructs correct URLs
+-  Works for both MinIO and local storage
+-  Single configuration point
+-  Automatically constructs correct URLs
 
 ### Option 2: MINIO_BASE_URL (Full Control)
 Set the complete base URL for MinIO media serving.
@@ -58,22 +58,22 @@ export MINIO_BASE_URL=http://192.168.1.100:9000/mnemocast-creatives
 ```
 
 **Benefits:**
-- ✅ Full control over the URL format
-- ✅ Can use different host/port than endpoint
-- ✅ Can use CDN or proxy URLs
+-  Full control over the URL format
+-  Can use different host/port than endpoint
+-  Can use CDN or proxy URLs
 
 ### Option 3: Both Set
 `MINIO_BASE_URL` takes precedence if both are set.
 
 ---
 
-## 🧪 Verification
+##  Verification
 
 ### 1. Check Backend Startup Logs
 When you start the backend, you should see:
 
 ```
-📦 Media Storage: MinIO
+ Media Storage: MinIO
    Endpoint: localhost:9000
    Bucket: mnemocast-creatives
    Use SSL: false
@@ -114,7 +114,7 @@ curl -I http://192.168.1.100:9000
 
 ---
 
-## 🔒 MinIO Server Configuration
+##  MinIO Server Configuration
 
 For MinIO to be accessible from other machines, ensure:
 
@@ -167,7 +167,7 @@ Ensure the bucket has public read access (already configured by the code):
 
 ---
 
-## 🔄 Updating Existing Creatives
+##  Updating Existing Creatives
 
 **Important:** Existing creatives in the database already have URLs with `localhost`. You have two options:
 
@@ -191,7 +191,7 @@ For Redis, you'll need to update each creative manually or use a script.
 
 ---
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Issue: Still seeing localhost URLs after setting SERVER_HOST
 
@@ -248,7 +248,7 @@ export MINIO_ENDPOINT=localhost:9000
 
 ---
 
-## 📝 Example: Complete Setup
+##  Example: Complete Setup
 
 ```bash
 # 1. Find your server IP
@@ -280,7 +280,7 @@ curl -X POST http://192.168.1.100:8080/api/v1/creatives/upload \
 
 ---
 
-## 🔐 Production Considerations
+##  Production Considerations
 
 For production deployments:
 
@@ -305,18 +305,18 @@ For production deployments:
 
 ---
 
-## ✅ Expected Behavior After Fix
+##  Expected Behavior After Fix
 
-1. ✅ Backend startup shows correct MinIO Base URL (not localhost)
-2. ✅ Uploaded creatives have URLs with server IP
-3. ✅ Media files load from any machine on LAN
-4. ✅ Dashboard displays images/videos correctly
-5. ✅ No "connection refused" or "localhost" errors
-6. ✅ MinIO is accessible from other machines
+1.  Backend startup shows correct MinIO Base URL (not localhost)
+2.  Uploaded creatives have URLs with server IP
+3.  Media files load from any machine on LAN
+4.  Dashboard displays images/videos correctly
+5.  No "connection refused" or "localhost" errors
+6.  MinIO is accessible from other machines
 
 ---
 
-## 🔗 Related Documentation
+##  Related Documentation
 
 - **Local Storage Fix:** `docs/MEDIA_URL_LAN_FIX.md`
 - **Dashboard LAN Access:** `docs/DASHBOARD_LAN_ACCESS_FIX.md`

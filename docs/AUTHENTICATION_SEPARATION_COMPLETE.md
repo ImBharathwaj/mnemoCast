@@ -1,54 +1,54 @@
-# 🔐 Authentication Separation - Complete Guide
+#  Authentication Separation - Complete Guide
 
-## ✅ Authentication Properly Separated
+##  Authentication Properly Separated
 
 Admin/dashboard endpoints and screen endpoints now use **completely separate authentication mechanisms**.
 
 ---
 
-## 📋 Endpoint Classification
+##  Endpoint Classification
 
-### 🔑 Admin/Dashboard Endpoints (User Authentication - JWT)
+###  Admin/Dashboard Endpoints (User Authentication - JWT)
 
 **Authentication:** `Authorization: Bearer <JWT_TOKEN>`
 **Middleware:** `AuthMiddleware.authenticate(authService)`
 
 #### Screen Management (Admin Only)
-- ✅ `POST /api/v1/screens/register` - Register new screen
-- ✅ `GET /api/v1/screens` - List all screens
-- ✅ `PUT /api/v1/screens/{screenId}` - Update screen (admin)
-- ✅ `DELETE /api/v1/screens/{screenId}` - Delete screen (admin)
+-  `POST /api/v1/screens/register` - Register new screen
+-  `GET /api/v1/screens` - List all screens
+-  `PUT /api/v1/screens/{screenId}` - Update screen (admin)
+-  `DELETE /api/v1/screens/{screenId}` - Delete screen (admin)
 
 #### Campaign Management
-- ✅ `POST /api/v1/campaigns` - Create campaign
-- ✅ `GET /api/v1/campaigns` - List campaigns
-- ✅ `GET /api/v1/campaigns/{campaignId}` - Get campaign
-- ✅ `PUT /api/v1/campaigns/{campaignId}` - Update campaign
-- ✅ `DELETE /api/v1/campaigns/{campaignId}` - Delete campaign
+-  `POST /api/v1/campaigns` - Create campaign
+-  `GET /api/v1/campaigns` - List campaigns
+-  `GET /api/v1/campaigns/{campaignId}` - Get campaign
+-  `PUT /api/v1/campaigns/{campaignId}` - Update campaign
+-  `DELETE /api/v1/campaigns/{campaignId}` - Delete campaign
 
 #### Creative Management
-- ✅ `POST /api/v1/creatives` - Create creative
-- ✅ `GET /api/v1/creatives` - List creatives
-- ✅ `GET /api/v1/creatives/{creativeId}` - Get creative
-- ✅ `PUT /api/v1/creatives/{creativeId}` - Update creative
-- ✅ `DELETE /api/v1/creatives/{creativeId}` - Delete creative
+-  `POST /api/v1/creatives` - Create creative
+-  `GET /api/v1/creatives` - List creatives
+-  `GET /api/v1/creatives/{creativeId}` - Get creative
+-  `PUT /api/v1/creatives/{creativeId}` - Update creative
+-  `DELETE /api/v1/creatives/{creativeId}` - Delete creative
 
 #### Media Upload
-- ✅ `POST /api/v1/creatives/upload` - Upload creative media
+-  `POST /api/v1/creatives/upload` - Upload creative media
 
 #### Analytics & Metrics
-- ✅ `GET /api/v1/analytics/*` - All analytics endpoints
-- ✅ `GET /api/v1/metrics` - System metrics
+-  `GET /api/v1/analytics/*` - All analytics endpoints
+-  `GET /api/v1/metrics` - System metrics
 
 #### Admin Ad Management
-- ✅ `POST /api/v1/admin/ads` - Create ad
-- ✅ `GET /api/v1/admin/ads` - List ads
-- ✅ `PUT /api/v1/admin/ads/{adId}` - Update ad
-- ✅ `DELETE /api/v1/admin/ads/{adId}` - Delete ad
+-  `POST /api/v1/admin/ads` - Create ad
+-  `GET /api/v1/admin/ads` - List ads
+-  `PUT /api/v1/admin/ads/{adId}` - Update ad
+-  `DELETE /api/v1/admin/ads/{adId}` - Delete ad
 
 ---
 
-### 📺 Screen Endpoints (Screen Authentication - Passkey)
+###  Screen Endpoints (Screen Authentication - Passkey)
 
 **Authentication:** 
 - `X-Screen-Id: <screen-id>`
@@ -56,28 +56,28 @@ Admin/dashboard endpoints and screen endpoints now use **completely separate aut
 **Middleware:** `ScreenAuthMiddleware.authenticate(screenStore)`
 
 #### Screen Operations
-- ✅ `GET /api/v1/screens/{screenId}` - Get own screen details
-- ✅ `PUT /api/v1/screens/{screenId}/heartbeat` - Send heartbeat
-- ✅ `GET /api/v1/screens/{screenId}/status` - Get own screen status
+-  `GET /api/v1/screens/{screenId}` - Get own screen details
+-  `PUT /api/v1/screens/{screenId}/heartbeat` - Send heartbeat
+-  `GET /api/v1/screens/{screenId}/status` - Get own screen status
 
 #### Screen Ad Delivery
-- ✅ `GET /api/v1/screens/{screenId}/ads/deliver` - Request single ad
-- ✅ `GET /api/v1/screens/{screenId}/ads/batch` - Request batch of ads
-- ✅ `GET /api/v1/screens/{screenId}/ads/preferences` - Get ad preferences
-- ✅ `GET /api/v1/screens/{screenId}/ads/history` - Get ad history
+-  `GET /api/v1/screens/{screenId}/ads/deliver` - Request single ad
+-  `GET /api/v1/screens/{screenId}/ads/batch` - Request batch of ads
+-  `GET /api/v1/screens/{screenId}/ads/preferences` - Get ad preferences
+-  `GET /api/v1/screens/{screenId}/ads/history` - Get ad history
 
 ---
 
-### 🌐 Public Endpoints (No Authentication)
+###  Public Endpoints (No Authentication)
 
-- ✅ `GET /api/v1/health` - Health check
-- ✅ `POST /api/v1/auth/register` - User registration
-- ✅ `POST /api/v1/auth/login` - User login
-- ✅ `GET /api/v1/media/creatives/*` - Media file serving
+-  `GET /api/v1/health` - Health check
+-  `POST /api/v1/auth/register` - User registration
+-  `POST /api/v1/auth/login` - User login
+-  `GET /api/v1/media/creatives/*` - Media file serving
 
 ---
 
-## 🏗️ Route Structure
+##  Route Structure
 
 ### ScreenRoutes.scala
 
@@ -143,7 +143,7 @@ pathPrefix("api" / "v1" / "screens") {
 
 ---
 
-## 🔒 Authentication Details
+##  Authentication Details
 
 ### User Authentication (Admin/Dashboard)
 
@@ -177,7 +177,7 @@ pathPrefix("api" / "v1" / "screens") {
 
 ---
 
-## 📝 Usage Examples
+##  Usage Examples
 
 ### Admin Endpoint (User Auth)
 
@@ -214,26 +214,26 @@ curl -X GET "http://localhost:8080/api/v1/screens/screen-123/ads/deliver" \
 
 ---
 
-## ✅ Verification
+##  Verification
 
 ### Screen Endpoints
-- ✅ `GET /api/v1/screens/{screenId}` - Uses `ScreenAuthMiddleware` (screen auth)
-- ✅ `PUT /api/v1/screens/{screenId}/heartbeat` - Uses `ScreenAuthMiddleware` (screen auth)
-- ✅ `GET /api/v1/screens/{screenId}/status` - Uses `ScreenAuthMiddleware` (screen auth)
-- ✅ All `/api/v1/screens/{screenId}/ads/*` - Use `ScreenAuthMiddleware` (screen auth)
+-  `GET /api/v1/screens/{screenId}` - Uses `ScreenAuthMiddleware` (screen auth)
+-  `PUT /api/v1/screens/{screenId}/heartbeat` - Uses `ScreenAuthMiddleware` (screen auth)
+-  `GET /api/v1/screens/{screenId}/status` - Uses `ScreenAuthMiddleware` (screen auth)
+-  All `/api/v1/screens/{screenId}/ads/*` - Use `ScreenAuthMiddleware` (screen auth)
 
 ### Admin Endpoints
-- ✅ `POST /api/v1/screens/register` - Uses `requireAuth` (user auth)
-- ✅ `GET /api/v1/screens` - Uses `requireAuth` (user auth)
-- ✅ `PUT /api/v1/screens/{screenId}` - Uses `requireAuth` (user auth)
-- ✅ `DELETE /api/v1/screens/{screenId}` - Uses `requireAuth` (user auth)
-- ✅ All campaign/creative/analytics endpoints - Use `requireAuth` (user auth)
+-  `POST /api/v1/screens/register` - Uses `requireAuth` (user auth)
+-  `GET /api/v1/screens` - Uses `requireAuth` (user auth)
+-  `PUT /api/v1/screens/{screenId}` - Uses `requireAuth` (user auth)
+-  `DELETE /api/v1/screens/{screenId}` - Uses `requireAuth` (user auth)
+-  All campaign/creative/analytics endpoints - Use `requireAuth` (user auth)
 
 ---
 
-## 🎯 Summary
+##  Summary
 
-✅ **Complete Separation Achieved:**
+ **Complete Separation Achieved:**
 
 1. **Admin/Dashboard Endpoints:**
    - Use JWT token authentication
@@ -252,11 +252,11 @@ curl -X GET "http://localhost:8080/api/v1/screens/screen-123/ads/deliver" \
    - Same path with different HTTP methods can use different auth
    - Clear separation with comments
 
-**Screen endpoints no longer require user authentication!** ✅
+**Screen endpoints no longer require user authentication!** 
 
 ---
 
-**Status:** ✅ Complete  
+**Status:**  Complete  
 **Date:** 2025-12-19  
 **Version:** 4.2.0
 

@@ -1,4 +1,4 @@
-# 🎬 Mnemocast Demo Script
+#  Mnemocast Demo Script
 
 **Duration:** 5-7 minutes  
 **Audience:** Investors, potential clients, technical evaluators  
@@ -6,7 +6,7 @@
 
 ---
 
-## 📖 Story Narrative
+##  Story Narrative
 
 **Scenario:** You're a digital advertising agency managing campaigns for multiple clients across India. You need to:
 - Target specific audiences based on location, venue type, and screen quality
@@ -18,7 +18,7 @@
 
 ---
 
-## 🎯 Demo Flow
+##  Demo Flow
 
 ### **1. System Overview & Health (1 minute)**
 
@@ -161,7 +161,7 @@
 
 ---
 
-## 🎤 Closing Statement
+##  Closing Statement
 
 "**Mnemocast** provides an enterprise-ready OOH ad serving platform that combines:
 - **Sophisticated targeting** for precise audience reach
@@ -173,19 +173,19 @@ Whether you're managing campaigns for a single brand or multiple clients, Mnemoc
 
 ---
 
-## 📊 Expected Outcomes
+##  Expected Outcomes
 
 After the demo, the audience should understand:
 
-1. ✅ **Targeting Sophistication:** Multi-dimensional targeting (location, venue, classification)
-2. ✅ **Analytics Depth:** Comprehensive performance metrics at all levels
-3. ✅ **System Reliability:** Enterprise-grade monitoring and health checks
-4. ✅ **Production Readiness:** Scalable, monitored, and documented platform
-5. ✅ **Business Value:** ROI tracking, budget management, performance optimization
+1.  **Targeting Sophistication:** Multi-dimensional targeting (location, venue, classification)
+2.  **Analytics Depth:** Comprehensive performance metrics at all levels
+3.  **System Reliability:** Enterprise-grade monitoring and health checks
+4.  **Production Readiness:** Scalable, monitored, and documented platform
+5.  **Business Value:** ROI tracking, budget management, performance optimization
 
 ---
 
-## 🔑 Key Talking Points Summary
+##  Key Talking Points Summary
 
 - **Targeting:** "Multi-dimensional targeting ensures ads reach the right audience"
 - **Analytics:** "Real-time analytics enable data-driven campaign optimization"
@@ -195,7 +195,7 @@ After the demo, the audience should understand:
 
 ---
 
-## 🛠️ Technical Highlights (if asked)
+##  Technical Highlights (if asked)
 
 - **Backend:** Scala + Pekko HTTP (high-performance, type-safe)
 - **Storage:** Redis + PostgreSQL hybrid (fast + persistent)
@@ -206,7 +206,7 @@ After the demo, the audience should understand:
 
 ---
 
-## 📝 Notes for Presenter
+##  Notes for Presenter
 
 - **Practice the flow** before the actual demo
 - **Have seed data ready** (run `scripts/seed-comprehensive-demo.sh`)
@@ -221,5 +221,5 @@ After the demo, the audience should understand:
 
 ---
 
-**Good luck with your demo! 🚀**
+**Good luck with your demo! **
 

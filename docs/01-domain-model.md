@@ -1,4 +1,4 @@
-# 📘 Mnemocast — Domain Model (v1)
+#  Mnemocast — Domain Model (v1)
 
 > This document defines the core domain entities used by the **Mnemocast Engine**.  
 > It is language-agnostic and acts as the source of truth for implementation.

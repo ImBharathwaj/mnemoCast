@@ -1,4 +1,4 @@
-# 🔍 Ad Delivery Debugging Guide
+#  Ad Delivery Debugging Guide
 
 ## Issue: Server doesn't send ads to screen when screen requests for ad
 
@@ -170,6 +170,6 @@ If ads are still not being sent:
 
 ---
 
-**Status:** ✅ Fixed Future chaining and added enhanced logging  
+**Status:**  Fixed Future chaining and added enhanced logging  
 **Date:** 2025-12-19
 

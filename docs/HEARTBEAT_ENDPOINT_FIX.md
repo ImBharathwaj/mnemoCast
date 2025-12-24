@@ -1,6 +1,6 @@
-# 🔧 Heartbeat Endpoint Fix
+#  Heartbeat Endpoint Fix
 
-## ✅ Issue Resolved
+##  Issue Resolved
 
 Fixed the heartbeat endpoint (`PUT /api/v1/screens/{screenId}/heartbeat`) to:
 1. Return updated screen data in JSON format
@@ -10,7 +10,7 @@ Fixed the heartbeat endpoint (`PUT /api/v1/screens/{screenId}/heartbeat`) to:
 
 ---
 
-## 🐛 Problem
+##  Problem
 
 **Error:** `405: HTTP method not allowed, supported methods: OPTIONS`
 
@@ -21,7 +21,7 @@ Fixed the heartbeat endpoint (`PUT /api/v1/screens/{screenId}/heartbeat`) to:
 
 ---
 
-## ✅ Solution
+##  Solution
 
 ### 1. Updated Heartbeat Endpoint
 
@@ -95,7 +95,7 @@ path(Segment / "heartbeat") { screenId =>
 
 ---
 
-## 📝 API Usage
+##  API Usage
 
 ### Request
 
@@ -145,7 +145,7 @@ OPTIONS /api/v1/screens/{screenId}/heartbeat
 
 ---
 
-## 🔒 Security
+##  Security
 
 - **Passkey Redaction:** Screen passkey is redacted (`***REDACTED***`) in responses
 - **Authentication Required:** Endpoint requires valid `X-Screen-Id` and `X-Screen-Passkey` headers
@@ -153,7 +153,7 @@ OPTIONS /api/v1/screens/{screenId}/heartbeat
 
 ---
 
-## ✅ Testing
+##  Testing
 
 ### Test with curl
 
@@ -181,16 +181,16 @@ curl -X OPTIONS "http://localhost:8080/api/v1/screens/screen-123/heartbeat" \
 
 ---
 
-## 🎉 Summary
+##  Summary
 
-✅ **Heartbeat endpoint now:**
+ **Heartbeat endpoint now:**
 - Returns updated screen data in JSON format
 - Handles CORS preflight requests
 - Returns status 200
 - Includes screen authentication headers in CORS
 - Redacts passkey in response
 
-✅ **CORS headers now include:**
+ **CORS headers now include:**
 - `X-Screen-Id`
 - `X-Screen-Passkey`
 
@@ -198,7 +198,7 @@ The endpoint is now fully functional for screen clients!
 
 ---
 
-**Status:** ✅ Fixed  
+**Status:**  Fixed  
 **Date:** 2025-12-19  
 **Version:** 4.1.0
 

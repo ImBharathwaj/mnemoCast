@@ -2,40 +2,40 @@
 
 ## Current System Status
 
-### ✅ What Works
+###  What Works
 - Basic ad delivery (single ad at a time)
 - Ad management (create, list, update)
 - Budget management (maxPlays, dailyLimit, hourlyLimit)
 - Frequency capping (per device/user)
 - Impression tracking
 - Analytics
-- **OOH Screen Management** (Phase 1 ✅)
-- **OOH Playlist Generation** (Phase 1 ✅)
-- **Time-Based Targeting (Dayparts)** (Phase 1 ✅)
-- **Enhanced Location Targeting** (Phase 1 ✅)
+- **OOH Screen Management** (Phase 1 )
+- **OOH Playlist Generation** (Phase 1 )
+- **Time-Based Targeting (Dayparts)** (Phase 1 )
+- **Enhanced Location Targeting** (Phase 1 )
 
-### ❌ Critical Gaps for OOH
+###  Critical Gaps for OOH
 
 #### 1. Screen/Placement Management
-**Status:** ✅ **IMPLEMENTED**  
+**Status:**  **IMPLEMENTED**  
 **Impact:** HIGH - Cannot identify or manage physical screens  
 **Implemented:**
-- ✅ Screen registration API (`POST /api/v1/screens/register`)
-- ✅ Screen lookup API (`GET /api/v1/screens/{screenId}`)
-- ✅ Screen listing API (`GET /api/v1/screens`)
-- ✅ Screen heartbeat API (`PUT /api/v1/screens/{screenId}/heartbeat`)
-- ✅ Screen model with location, tags, metadata (`Screen`, `ScreenLocation`)
-- ✅ Screen store (`ScreenStore` interface, `RedisScreenStore` implementation)
+-  Screen registration API (`POST /api/v1/screens/register`)
+-  Screen lookup API (`GET /api/v1/screens/{screenId}`)
+-  Screen listing API (`GET /api/v1/screens`)
+-  Screen heartbeat API (`PUT /api/v1/screens/{screenId}/heartbeat`)
+-  Screen model with location, tags, metadata (`Screen`, `ScreenLocation`)
+-  Screen store (`ScreenStore` interface, `RedisScreenStore` implementation)
 
 #### 2. Playlist Generation
-**Status:** ✅ **IMPLEMENTED**  
+**Status:**  **IMPLEMENTED**  
 **Impact:** CRITICAL - OOH requires playlists, not single ads  
 **Implemented:**
-- ✅ Playlist API (`GET /api/v1/screens/{screenId}/playlist?durationMinutes=X`)
-- ✅ Playlist generation service (`PlaylistService`)
-- ✅ Duration-based ad selection
-- ✅ `durationSeconds` field added to `Ad` model
-- ⚠️ Weighted/priority-based scheduling (basic random selection implemented, advanced weighting pending)
+-  Playlist API (`GET /api/v1/screens/{screenId}/playlist?durationMinutes=X`)
+-  Playlist generation service (`PlaylistService`)
+-  Duration-based ad selection
+-  `durationSeconds` field added to `Ad` model
+-  Weighted/priority-based scheduling (basic random selection implemented, advanced weighting pending)
 
 #### 3. Campaign/Creative Separation
 **Status:** Not implemented  
@@ -47,33 +47,33 @@
 - Campaign-level targeting and budget
 
 #### 4. Time-Based Targeting (Dayparts)
-**Status:** ✅ **IMPLEMENTED**  
+**Status:**  **IMPLEMENTED**  
 **Impact:** HIGH - Critical for OOH scheduling  
 **Implemented:**
-- ✅ TimeBand model (start/end times)
-- ✅ Day-of-week targeting (via `daysOfWeek` field)
-- ✅ Time window matching logic (`TimeTargetingService`)
-- ✅ Timezone handling (via `timezone` field in `DeliveryRequest`)
-- ✅ Integration with `TargetingService` via `daypart`/`timeband` operator
+-  TimeBand model (start/end times)
+-  Day-of-week targeting (via `daysOfWeek` field)
+-  Time window matching logic (`TimeTargetingService`)
+-  Timezone handling (via `timezone` field in `DeliveryRequest`)
+-  Integration with `TargetingService` via `daypart`/`timeband` operator
 
 #### 5. Enhanced Location Targeting
-**Status:** ✅ **IMPLEMENTED**  
+**Status:**  **IMPLEMENTED**  
 **Impact:** MEDIUM - OOH needs city/area/venue targeting  
 **Implemented:**
-- ✅ City targeting (via `city` field in `DeliveryRequest` and `ScreenLocation`)
-- ✅ Area/neighborhood targeting (via `area` field)
-- ✅ Venue type tags (via `venueType` field and screen `tags`)
-- ✅ Screen tag matching (stored in `Screen` model, available for targeting)
-- ✅ Extended `TargetingService` to support `city`, `area`, `venueType`, `screenId`, `timezone` keys
+-  City targeting (via `city` field in `DeliveryRequest` and `ScreenLocation`)
+-  Area/neighborhood targeting (via `area` field)
+-  Venue type tags (via `venueType` field and screen `tags`)
+-  Screen tag matching (stored in `Screen` model, available for targeting)
+-  Extended `TargetingService` to support `city`, `area`, `venueType`, `screenId`, `timezone` keys
 
 #### 6. Playlist Response Format
-**Status:** ✅ **IMPLEMENTED**  
+**Status:**  **IMPLEMENTED**  
 **Impact:** CRITICAL - Current API returns single ad  
 **Implemented:**
-- ✅ PlaylistResponse model (with `requestId`, `screenId`, `items`, `validForSeconds`, `totalDurationSeconds`)
-- ✅ PlaylistItem model (with `adId`, `creativeUrl`, `targetUrl`, `durationSeconds`, `impressionTrackingUrl`, `position`)
-- ✅ Multiple ads in sequence
-- ✅ ValidForSeconds field (default 5 minutes, configurable)
+-  PlaylistResponse model (with `requestId`, `screenId`, `items`, `validForSeconds`, `totalDurationSeconds`)
+-  PlaylistItem model (with `adId`, `creativeUrl`, `targetUrl`, `durationSeconds`, `impressionTrackingUrl`, `position`)
+-  Multiple ads in sequence
+-  ValidForSeconds field (default 5 minutes, configurable)
 
 ## Recommended Implementation Priority
 
@@ -104,15 +104,15 @@
    - Share-of-voice distribution
    - Advanced frequency capping
 
-## Migration Path ✅ **COMPLETED**
+## Migration Path  **COMPLETED**
 
 The current system has been extended rather than rebuilt:
 
-1. ✅ **Extended existing Ad model:**
+1.  **Extended existing Ad model:**
    - Added `durationSeconds` field for playlist generation
    - Existing targeting rules now support OOH fields via extended keys
 
-2. ✅ **Added new models:**
+2.  **Added new models:**
    - `Screen` - Physical OOH display device/player
    - `ScreenLocation` - Location information (city, area, venueType, timezone)
    - `PlaylistResponse` - Playlist output format
@@ -120,40 +120,40 @@ The current system has been extended rather than rebuilt:
    - `TimeBand` - Time window for daypart targeting
    - `CreateScreenRequest` - Screen registration request
 
-3. ✅ **Extended DeliveryRequest:**
+3.  **Extended DeliveryRequest:**
    - Added `screenId`, `city`, `area`, `venueType`, `timezone` fields
 
-4. ✅ **Created new services:**
+4.  **Created new services:**
    - `PlaylistService` - Generates playlists for OOH screens
    - `TimeTargetingService` - Handles time-based targeting logic
    - Extended `TargetingService` - Supports OOH-specific targeting keys
 
-5. ✅ **Extended APIs:**
+5.  **Extended APIs:**
    - `AdRoutes` - Now accepts OOH parameters (screenId, city, area, venueType, timezone)
    - `ScreenRoutes` - New routes for screen management
    - `PlaylistRoutes` - New routes for playlist generation
 
 ## Implementation Summary
 
-### Phase 1: Core OOH Features ✅ **COMPLETED**
-1. ✅ **Screen Management**
+### Phase 1: Core OOH Features  **COMPLETED**
+1.  **Screen Management**
    - Screen model and store (`Screen`, `ScreenLocation`, `ScreenStore`, `RedisScreenStore`)
    - Registration and lookup APIs (`POST /api/v1/screens/register`, `GET /api/v1/screens/{screenId}`)
    - Basic location/tag support (city, area, venueType, tags, timezone)
 
-2. ✅ **Playlist Generation**
+2.  **Playlist Generation**
    - Playlist service (`PlaylistService`)
    - Duration-based selection
    - Playlist models (`PlaylistResponse`, `PlaylistItem`)
    - API endpoint (`GET /api/v1/screens/{screenId}/playlist`)
 
-3. ✅ **Enhanced Targeting**
+3.  **Enhanced Targeting**
    - City/area targeting (via `DeliveryRequest` extensions)
    - Time-based targeting (dayparts via `TimeBand` and `TimeTargetingService`)
    - Screen tag matching (stored in `Screen` model)
    - Extended `TargetingService` for OOH-specific fields
 
-### Phase 2: Advanced Features ⚠️ **PENDING**
+### Phase 2: Advanced Features  **PENDING**
 4. **Campaign/Creative Structure**
    - Campaign model (groups multiple creatives)
    - Creative model (individual assets)
@@ -167,16 +167,16 @@ The current system has been extended rather than rebuilt:
 
 ## Conclusion
 
-**Current System:** ✅ Suitable for both conventional ad serving (mobile/web) and **basic OOH ad serving**  
+**Current System:**  Suitable for both conventional ad serving (mobile/web) and **basic OOH ad serving**  
 **OOH Readiness:** ~85% - Core OOH features implemented, advanced features pending
 
 **Minimum Viable OOH System Status:**
-- ✅ Screen management (IMPLEMENTED)
-- ✅ Playlist generation (IMPLEMENTED)
-- ✅ Time-based targeting (IMPLEMENTED)
-- ✅ Enhanced location targeting (IMPLEMENTED)
-- ⚠️ Campaign/Creative separation (PENDING - Phase 2)
-- ⚠️ Advanced scheduling/weighting (PENDING - Phase 2)
+-  Screen management (IMPLEMENTED)
+-  Playlist generation (IMPLEMENTED)
+-  Time-based targeting (IMPLEMENTED)
+-  Enhanced location targeting (IMPLEMENTED)
+-  Campaign/Creative separation (PENDING - Phase 2)
+-  Advanced scheduling/weighting (PENDING - Phase 2)
 
 **Key Implemented Features:**
 - Screen registration and management with location data

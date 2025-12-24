@@ -153,20 +153,20 @@ docker-compose up -d
 ## What Goes Where
 
 ### Redis (Appropriate For)
-- ✅ Active ads cache (fast delivery)
-- ✅ Recent events cache (last 100 events)
-- ✅ Hot data (frequently accessed)
-- ✅ Real-time counters
-- ✅ Session data
+-  Active ads cache (fast delivery)
+-  Recent events cache (last 100 events)
+-  Hot data (frequently accessed)
+-  Real-time counters
+-  Session data
 
 ### Postgres (Suitable For)
-- ✅ Ad metadata (persistent storage)
-- ✅ Historical events (analytics)
-- ✅ Complex queries (JOINs, aggregations)
-- ✅ ACID transactions
-- ✅ Relationships (targeting rules)
-- ✅ Audit trails
-- ✅ Budget tracking (accurate counts)
+-  Ad metadata (persistent storage)
+-  Historical events (analytics)
+-  Complex queries (JOINs, aggregations)
+-  ACID transactions
+-  Relationships (targeting rules)
+-  Audit trails
+-  Budget tracking (accurate counts)
 
 ---
 

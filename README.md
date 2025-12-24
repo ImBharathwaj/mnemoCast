@@ -4,10 +4,10 @@ A smart ad serving engine built with Scala and Pekko HTTP.
 
 ## Features
 
-- ✅ **Ad Delivery**: Smart ad selection with targeting rules
-- ✅ **Budget Management**: Daily/hourly/total budget limits
-- ✅ **Frequency Capping**: Limit impressions per device/user
-- ✅ **Analytics**: Performance metrics, dashboard reports
+- **Ad Delivery**: Smart ad selection with targeting rules
+- **Budget Management**: Daily/hourly/total budget limits
+- **Frequency Capping**: Limit impressions per device/user
+- **Analytics**: Performance metrics, dashboard reports
 
 ## Quick Start
 
@@ -19,7 +19,7 @@ See `docs/RUNNING.md` for detailed setup instructions.
 
 ## Documentation
 
-- **cURL Testing Guide**: `docs/CURL_TESTING.md` - Test all capabilities with curl commands ⭐
+- **cURL Testing Guide**: `docs/CURL_TESTING.md` - Test all capabilities with curl commands
 - **Capabilities**: `docs/CAPABILITIES.md` - What the system can do
 - **API Specification**: `docs/02-api-spec.md` - Complete API reference
 - **Features Overview**: `docs/FEATURES.md` - Feature details

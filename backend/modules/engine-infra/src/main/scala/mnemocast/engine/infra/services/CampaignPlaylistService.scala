@@ -79,7 +79,7 @@ class CampaignPlaylistService(
               )
               
               decisionStore.append(decision).recover { case ex =>
-                println(s"⚠️  Warning: Failed to log decision: ${ex.getMessage}")
+                println(s"WARNING: Failed to log decision: ${ex.getMessage}")
               }
             }
 

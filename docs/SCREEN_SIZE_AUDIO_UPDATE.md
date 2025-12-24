@@ -1,10 +1,10 @@
-# 📺 Screen Display Size and Audio Capability Update
+#  Screen Display Size and Audio Capability Update
 
 **Update:** Added display size (width, height) and audio capability fields to Screen model and APIs.
 
 ---
 
-## ✅ Changes Made
+##  Changes Made
 
 ### 1. Domain Model Updates
 
@@ -64,7 +64,7 @@ ALTER TABLE screens
 
 ---
 
-## 📋 API Examples
+##  API Examples
 
 ### Register Screen with Display Size
 
@@ -106,7 +106,7 @@ curl -X PUT http://localhost:8080/api/v1/screens/screen-1 \
 
 ---
 
-## 🎯 Use Cases
+##  Use Cases
 
 ### 1. Ad Targeting by Display Size
 - Serve high-resolution creatives to 4K displays (3840×2160)
@@ -125,7 +125,7 @@ curl -X PUT http://localhost:8080/api/v1/screens/screen-1 \
 
 ---
 
-## 🔄 Migration Steps
+##  Migration Steps
 
 ### For Existing Databases
 
@@ -151,7 +151,7 @@ Redis storage uses JSON serialization, so existing screens will work with defaul
 
 ---
 
-## 📊 Field Details
+##  Field Details
 
 ### width (Optional Integer)
 - **Purpose:** Display width in pixels
@@ -172,7 +172,7 @@ Redis storage uses JSON serialization, so existing screens will work with defaul
 
 ---
 
-## 🧪 Testing
+##  Testing
 
 ### Test Screen Registration
 ```bash
@@ -206,7 +206,7 @@ curl http://localhost:8080/api/v1/screens/screen-id
 
 ---
 
-## ✅ Checklist
+##  Checklist
 
 - [x] Update Screen domain model
 - [x] Update CreateScreenRequest model

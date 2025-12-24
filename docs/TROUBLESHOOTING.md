@@ -185,9 +185,9 @@ kill -9 <PID>
 ### Default Strategy Changed
 
 The default storage strategy is now **"redis"** (was "hybrid"). This means:
-- ✅ Works without Postgres
-- ✅ Only requires Redis
-- ✅ Faster startup
+-  Works without Postgres
+-  Only requires Redis
+-  Faster startup
 
 ### To Use Hybrid Mode
 
@@ -252,9 +252,9 @@ sbt run
 ```
 
 Look for:
-- ✅ "Mnemocast Engine API running at..."
-- ⚠️  Warnings about Postgres
-- ❌ Error messages
+-  "Mnemocast Engine API running at..."
+-   Warnings about Postgres
+-  Error messages
 
 ### 2. Test Individual Components
 

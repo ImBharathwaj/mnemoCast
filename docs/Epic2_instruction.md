@@ -1,5 +1,5 @@
-✅ Development Steps (Ordered)
-1️⃣ Targeting Logic (Manual)
+ Development Steps (Ordered)
+1⃣ Targeting Logic (Manual)
 
 Module: engine-domain
 Path: modules/engine-domain/src/main/scala/mnemocast/engine/domain/services/TargetingService.scala
@@ -24,7 +24,7 @@ platform in android,ios
 
 Cursor assist: Ask Cursor to generate unit tests, not logic.
 
-2️⃣ Integrate Targeting into Delivery (Cursor-assist)
+2⃣ Integrate Targeting into Delivery (Cursor-assist)
 
 Module: engine-infra
 File: AdDeliveryService.scala
@@ -50,7 +50,7 @@ Done when:
 
 /ads/deliver?country=IN returns an ad
 
-3️⃣ Admin API — Create Ad (Cursor-heavy)
+3⃣ Admin API — Create Ad (Cursor-heavy)
 
 Module: engine-api
 Add to existing or new file:
@@ -88,7 +88,7 @@ Cursor prompt idea:
 
 Scaffold a POST /admin/ads route that takes CreateAdRequest JSON, stores an Ad via AdStore, and returns 201 with the created Ad.
 
-4️⃣ Admin API — List Ads (Cursor)
+4⃣ Admin API — List Ads (Cursor)
 
 Endpoint:
 
@@ -109,7 +109,7 @@ curl http://localhost:8080/admin/ads
 
 returns array of ads.
 
-5️⃣ Events API — List Events per Ad (Cursor)
+5⃣ Events API — List Events per Ad (Cursor)
 
 Endpoint:
 
@@ -126,7 +126,7 @@ Showing impressions logged for specific ad:
 
 curl "http://localhost:8080/admin/ads/ad-1/events?limit=10"
 
-6️⃣ Docs & Demo Script (Manual)
+6⃣ Docs & Demo Script (Manual)
 
 Files to update:
 

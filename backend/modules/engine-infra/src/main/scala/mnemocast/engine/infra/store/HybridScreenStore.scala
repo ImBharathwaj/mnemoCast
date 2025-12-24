@@ -18,8 +18,8 @@ class HybridScreenStore(
     // Write to both: Postgres (persistent) and Redis (cache)
     // If Postgres fails, still write to Redis (graceful degradation)
     postgresStore.upsert(screen).recover { case ex: Exception =>
-      println(s"⚠️  Warning: Failed to write screen to Postgres: ${ex.getMessage}")
-      println(s"⚠️  Continuing with Redis-only write for screen ${screen.id}")
+      println(s"WARNING: Failed to write screen to Postgres: ${ex.getMessage}")
+      println(s"Continuing with Redis-only write for screen ${screen.id}")
     }.flatMap { _ =>
       redisStore.upsert(screen)
     }
@@ -57,7 +57,7 @@ class HybridScreenStore(
     // Update both stores
     // For last_seen, we prioritize speed (Redis) but also persist to Postgres
     postgresStore.updateLastSeen(id).recover { case ex: Exception =>
-      println(s"⚠️  Warning: Failed to update last_seen in Postgres: ${ex.getMessage}")
+      println(s"WARNING: Failed to update last_seen in Postgres: ${ex.getMessage}")
     }.flatMap { _ =>
       redisStore.updateLastSeen(id)
     }
