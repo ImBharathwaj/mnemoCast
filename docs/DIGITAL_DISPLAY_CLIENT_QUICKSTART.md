@@ -1,10 +1,10 @@
-# 🚀 Digital Display Client - Quick Start Guide
+#  Digital Display Client - Quick Start Guide
 
 **Quick implementation guide for getting the digital display client up and running.**
 
 ---
 
-## 🎯 Quick Start (30 minutes)
+##  Quick Start (30 minutes)
 
 ### Step 1: Initialize Project
 
@@ -501,7 +501,7 @@ npm run preview
 
 ---
 
-## 🧪 Testing with Backend
+##  Testing with Backend
 
 1. **Start Backend:**
    ```bash
@@ -527,7 +527,7 @@ npm run preview
 
 ---
 
-## 📝 Configuration
+##  Configuration
 
 ### Option 1: Environment Variables
 ```env
@@ -567,7 +567,7 @@ Create `public/config.json`:
 
 ---
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Issue: Cannot connect to backend
 - **Check:** Backend is running on port 8080
@@ -586,7 +586,7 @@ Create `public/config.json`:
 
 ---
 
-## 🚀 Next Steps
+##  Next Steps
 
 1. **Add Video.js** for better video playback
 2. **Add Error Recovery** for network failures
@@ -596,7 +596,7 @@ Create `public/config.json`:
 
 ---
 
-## 📚 Full Documentation
+##  Full Documentation
 
 See `docs/DIGITAL_DISPLAY_CLIENT_PLAN.md` for complete implementation plan.
 

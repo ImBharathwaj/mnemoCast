@@ -241,8 +241,8 @@ curl -X POST "http://localhost:8080/admin/ads" \
 ```
 
 **Postgres Records:**
-- ✅ 1 row in `ads` table
-- ✅ 1 row in `targeting_rules` table
+-  1 row in `ads` table
+-  1 row in `targeting_rules` table
 
 #### Step 2: Request Ad Delivery
 
@@ -251,8 +251,8 @@ curl -X GET "http://localhost:8080/ads/deliver?country=IN&deviceId=device-123&us
 ```
 
 **Postgres Records:**
-- ✅ 1 row in `delivery_events` (event_type = 'impression')
-- ✅ 4-6 rows in `event_metadata` (deviceId, userId, ip, country, platform, etc.)
+-  1 row in `delivery_events` (event_type = 'impression')
+-  4-6 rows in `event_metadata` (deviceId, userId, ip, country, platform, etc.)
 
 #### Step 3: Track Click
 
@@ -261,8 +261,8 @@ curl -L "http://localhost:8080/api/v1/events/click?adId=ad-123&requestId=req-001
 ```
 
 **Postgres Records:**
-- ✅ 1 row in `delivery_events` (event_type = 'click')
-- ✅ 1-2 rows in `event_metadata` (ip, possibly others)
+-  1 row in `delivery_events` (event_type = 'click')
+-  1-2 rows in `event_metadata` (ip, possibly others)
 
 #### Step 4: View Analytics
 

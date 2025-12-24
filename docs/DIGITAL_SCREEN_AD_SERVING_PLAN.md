@@ -1,4 +1,4 @@
-# 📺 Digital Screen Ad Serving API - Implementation Plan
+#  Digital Screen Ad Serving API - Implementation Plan
 
 ## Executive Summary
 
@@ -6,24 +6,24 @@ This document outlines the plan for developing specialized API endpoints for ser
 
 ---
 
-## ✅ What We Already Have (Good Enough)
+##  What We Already Have (Good Enough)
 
-### 1. **Core Ad Delivery Infrastructure** ✅
+### 1. **Core Ad Delivery Infrastructure** 
 - **`GET /ads/deliver`** - Generic ad delivery endpoint
   - Supports screen-specific parameters (`screenId`, `city`, `area`, `venueType`)
   - Includes targeting, budget management, and frequency capping
   - Returns `DeliveryResponse` with ad creative URL and tracking URLs
-  - **Status:** ✅ Production-ready
+  - **Status:**  Production-ready
 
-### 2. **Playlist Generation** ✅
+### 2. **Playlist Generation** 
 - **`GET /api/v1/screens/{screenId}/playlist`** - Generate playlists for screens
   - Campaign-based playlist generation
   - Ad-based playlist generation (fallback)
   - Duration-based playlist generation
   - Screen context-aware (uses screen location, tags, classification)
-  - **Status:** ✅ Production-ready
+  - **Status:**  Production-ready
 
-### 3. **Screen Management** ✅
+### 3. **Screen Management** 
 - **`POST /api/v1/screens/register`** - Register screens
 - **`GET /api/v1/screens/{screenId}`** - Get screen info
 - **`PUT /api/v1/screens/{screenId}/heartbeat`** - Screen heartbeat
@@ -34,33 +34,33 @@ This document outlines the plan for developing specialized API endpoints for ser
   - Classification for priority
   - Size (width, height)
   - Audio capability (isAudible)
-  - **Status:** ✅ Production-ready
+  - **Status:**  Production-ready
 
-### 4. **Campaign & Creative Management** ✅
+### 4. **Campaign & Creative Management** 
 - Campaign management with targeting rules
 - Creative management with metadata
 - Campaign-to-creative relationships
-- **Status:** ✅ Production-ready
+- **Status:**  Production-ready
 
-### 5. **Event Tracking** ✅
+### 5. **Event Tracking** 
 - **`GET /api/v1/events/impression`** - Impression tracking
 - Event storage and analytics
-- **Status:** ✅ Production-ready
+- **Status:**  Production-ready
 
-### 6. **Ad Delivery Service** ✅
+### 6. **Ad Delivery Service** 
 - `AdDeliveryService` with:
   - Targeting rules filtering
   - Budget constraints
   - Frequency capping
   - Weighted ad selection
   - Screen classification support
-  - **Status:** ✅ Production-ready
+  - **Status:**  Production-ready
 
 ---
 
-## 🔧 What Needs Enhancement
+##  What Needs Enhancement
 
-### 1. **Screen-Specific Ad Delivery Endpoint** ⚠️
+### 1. **Screen-Specific Ad Delivery Endpoint** 
 **Current:** Generic `/ads/deliver` endpoint works but isn't optimized for screens
 
 **Enhancement Needed:**
@@ -69,9 +69,9 @@ This document outlines the plan for developing specialized API endpoints for ser
 - Better error handling for unregistered screens
 - Screen-specific response format
 
-**Priority:** 🔴 High
+**Priority:**  High
 
-### 2. **Screen Context Auto-Discovery** ⚠️
+### 2. **Screen Context Auto-Discovery** 
 **Current:** Screen context must be passed manually in query params
 
 **Enhancement Needed:**
@@ -79,9 +79,9 @@ This document outlines the plan for developing specialized API endpoints for ser
 - Use screen's stored location, tags, and metadata
 - Reduce API call complexity for screen clients
 
-**Priority:** 🔴 High
+**Priority:**  High
 
-### 3. **Batch Ad Delivery** ⚠️
+### 3. **Batch Ad Delivery** 
 **Current:** Single ad delivery per request
 
 **Enhancement Needed:**
@@ -89,9 +89,9 @@ This document outlines the plan for developing specialized API endpoints for ser
 - Support for requesting N ads at once
 - Optimized for playlist building
 
-**Priority:** 🟡 Medium
+**Priority:**  Medium
 
-### 4. **Screen Health & Status** ⚠️
+### 4. **Screen Health & Status** 
 **Current:** Basic heartbeat endpoint exists
 
 **Enhancement Needed:**
@@ -100,9 +100,9 @@ This document outlines the plan for developing specialized API endpoints for ser
 - Connection health metrics
 - Playback statistics
 
-**Priority:** 🟡 Medium
+**Priority:**  Medium
 
-### 5. **Screen-Specific Analytics** ⚠️
+### 5. **Screen-Specific Analytics** 
 **Current:** Generic analytics endpoints
 
 **Enhancement Needed:**
@@ -110,13 +110,13 @@ This document outlines the plan for developing specialized API endpoints for ser
 - Ad performance per screen
 - Screen-level reporting
 
-**Priority:** 🟢 Low
+**Priority:**  Low
 
 ---
 
 ## 🆕 New Endpoints to Create
 
-### 1. **Screen Ad Delivery Endpoint** 🔴 HIGH PRIORITY
+### 1. **Screen Ad Delivery Endpoint**  HIGH PRIORITY
 
 **Endpoint:** `GET /api/v1/screens/{screenId}/ads/deliver`
 
@@ -162,7 +162,7 @@ GET /api/v1/screens/{screenId}/ads/deliver?durationSeconds=30
 
 ---
 
-### 2. **Batch Ad Delivery Endpoint** 🟡 MEDIUM PRIORITY
+### 2. **Batch Ad Delivery Endpoint**  MEDIUM PRIORITY
 
 **Endpoint:** `GET /api/v1/screens/{screenId}/ads/batch`
 
@@ -204,7 +204,7 @@ GET /api/v1/screens/{screenId}/ads/batch?count=10&durationMinutes=5
 
 ---
 
-### 3. **Screen Status Endpoint** 🟡 MEDIUM PRIORITY
+### 3. **Screen Status Endpoint**  MEDIUM PRIORITY
 
 **Endpoint:** `GET /api/v1/screens/{screenId}/status`
 
@@ -235,7 +235,7 @@ GET /api/v1/screens/{screenId}/ads/batch?count=10&durationMinutes=5
 
 ---
 
-### 4. **Screen Ad Preferences Endpoint** 🟢 LOW PRIORITY
+### 4. **Screen Ad Preferences Endpoint**  LOW PRIORITY
 
 **Endpoint:** `GET /api/v1/screens/{screenId}/ads/preferences`
 
@@ -265,7 +265,7 @@ GET /api/v1/screens/{screenId}/ads/batch?count=10&durationMinutes=5
 
 ---
 
-### 5. **Screen Ad History Endpoint** 🟢 LOW PRIORITY
+### 5. **Screen Ad History Endpoint**  LOW PRIORITY
 
 **Endpoint:** `GET /api/v1/screens/{screenId}/ads/history`
 
@@ -297,17 +297,17 @@ GET /api/v1/screens/{screenId}/ads/history?limit=50&since=2025-12-18T00:00:00Z
 
 ---
 
-## 📋 Implementation Phases
+##  Implementation Phases
 
-### Phase 1: Core Screen Ad Delivery (Week 1) 🔴
+### Phase 1: Core Screen Ad Delivery (Week 1) 
 **Priority:** Critical
 
-1. ✅ Create `ScreenAdRoutes.scala`
-2. ✅ Implement `GET /api/v1/screens/{screenId}/ads/deliver`
-3. ✅ Auto-populate screen context
-4. ✅ Enhanced error handling
-5. ✅ Update API documentation
-6. ✅ Add tests
+1.  Create `ScreenAdRoutes.scala`
+2.  Implement `GET /api/v1/screens/{screenId}/ads/deliver`
+3.  Auto-populate screen context
+4.  Enhanced error handling
+5.  Update API documentation
+6.  Add tests
 
 **Deliverables:**
 - Screen-specific ad delivery endpoint
@@ -316,13 +316,13 @@ GET /api/v1/screens/{screenId}/ads/history?limit=50&since=2025-12-18T00:00:00Z
 
 ---
 
-### Phase 2: Batch Delivery & Status (Week 2) 🟡
+### Phase 2: Batch Delivery & Status (Week 2) 
 **Priority:** Important
 
-1. ✅ Implement batch ad delivery endpoint
-2. ✅ Implement screen status endpoint
-3. ✅ Add request tracking
-4. ✅ Update documentation
+1.  Implement batch ad delivery endpoint
+2.  Implement screen status endpoint
+3.  Add request tracking
+4.  Update documentation
 
 **Deliverables:**
 - Batch ad delivery
@@ -331,13 +331,13 @@ GET /api/v1/screens/{screenId}/ads/history?limit=50&since=2025-12-18T00:00:00Z
 
 ---
 
-### Phase 3: Advanced Features (Week 3) 🟢
+### Phase 3: Advanced Features (Week 3) 
 **Priority:** Nice to have
 
-1. ✅ Screen ad preferences endpoint
-2. ✅ Screen ad history endpoint
-3. ✅ Screen-specific analytics
-4. ✅ Performance optimizations
+1.  Screen ad preferences endpoint
+2.  Screen ad history endpoint
+3.  Screen-specific analytics
+4.  Performance optimizations
 
 **Deliverables:**
 - Advanced screen features
@@ -346,7 +346,7 @@ GET /api/v1/screens/{screenId}/ads/history?limit=50&since=2025-12-18T00:00:00Z
 
 ---
 
-## 🏗️ Architecture Changes
+##  Architecture Changes
 
 ### New Files to Create
 
@@ -376,7 +376,7 @@ GET /api/v1/screens/{screenId}/ads/history?limit=50&since=2025-12-18T00:00:00Z
 
 ---
 
-## 🔍 Technical Considerations
+##  Technical Considerations
 
 ### 1. **Performance**
 - Cache screen data to reduce database lookups
@@ -400,7 +400,7 @@ GET /api/v1/screens/{screenId}/ads/history?limit=50&since=2025-12-18T00:00:00Z
 
 ---
 
-## 📊 Success Metrics
+##  Success Metrics
 
 1. **Ad Delivery Performance**
    - < 100ms response time for single ad delivery
@@ -418,16 +418,16 @@ GET /api/v1/screens/{screenId}/ads/history?limit=50&since=2025-12-18T00:00:00Z
 
 ---
 
-## 🎯 Summary
+##  Summary
 
-### What's Already Good ✅
+### What's Already Good 
 - Core ad delivery infrastructure
 - Playlist generation
 - Screen management
 - Campaign & creative management
 - Event tracking
 
-### What Needs Enhancement ⚠️
+### What Needs Enhancement 
 - Screen-specific ad delivery endpoint
 - Auto-discovery of screen context
 - Batch delivery support
@@ -442,7 +442,7 @@ GET /api/v1/screens/{screenId}/ads/history?limit=50&since=2025-12-18T00:00:00Z
 
 ---
 
-## 🚀 Next Steps
+##  Next Steps
 
 1. **Review and approve this plan**
 2. **Start Phase 1 implementation**

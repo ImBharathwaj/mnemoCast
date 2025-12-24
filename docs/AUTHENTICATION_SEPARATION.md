@@ -1,8 +1,8 @@
-# 🔐 Authentication Separation - Admin vs Screen Endpoints
+#  Authentication Separation - Admin vs Screen Endpoints
 
-## 📋 Current Authentication Strategy
+##  Current Authentication Strategy
 
-### ✅ Admin/Dashboard Endpoints (User Authentication - JWT)
+###  Admin/Dashboard Endpoints (User Authentication - JWT)
 These endpoints require **user authentication** via JWT token in `Authorization: Bearer <token>` header:
 
 #### Screen Management (Admin)
@@ -40,7 +40,7 @@ These endpoints require **user authentication** via JWT token in `Authorization:
 
 ---
 
-### ✅ Screen Endpoints (Screen Authentication - Passkey)
+###  Screen Endpoints (Screen Authentication - Passkey)
 These endpoints require **screen authentication** via `X-Screen-Id` and `X-Screen-Passkey` headers:
 
 #### Screen Operations
@@ -56,7 +56,7 @@ These endpoints require **screen authentication** via `X-Screen-Id` and `X-Scree
 
 ---
 
-### ✅ Public Endpoints (No Authentication)
+###  Public Endpoints (No Authentication)
 - `GET /api/v1/health` - Health check
 - `POST /api/v1/auth/register` - User registration
 - `POST /api/v1/auth/login` - User login
@@ -64,7 +64,7 @@ These endpoints require **screen authentication** via `X-Screen-Id` and `X-Scree
 
 ---
 
-## 🔧 Implementation Details
+##  Implementation Details
 
 ### User Authentication (Admin/Dashboard)
 **Middleware:** `AuthMiddleware.authenticate(authService)`
@@ -80,7 +80,7 @@ These endpoints require **screen authentication** via `X-Screen-Id` and `X-Scree
 
 ---
 
-## 📝 Route Organization
+##  Route Organization
 
 ### ScreenRoutes.scala
 ```scala
@@ -119,7 +119,7 @@ All endpoints use `ScreenAuthMiddleware.authenticate(screenStore)`:
 
 ---
 
-## ✅ Verification Checklist
+##  Verification Checklist
 
 - [x] Screen registration requires user auth (admin only)
 - [x] Screen listing requires user auth (admin only)
@@ -137,7 +137,7 @@ All endpoints use `ScreenAuthMiddleware.authenticate(screenStore)`:
 
 ---
 
-## 🎯 Summary
+##  Summary
 
 **Admin/Dashboard Endpoints:**
 - Use `requireAuth` → `AuthMiddleware.authenticate(authService)`
@@ -149,10 +149,10 @@ All endpoints use `ScreenAuthMiddleware.authenticate(screenStore)`:
 - Require `X-Screen-Id` and `X-Screen-Passkey` headers
 - For screen operations (heartbeat, ad delivery, status)
 
-**Authentication is properly separated!** ✅
+**Authentication is properly separated!** 
 
 ---
 
-**Status:** ✅ Verified  
+**Status:**  Verified  
 **Date:** 2025-12-19
 

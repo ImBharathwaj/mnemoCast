@@ -1,6 +1,6 @@
-# 🚀 Mnemocast Engine — Sprint Plan (6 Weeks)
+#  Mnemocast Engine — Sprint Plan (6 Weeks)
 
-## 🎯 Objective
+##  Objective
 Build the **Core Ad Serving Engine** for Mnemocast:
 - Register screens
 - Manage campaigns & creatives
@@ -12,9 +12,9 @@ Output: Fully demo-ready backend with Postman/terminal
 
 ---
 
-## 📅 Sprint Breakdown
+##  Sprint Breakdown
 
-### 🏁 Sprint 1 — Domain Model + Screen APIs
+###  Sprint 1 — Domain Model + Screen APIs
 **Duration:** 1 week
 
 **User Stories**
@@ -36,7 +36,7 @@ Output: Fully demo-ready backend with Postman/terminal
 
 ---
 
-### ⚙️ Sprint 2 — Campaign & Creative Handling
+###  Sprint 2 — Campaign & Creative Handling
 **Duration:** 1 week
 
 **User Stories**
@@ -57,7 +57,7 @@ Output: Fully demo-ready backend with Postman/terminal
 
 ---
 
-### 🎛 Sprint 3 — Playlist Generation Engine (v1)
+###  Sprint 3 — Playlist Generation Engine (v1)
 **Duration:** 2 weeks
 
 **User Stories**
@@ -82,7 +82,7 @@ Output: Fully demo-ready backend with Postman/terminal
 
 ---
 
-### 🧾 Sprint 4 — Play Event Logging + Budget Enforcement
+###  Sprint 4 — Play Event Logging + Budget Enforcement
 **Duration:** 1 week
 
 **User Stories**
@@ -104,7 +104,7 @@ Output: Fully demo-ready backend with Postman/terminal
 
 ---
 
-### 🎥 Sprint 5 — Demo Story + Stability Hardening
+###  Sprint 5 — Demo Story + Stability Hardening
 **Duration:** 1 week
 
 **User Stories**
@@ -128,7 +128,7 @@ Output: Fully demo-ready backend with Postman/terminal
 
 ---
 
-## 📌 Timeline Summary
+##  Timeline Summary
 
 | Sprint | Duration | Focus | Demo Output |
 |--------|:-------:|------|-------------|
@@ -142,12 +142,12 @@ Output: Fully demo-ready backend with Postman/terminal
 
 ---
 
-## 🧠 Principle for Phase 1
+##  Principle for Phase 1
 > **If it doesn’t show up in the demo → it’s not in Phase 1.**
 
 ---
 
-## 👉 Next Step
+##  Next Step
 Start with:
 - `docs/01-domain-model.md`
 - `docs/02-api-spec.md`

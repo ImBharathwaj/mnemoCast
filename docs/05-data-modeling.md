@@ -1,4 +1,4 @@
-# 🗄️ Mnemocast Engine — Data Modeling Plan (v1)
+#  Mnemocast Engine — Data Modeling Plan (v1)
 
 > Goal: Design how data for the Mnemocast Engine is structured and stored,  
 > with an MVP that starts simple (in-memory / single DB) but can scale later.

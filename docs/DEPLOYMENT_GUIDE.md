@@ -1,11 +1,11 @@
-# 🚀 Mnemocast Deployment Guide
+#  Mnemocast Deployment Guide
 
 **Version:** 1.0.0  
 **Last Updated:** December 2024
 
 ---
 
-## 📋 Table of Contents
+##  Table of Contents
 
 1. [Prerequisites](#prerequisites)
 2. [Quick Start](#quick-start)
@@ -319,28 +319,28 @@ spec:
 ```bash
 export STORAGE_STRATEGY=redis
 ```
-- ✅ Fastest performance
-- ✅ Simple setup
-- ❌ No data persistence
-- ❌ Data lost on restart
+-  Fastest performance
+-  Simple setup
+-  No data persistence
+-  Data lost on restart
 
 #### **PostgreSQL-Only (Persistent)**
 ```bash
 export STORAGE_STRATEGY=postgres
 ```
-- ✅ Data persistence
-- ✅ ACID compliance
-- ❌ Slower than Redis
-- ❌ More complex setup
+-  Data persistence
+-  ACID compliance
+-  Slower than Redis
+-  More complex setup
 
 #### **Hybrid (Recommended)**
 ```bash
 export STORAGE_STRATEGY=hybrid
 ```
-- ✅ Best of both worlds
-- ✅ Fast reads (Redis cache)
-- ✅ Persistent writes (PostgreSQL)
-- ✅ Data durability
+-  Best of both worlds
+-  Fast reads (Redis cache)
+-  Persistent writes (PostgreSQL)
+-  Data durability
 
 ---
 

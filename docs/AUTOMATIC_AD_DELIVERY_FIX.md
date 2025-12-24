@@ -1,6 +1,6 @@
-# 🔧 Automatic Ad Delivery - No Manual Configuration Needed
+#  Automatic Ad Delivery - No Manual Configuration Needed
 
-## ✅ Solution: Universal Fallback Ads
+##  Solution: Universal Fallback Ads
 
 **Problem:** All ads had targeting rules, so screens that didn't match any rules got no ads.
 
@@ -8,7 +8,7 @@
 
 ---
 
-## 🎯 How It Works
+##  How It Works
 
 ### TargetingService Logic:
 ```scala
@@ -26,14 +26,14 @@ def matches(ad: Ad, request: DeliveryRequest): Boolean = {
 
 ---
 
-## 📊 Ad Types in System
+##  Ad Types in System
 
 ### 1. **Targeted Ads** (Specific Screens)
 - Have targeting rules (city, venueType, classification, tags)
 - Only shown to matching screens
 - Examples: Mall ads for malls, Airport ads for airports
 
-### 2. **Universal Ads** (All Screens) ✅ NEW
+### 2. **Universal Ads** (All Screens)  NEW
 - **NO targeting rules**
 - Automatically match ALL screens
 - Always available as fallback
@@ -41,7 +41,7 @@ def matches(ad: Ad, request: DeliveryRequest): Boolean = {
 
 ---
 
-## 🔄 Ad Selection Priority
+##  Ad Selection Priority
 
 When a screen requests an ad:
 
@@ -60,7 +60,7 @@ When a screen requests an ad:
 
 ---
 
-## ✅ What Was Added
+##  What Was Added
 
 ### Universal Fallback Ads (3 ads):
 ```sql
@@ -71,14 +71,14 @@ When a screen requests an ad:
 ```
 
 **Characteristics:**
-- ✅ No targeting rules (match all screens)
-- ✅ High budget (100,000 max plays)
-- ✅ Medium weight (5)
-- ✅ Always active
+-  No targeting rules (match all screens)
+-  High budget (100,000 max plays)
+-  Medium weight (5)
+-  Always active
 
 ---
 
-## 🚀 Benefits
+##  Benefits
 
 1. **Zero Manual Configuration**
    - Universal ads work automatically
@@ -97,7 +97,7 @@ When a screen requests an ad:
 
 ---
 
-## 📝 Usage
+##  Usage
 
 ### For New Screens:
 - **No configuration needed!**
@@ -115,7 +115,7 @@ When a screen requests an ad:
 
 ---
 
-## 🔍 Verification
+##  Verification
 
 ### Check Universal Ads:
 ```sql
@@ -141,18 +141,18 @@ curl -X GET "http://localhost:8080/api/v1/screens/{screenId}/ads/deliver" \
 
 ---
 
-## 🎯 Summary
+##  Summary
 
-✅ **Problem Solved:** No more "No ads available" errors  
-✅ **Automatic:** Universal ads work without configuration  
-✅ **Smart:** Targeted ads still work for specific screens  
-✅ **Reliable:** Every screen always gets an ad  
+ **Problem Solved:** No more "No ads available" errors  
+ **Automatic:** Universal ads work without configuration  
+ **Smart:** Targeted ads still work for specific screens  
+ **Reliable:** Every screen always gets an ad  
 
-**The system now works automatically - no manual configuration needed!** 🎉
+**The system now works automatically - no manual configuration needed!** 
 
 ---
 
-**Status:** ✅ Fixed  
+**Status:**  Fixed  
 **Date:** 2025-12-19  
 **Version:** 4.2.3
 

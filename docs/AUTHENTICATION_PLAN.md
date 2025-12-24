@@ -1,10 +1,10 @@
-# 🔐 Authentication & Authorization Implementation Plan
+#  Authentication & Authorization Implementation Plan
 
 **Purpose:** Add fully functional signup and login features to Mnemocast with secure authentication, session management, and protected routes.
 
 ---
 
-## 📋 Overview
+##  Overview
 
 This plan covers implementing a complete authentication system including:
 - User registration (signup)
@@ -17,7 +17,7 @@ This plan covers implementing a complete authentication system including:
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ### Backend (Scala + Pekko HTTP)
 - **JWT Authentication**: Stateless token-based authentication
@@ -33,7 +33,7 @@ This plan covers implementing a complete authentication system including:
 
 ---
 
-## 📊 Database Schema
+##  Database Schema
 
 ### Users Table
 
@@ -75,7 +75,7 @@ CREATE INDEX IF NOT EXISTS idx_refresh_tokens_expires_at ON refresh_tokens(expir
 
 ---
 
-## 🔧 Backend Implementation
+##  Backend Implementation
 
 ### 1. Domain Models
 
@@ -504,7 +504,7 @@ class AuthRoutes(
 
 ---
 
-## 🎨 Frontend Implementation
+##  Frontend Implementation
 
 ### 1. Auth Types
 
@@ -1094,54 +1094,54 @@ const getHeaders = (): HeadersInit => {
 
 ---
 
-## 📝 Implementation Steps
+##  Implementation Steps
 
 ### Phase 1: Database Setup
-1. ✅ Add users table to `init.sql`
-2. ✅ Add refresh_tokens table (optional)
-3. ✅ Run migration script
+1.  Add users table to `init.sql`
+2.  Add refresh_tokens table (optional)
+3.  Run migration script
 
 ### Phase 2: Backend Core
-1. ✅ Add dependencies (jbcrypt, jwt-circe) to `build.sbt`
-2. ✅ Create domain models (User, AuthRequest, AuthResponse)
-3. ✅ Implement PasswordService
-4. ✅ Implement JwtService
-5. ✅ Create UserStore interface
-6. ✅ Implement PostgresUserStore
-7. ✅ Implement AuthService
-8. ✅ Create AuthMiddleware
-9. ✅ Create AuthRoutes
-10. ✅ Wire up routes in HttpServer
+1.  Add dependencies (jbcrypt, jwt-circe) to `build.sbt`
+2.  Create domain models (User, AuthRequest, AuthResponse)
+3.  Implement PasswordService
+4.  Implement JwtService
+5.  Create UserStore interface
+6.  Implement PostgresUserStore
+7.  Implement AuthService
+8.  Create AuthMiddleware
+9.  Create AuthRoutes
+10.  Wire up routes in HttpServer
 
 ### Phase 3: Frontend Core
-1. ✅ Create auth types
-2. ✅ Create authService
-3. ✅ Create AuthContext
-4. ✅ Create ProtectedRoute component
-5. ✅ Create Login page
-6. ✅ Create Signup page
-7. ✅ Update App.tsx with routes
-8. ✅ Update API service to include auth headers
+1.  Create auth types
+2.  Create authService
+3.  Create AuthContext
+4.  Create ProtectedRoute component
+5.  Create Login page
+6.  Create Signup page
+7.  Update App.tsx with routes
+8.  Update API service to include auth headers
 
 ### Phase 4: Integration
-1. ✅ Protect backend routes with AuthMiddleware
-2. ✅ Update frontend API calls to use auth headers
-3. ✅ Add logout functionality
-4. ✅ Add user profile display
-5. ✅ Handle token expiration
+1.  Protect backend routes with AuthMiddleware
+2.  Update frontend API calls to use auth headers
+3.  Add logout functionality
+4.  Add user profile display
+5.  Handle token expiration
 
 ### Phase 5: Testing & Polish
-1. ✅ Test signup flow
-2. ✅ Test login flow
-3. ✅ Test protected routes
-4. ✅ Test token expiration handling
-5. ✅ Add error handling
-6. ✅ Add loading states
-7. ✅ Add form validation
+1.  Test signup flow
+2.  Test login flow
+3.  Test protected routes
+4.  Test token expiration handling
+5.  Add error handling
+6.  Add loading states
+7.  Add form validation
 
 ---
 
-## 🔒 Security Considerations
+##  Security Considerations
 
 1. **Password Security**
    - Use bcrypt with cost factor 12
@@ -1166,7 +1166,7 @@ const getHeaders = (): HeadersInit => {
 
 ---
 
-## 🚀 Environment Variables
+##  Environment Variables
 
 ### Backend
 ```bash
@@ -1182,7 +1182,7 @@ REACT_APP_API_URL=http://localhost:8080  # Already exists
 
 ---
 
-## 📚 Additional Features (Future)
+##  Additional Features (Future)
 
 1. **Email Verification**
    - Send verification email on signup
@@ -1206,7 +1206,7 @@ REACT_APP_API_URL=http://localhost:8080  # Already exists
 
 ---
 
-## ✅ Acceptance Criteria
+##  Acceptance Criteria
 
 - [ ] Users can register with email, username, and password
 - [ ] Users can login with email/username and password

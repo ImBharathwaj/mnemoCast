@@ -1,14 +1,14 @@
-# 📺 Screen Ad Delivery - System Verification
+#  Screen Ad Delivery - System Verification
 
-## ✅ System Status
+##  System Status
 
 The ad delivery system is **fully configured and ready** to serve ads to screens. Here's what's in place:
 
 ---
 
-## 🏗️ System Architecture
+##  System Architecture
 
-### 1. **Ad Delivery Endpoints** ✅
+### 1. **Ad Delivery Endpoints** 
 
 **Screen-Specific Ad Delivery:**
 - `GET /api/v1/screens/{screenId}/ads/deliver` - Get single ad
@@ -17,37 +17,37 @@ The ad delivery system is **fully configured and ready** to serve ads to screens
 - `GET /api/v1/screens/{screenId}/ads/history` - Get ad history
 
 **All endpoints:**
-- ✅ Require screen authentication (X-Screen-Id + X-Screen-Passkey)
-- ✅ Auto-populate screen context from registry
-- ✅ Return enhanced responses with screen metadata
+-  Require screen authentication (X-Screen-Id + X-Screen-Passkey)
+-  Auto-populate screen context from registry
+-  Return enhanced responses with screen metadata
 
-### 2. **Ad Delivery Service** ✅
+### 2. **Ad Delivery Service** 
 
 **Location:** `backend/modules/engine-infra/src/main/scala/mnemocast/engine/infra/services/AdDeliveryService.scala`
 
 **Flow:**
-1. ✅ Fetch all active ads from `AdStore`
-2. ✅ Filter by targeting rules (location, tags, etc.)
-3. ✅ Filter by budget constraints (max plays, daily/hourly limits)
-4. ✅ Filter by frequency capping (max impressions per device/user)
-5. ✅ Weighted selection (higher weight ads + screen classification boost)
-6. ✅ Build response with impression tracking URL
-7. ✅ Log impression event
+1.  Fetch all active ads from `AdStore`
+2.  Filter by targeting rules (location, tags, etc.)
+3.  Filter by budget constraints (max plays, daily/hourly limits)
+4.  Filter by frequency capping (max impressions per device/user)
+5.  Weighted selection (higher weight ads + screen classification boost)
+6.  Build response with impression tracking URL
+7.  Log impression event
 
-### 3. **Data Seeding** ✅
+### 3. **Data Seeding** 
 
 **Seed Script:** `infra/local-dev/postgres/seed_demo_data.sql`
 
 **Includes:**
-- ✅ 9 screens (various locations: airports, malls, metro, offices)
-- ✅ Multiple campaigns
-- ✅ Multiple creatives
-- ✅ 10+ active ads with targeting rules
-- ✅ Sample delivery events for analytics
+-  9 screens (various locations: airports, malls, metro, offices)
+-  Multiple campaigns
+-  Multiple creatives
+-  10+ active ads with targeting rules
+-  Sample delivery events for analytics
 
 ---
 
-## 🔄 Complete Ad Delivery Flow
+##  Complete Ad Delivery Flow
 
 ### Step 1: Screen Requests Ad
 
@@ -62,38 +62,38 @@ Headers:
 ### Step 2: Authentication
 
 **Backend:**
-1. ✅ Validates screen ID and passkey
-2. ✅ Fetches screen from registry
-3. ✅ Verifies screen is authenticated
+1.  Validates screen ID and passkey
+2.  Fetches screen from registry
+3.  Verifies screen is authenticated
 
 ### Step 3: Build Delivery Request
 
 **Backend auto-populates:**
-- ✅ `deviceId` = screen ID
-- ✅ `country` = screen.location.country
-- ✅ `city` = screen.location.city
-- ✅ `area` = screen.location.area
-- ✅ `venueType` = screen.location.venueType
-- ✅ `screenTags` = screen.tags
-- ✅ `timezone` = screen.location.timezone
-- ✅ `screenId` = screen ID
+-  `deviceId` = screen ID
+-  `country` = screen.location.country
+-  `city` = screen.location.city
+-  `area` = screen.location.area
+-  `venueType` = screen.location.venueType
+-  `screenTags` = screen.tags
+-  `timezone` = screen.location.timezone
+-  `screenId` = screen ID
 
 ### Step 4: Ad Selection
 
 **AdDeliveryService:**
-1. ✅ Fetches all active ads
-2. ✅ Filters by targeting:
+1.  Fetches all active ads
+2.  Filters by targeting:
    - Location (country, city, area, venueType)
    - Tags (screen must have matching tag)
    - Classification (screen classification boosts ad weight)
-3. ✅ Filters by budget:
+3.  Filters by budget:
    - Total max plays not exceeded
    - Daily limit not exceeded
    - Hourly limit not exceeded
-4. ✅ Filters by frequency capping:
+4.  Filters by frequency capping:
    - Max impressions per device not exceeded
    - Max impressions per user not exceeded
-5. ✅ Weighted selection:
+5.  Weighted selection:
    - Higher weight ads more likely
    - Screen classification multiplies weight (premium screens favor premium ads)
 
@@ -132,13 +132,13 @@ GET {impressionTrackingUrl}
 ```
 
 **Backend:**
-- ✅ Logs impression event
-- ✅ Updates analytics
-- ✅ Tracks frequency capping
+-  Logs impression event
+-  Updates analytics
+-  Tracks frequency capping
 
 ---
 
-## 🧪 Testing the System
+##  Testing the System
 
 ### 1. Verify Screen is Registered
 
@@ -180,7 +180,7 @@ SELECT * FROM ad_targeting_rules WHERE ad_id = 'ad-summer-sale-001';
 
 ---
 
-## 🔍 Troubleshooting
+##  Troubleshooting
 
 ### Issue: No Ads Returned
 
@@ -225,26 +225,26 @@ SELECT * FROM ad_targeting_rules WHERE ad_id = 'ad-summer-sale-001';
 
 ---
 
-## 📊 Expected Behavior
+##  Expected Behavior
 
 ### Successful Ad Delivery
 
-1. ✅ Screen authenticates successfully
-2. ✅ Ad delivery service finds eligible ads
-3. ✅ Ad is selected based on weight and classification
-4. ✅ Response includes creative URL and tracking URL
-5. ✅ Impression event is logged
+1.  Screen authenticates successfully
+2.  Ad delivery service finds eligible ads
+3.  Ad is selected based on weight and classification
+4.  Response includes creative URL and tracking URL
+5.  Impression event is logged
 
 ### No Ad Available
 
-1. ✅ Screen authenticates successfully
-2. ✅ Ad delivery service checks for ads
-3. ✅ No eligible ads found (targeting, budget, or frequency cap)
-4. ✅ Returns 204 No Content with message
+1.  Screen authenticates successfully
+2.  Ad delivery service checks for ads
+3.  No eligible ads found (targeting, budget, or frequency cap)
+4.  Returns 204 No Content with message
 
 ---
 
-## ✅ Verification Checklist
+##  Verification Checklist
 
 - [x] Screen authentication working
 - [x] Ad delivery endpoints registered
@@ -260,7 +260,7 @@ SELECT * FROM ad_targeting_rules WHERE ad_id = 'ad-summer-sale-001';
 
 ---
 
-## 🚀 Next Steps
+##  Next Steps
 
 1. **Test with Real Screen Client**
    - Implement screen client that calls `/ads/deliver`
@@ -279,15 +279,15 @@ SELECT * FROM ad_targeting_rules WHERE ad_id = 'ad-summer-sale-001';
 
 ---
 
-## 📝 Summary
+##  Summary
 
 **The system is fully configured and ready to deliver ads to screens!**
 
-✅ All endpoints are implemented
-✅ Authentication is working
-✅ Ad delivery logic is complete
-✅ Targeting, budget, and frequency capping are integrated
-✅ Demo data is available for testing
+ All endpoints are implemented
+ Authentication is working
+ Ad delivery logic is complete
+ Targeting, budget, and frequency capping are integrated
+ Demo data is available for testing
 
 **To start serving ads:**
 1. Ensure backend is running
@@ -297,7 +297,7 @@ SELECT * FROM ad_targeting_rules WHERE ad_id = 'ad-summer-sale-001';
 
 ---
 
-**Status:** ✅ Ready for Production  
+**Status:**  Ready for Production  
 **Date:** 2025-12-19  
 **Version:** 4.2.1
 

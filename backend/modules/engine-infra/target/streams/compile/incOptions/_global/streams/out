@@ -1,2 +1,56 @@
-[0m[[0m[0mdebug[0m] [0m[0mCreated transactional ClassFileManager with tempDir = /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes.bak[0m
-[0m[[0m[0mdebug[0m] [0m[0mRemoving the temporary directory used for backing up class files: /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes.bak[0m
+[debug] Created transactional ClassFileManager with tempDir = /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes.bak
+[debug] About to delete class files:
+[debug] 	SeedDemoAds.class
+[debug] 	HybridCampaignStore.class
+[debug] 	HybridCampaignStore$$anonfun$upsert$1.class
+[debug] 	HybridCreativeStore.class
+[debug] 	SeedDemoAds$delayedInit$body.class
+[debug] 	SeedDemoAds$.class
+[debug] 	CampaignPlaylistService$$anonfun$$nestedInanonfun$generatePlaylist$8$1.class
+[debug] 	AdDeliveryService$.class
+[debug] 	AdDeliveryService.class
+[debug] 	CampaignPlaylistService.class
+[debug] 	HybridCreativeStore$$anonfun$upsert$1.class
+[debug] 	CampaignPlaylistService$.class
+[debug] 	HybridScreenStore.class
+[debug] 	HybridAdStore$$anonfun$upsert$1.class
+[debug] 	HybridAdStore.class
+[debug] 	HybridScreenStore$$anonfun$updateLastSeen$1.class
+[debug] 	HybridScreenStore$$anonfun$upsert$1.class
+[debug] We backup class files:
+[debug] 	SeedDemoAds.class
+[debug] 	HybridCampaignStore.class
+[debug] 	HybridCampaignStore$$anonfun$upsert$1.class
+[debug] 	HybridCreativeStore.class
+[debug] 	SeedDemoAds$delayedInit$body.class
+[debug] 	SeedDemoAds$.class
+[debug] 	CampaignPlaylistService$$anonfun$$nestedInanonfun$generatePlaylist$8$1.class
+[debug] 	AdDeliveryService$.class
+[debug] 	AdDeliveryService.class
+[debug] 	CampaignPlaylistService.class
+[debug] 	HybridCreativeStore$$anonfun$upsert$1.class
+[debug] 	CampaignPlaylistService$.class
+[debug] 	HybridScreenStore.class
+[debug] 	HybridAdStore$$anonfun$upsert$1.class
+[debug] 	HybridAdStore.class
+[debug] 	HybridScreenStore$$anonfun$updateLastSeen$1.class
+[debug] 	HybridScreenStore$$anonfun$upsert$1.class
+[debug] Registering generated classes:
+[debug] 	SeedDemoAds.class
+[debug] 	HybridCampaignStore.class
+[debug] 	HybridCampaignStore$$anonfun$upsert$1.class
+[debug] 	HybridCreativeStore.class
+[debug] 	SeedDemoAds$delayedInit$body.class
+[debug] 	SeedDemoAds$.class
+[debug] 	CampaignPlaylistService$$anonfun$$nestedInanonfun$generatePlaylist$8$1.class
+[debug] 	AdDeliveryService$.class
+[debug] 	AdDeliveryService.class
+[debug] 	CampaignPlaylistService.class
+[debug] 	HybridCreativeStore$$anonfun$upsert$1.class
+[debug] 	CampaignPlaylistService$.class
+[debug] 	HybridScreenStore.class
+[debug] 	HybridAdStore$$anonfun$upsert$1.class
+[debug] 	HybridAdStore.class
+[debug] 	HybridScreenStore$$anonfun$updateLastSeen$1.class
+[debug] 	HybridScreenStore$$anonfun$upsert$1.class
+[debug] Removing the temporary directory used for backing up class files: /home/bharathwaj/Code/MnemoPhi/mnemoCast/backend/modules/engine-infra/target/scala-2.13/classes.bak

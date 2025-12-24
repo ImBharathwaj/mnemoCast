@@ -1,4 +1,4 @@
-# 📚 Mnemocast API Documentation
+#  Mnemocast API Documentation
 
 **Version:** 1.0.0  
 **Base URL:** `http://localhost:8080`  
@@ -6,7 +6,7 @@
 
 ---
 
-## 📋 Table of Contents
+##  Table of Contents
 
 1. [Authentication](#authentication)
 2. [Base URL & Versioning](#base-url--versioning)

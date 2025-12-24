@@ -1,14 +1,14 @@
-# 🔐 Screen Authentication Implementation
+#  Screen Authentication Implementation
 
-## ✅ Implementation Complete
+##  Implementation Complete
 
 Screen authentication with unique ID and passkey has been successfully implemented. All screen endpoints now require authentication using the passkey generated during registration.
 
 ---
 
-## 🎯 What Was Implemented
+##  What Was Implemented
 
-### 1. **Passkey Generation** ✅
+### 1. **Passkey Generation** 
 
 - **Service:** `PasskeyService`
 - **Location:** `backend/modules/engine-infra/src/main/scala/mnemocast/engine/infra/services/PasskeyService.scala`
@@ -28,7 +28,7 @@ object PasskeyService {
 }
 ```
 
-### 2. **Screen Model Update** ✅
+### 2. **Screen Model Update** 
 
 - **File:** `backend/modules/engine-domain/src/main/scala/mnemocast/engine/domain/model/Screen.scala`
 - **Changes:**
@@ -36,7 +36,7 @@ object PasskeyService {
   - Passkey is generated automatically on registration
   - Passkey is stored securely and never returned in API responses (except during registration)
 
-### 3. **Database Schema Update** ✅
+### 3. **Database Schema Update** 
 
 - **File:** `infra/local-dev/postgres/init.sql`
 - **Changes:**
@@ -49,7 +49,7 @@ ALTER TABLE screens ADD COLUMN passkey TEXT NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_screens_passkey ON screens(passkey);
 ```
 
-### 4. **Screen Authentication Middleware** ✅
+### 4. **Screen Authentication Middleware** 
 
 - **File:** `backend/modules/engine-api/src/main/scala/mnemocast/engine/api/middleware/ScreenAuthMiddleware.scala`
 - **Features:**
@@ -62,7 +62,7 @@ CREATE INDEX IF NOT EXISTS idx_screens_passkey ON screens(passkey);
 - `X-Screen-Id`: The screen's unique identifier
 - `X-Screen-Passkey`: The authentication passkey
 
-### 5. **Screen Registration Update** ✅
+### 5. **Screen Registration Update** 
 
 - **File:** `backend/modules/engine-api/src/main/scala/mnemocast/engine/api/routes/ScreenRoutes.scala`
 - **Changes:**
@@ -83,26 +83,26 @@ CREATE INDEX IF NOT EXISTS idx_screens_passkey ON screens(passkey);
 }
 ```
 
-### 6. **Protected Endpoints** ✅
+### 6. **Protected Endpoints** 
 
 All screen endpoints now require authentication:
 
 #### Screen Management Endpoints
-- ✅ `GET /api/v1/screens/{screenId}` - Get screen details
-- ✅ `PUT /api/v1/screens/{screenId}/heartbeat` - Send heartbeat
-- ✅ `GET /api/v1/screens/{screenId}/status` - Get screen status
+-  `GET /api/v1/screens/{screenId}` - Get screen details
+-  `PUT /api/v1/screens/{screenId}/heartbeat` - Send heartbeat
+-  `GET /api/v1/screens/{screenId}/status` - Get screen status
 
 #### Screen Ad Delivery Endpoints
-- ✅ `GET /api/v1/screens/{screenId}/ads/deliver` - Single ad delivery
-- ✅ `GET /api/v1/screens/{screenId}/ads/batch` - Batch ad delivery
-- ✅ `GET /api/v1/screens/{screenId}/ads/preferences` - Ad preferences
-- ✅ `GET /api/v1/screens/{screenId}/ads/history` - Ad history
+-  `GET /api/v1/screens/{screenId}/ads/deliver` - Single ad delivery
+-  `GET /api/v1/screens/{screenId}/ads/batch` - Batch ad delivery
+-  `GET /api/v1/screens/{screenId}/ads/preferences` - Ad preferences
+-  `GET /api/v1/screens/{screenId}/ads/history` - Ad history
 
 **Note:** `POST /api/v1/screens/register` remains public (no authentication required for registration).
 
 ---
 
-## 🔒 Security Features
+##  Security Features
 
 ### Authentication Flow
 
@@ -147,7 +147,7 @@ All screen endpoints now require authentication:
 
 ---
 
-## 📝 Usage Examples
+##  Usage Examples
 
 ### 1. Register a Screen
 
@@ -241,7 +241,7 @@ curl -X GET http://localhost:8080/api/v1/screens/screen-123/status \
 
 ---
 
-## 🚨 Error Responses
+##  Error Responses
 
 ### Invalid Credentials
 
@@ -288,7 +288,7 @@ HTTP 403 Forbidden
 
 ---
 
-## 🔄 Migration Guide
+##  Migration Guide
 
 ### For Existing Screens
 
@@ -317,7 +317,7 @@ If you have existing screens without passkeys, you'll need to:
 
 ---
 
-## 📋 Client Configuration
+##  Client Configuration
 
 ### Screen Client Setup
 
@@ -356,7 +356,7 @@ If you have existing screens without passkeys, you'll need to:
 
 ---
 
-## ✅ Testing Checklist
+##  Testing Checklist
 
 - [x] Passkey generation works
 - [x] Passkey stored in database
@@ -371,22 +371,22 @@ If you have existing screens without passkeys, you'll need to:
 
 ---
 
-## 🎉 Summary
+##  Summary
 
 Screen authentication is now fully implemented:
 
-✅ **Unique Screen ID** - Generated on registration  
-✅ **Secure Passkey** - Cryptographically secure, 256-bit entropy  
-✅ **Authentication Middleware** - Validates all screen requests  
-✅ **Protected Endpoints** - All screen endpoints require authentication  
-✅ **Secure Storage** - Passkeys stored securely, never exposed  
-✅ **Client Configuration** - Simple header-based authentication  
+ **Unique Screen ID** - Generated on registration  
+ **Secure Passkey** - Cryptographically secure, 256-bit entropy  
+ **Authentication Middleware** - Validates all screen requests  
+ **Protected Endpoints** - All screen endpoints require authentication  
+ **Secure Storage** - Passkeys stored securely, never exposed  
+ **Client Configuration** - Simple header-based authentication  
 
 All screen transactions (including heartbeat) now require valid screen ID and passkey authentication!
 
 ---
 
-**Status:** ✅ Complete  
+**Status:**  Complete  
 **Date:** 2025-12-18  
 **Version:** 4.0.0
 

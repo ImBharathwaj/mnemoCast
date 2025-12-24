@@ -1,4 +1,4 @@
-# 🖥️ Multi-System Work Split for Mnemocast (Solo Dev + Cursor)
+#  Multi-System Work Split for Mnemocast (Solo Dev + Cursor)
 
 Goal:
 - Use **two systems in parallel**
@@ -8,7 +8,7 @@ Goal:
 
 ---
 
-## 🧱 High-Level Split
+##  High-Level Split
 
 - **System A (Engine Machine)** → Core Ad Serving Engine
 - **System B (Tooling & Simulation Machine)** → Test client, simulators, docs, future player experiments
@@ -19,7 +19,7 @@ Think of it like:
 
 ---
 
-## 🖥 System A — Core Engine Development (Backend)
+##  System A — Core Engine Development (Backend)
 
 **Repository:** `mnemocast-engine`  
 **Primary Tech:** Scala + Pekko HTTP
@@ -60,7 +60,7 @@ Think of it like:
 
 ---
 
-## 💻 System B — Tools, Simulators & Docs
+##  System B — Tools, Simulators & Docs
 
 **Repository:** `mnemocast-tools` (or `mnemocast-lab`)  
 **Primary Tech:** whatever is fastest (Node, Python, or even just Postman collections + Markdown)
@@ -116,7 +116,7 @@ Think of it like:
 
 ---
 
-## 🔗 Integration Between System A & System B
+##  Integration Between System A & System B
 
 The only shared contracts:
 
@@ -137,7 +137,7 @@ No direct filesystem or process dependency.
 
 ---
 
-## 🔁 Example Daily Flow
+##  Example Daily Flow
 
 ### On System A (Engine)
 - Open Cursor
@@ -164,7 +164,7 @@ You can do this **independently**:
 
 ---
 
-## ✅ Benefits of This Split
+##  Benefits of This Split
 
 - No machine is “blocked” by the other.
 - You separate:

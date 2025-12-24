@@ -38,9 +38,9 @@ object SeedDemoAds extends App {
     println("Seeding demo ad into Redis...")
     val f = adStore.upsert(demoAd)
     Await.result(f, 5.seconds)
-    println("✅ Seeded demo ad with id='ad-1'")
+    println("SUCCESS: Seeded demo ad with id='ad-1'")
   } catch {
     case NonFatal(e) =>
-      println(s"❌ Failed to seed demo ad: ${e.getMessage}")
+      println(s"ERROR: Failed to seed demo ad: ${e.getMessage}")
   }
 }

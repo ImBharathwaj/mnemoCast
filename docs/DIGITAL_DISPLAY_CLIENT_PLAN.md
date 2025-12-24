@@ -1,4 +1,4 @@
-# 📺 Digital Display Client Application Plan
+#  Digital Display Client Application Plan
 
 **Version:** 1.0.0  
 **Last Updated:** December 2024  
@@ -6,7 +6,7 @@
 
 ---
 
-## 🎯 Executive Summary
+##  Executive Summary
 
 This document outlines the comprehensive plan for building the **Digital Display Client Application** - the client-side application that runs on physical or virtual display screens to fetch and play advertisements from the Mnemocast backend engine.
 
@@ -21,7 +21,7 @@ The Digital Display Client is responsible for:
 
 ---
 
-## 🏗️ Architecture Overview
+##  Architecture Overview
 
 ### High-Level Architecture
 
@@ -61,7 +61,7 @@ The Digital Display Client is responsible for:
 
 ---
 
-## 🛠️ Technology Stack Options
+##  Technology Stack Options
 
 ### Option 1: Web-Based (Recommended for MVP)
 **Tech Stack:**
@@ -73,15 +73,15 @@ The Digital Display Client is responsible for:
 - **Deployment:** Electron (for desktop) or Web App (for kiosk mode)
 
 **Pros:**
-- ✅ Fast development
-- ✅ Cross-platform (runs on any device with browser)
-- ✅ Easy to update (just refresh)
-- ✅ Rich ecosystem
-- ✅ Can run on Raspberry Pi, tablets, smart TVs
+-  Fast development
+-  Cross-platform (runs on any device with browser)
+-  Easy to update (just refresh)
+-  Rich ecosystem
+-  Can run on Raspberry Pi, tablets, smart TVs
 
 **Cons:**
-- ⚠️ Requires browser runtime
-- ⚠️ Less control over low-level hardware
+-  Requires browser runtime
+-  Less control over low-level hardware
 
 **Best For:** MVP, rapid prototyping, flexible deployment
 
@@ -95,14 +95,14 @@ The Digital Display Client is responsible for:
 - **Language:** TypeScript/JavaScript or Rust
 
 **Pros:**
-- ✅ More control over system resources
-- ✅ Better performance
-- ✅ Can run without browser UI
-- ✅ Better for kiosk mode
+-  More control over system resources
+-  Better performance
+-  Can run without browser UI
+-  Better for kiosk mode
 
 **Cons:**
-- ⚠️ Larger application size
-- ⚠️ Platform-specific builds needed
+-  Larger application size
+-  Platform-specific builds needed
 
 **Best For:** Production deployments, kiosk installations
 
@@ -116,13 +116,13 @@ The Digital Display Client is responsible for:
 - **Async:** asyncio
 
 **Pros:**
-- ✅ Simple deployment
-- ✅ Good for Raspberry Pi
-- ✅ Easy to script and automate
+-  Simple deployment
+-  Good for Raspberry Pi
+-  Easy to script and automate
 
 **Cons:**
-- ⚠️ Less modern UI capabilities
-- ⚠️ Performance limitations for complex UIs
+-  Less modern UI capabilities
+-  Performance limitations for complex UIs
 
 **Best For:** Embedded systems, Raspberry Pi, simple displays
 
@@ -135,19 +135,19 @@ The Digital Display Client is responsible for:
 - **HTTP Client:** Built-in fetch or http package
 
 **Pros:**
-- ✅ Cross-platform mobile/tablet
-- ✅ Native performance
-- ✅ Good for Android/iOS tablets
+-  Cross-platform mobile/tablet
+-  Native performance
+-  Good for Android/iOS tablets
 
 **Cons:**
-- ⚠️ More complex setup
-- ⚠️ Platform-specific considerations
+-  More complex setup
+-  Platform-specific considerations
 
 **Best For:** Tablet-based displays, mobile installations
 
 ---
 
-## 🎯 Recommended Approach: Web-Based MVP
+##  Recommended Approach: Web-Based MVP
 
 **Recommended Stack:**
 - **Framework:** React + TypeScript
@@ -167,7 +167,7 @@ The Digital Display Client is responsible for:
 
 ---
 
-## 📋 Core Features & Functionality
+##  Core Features & Functionality
 
 ### Phase 1: MVP Core Features
 
@@ -319,7 +319,7 @@ The Digital Display Client is responsible for:
 
 ---
 
-## 🔌 API Integration Points
+##  API Integration Points
 
 ### Required Endpoints
 
@@ -375,7 +375,7 @@ Request: {
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 digital-display-client/
@@ -428,19 +428,19 @@ digital-display-client/
 
 ---
 
-## 🚀 Implementation Phases
+##  Implementation Phases
 
 ### Phase 1: Foundation (Week 1-2)
 **Goal:** Basic working client that can fetch and play playlists
 
 **Tasks:**
-1. ✅ Set up project structure (React + TypeScript + Vite)
-2. ✅ Create API client service
-3. ✅ Implement screen registration
-4. ✅ Implement playlist fetching
-5. ✅ Basic media player (images only first)
-6. ✅ Simple playlist playback loop
-7. ✅ Basic error handling
+1.  Set up project structure (React + TypeScript + Vite)
+2.  Create API client service
+3.  Implement screen registration
+4.  Implement playlist fetching
+5.  Basic media player (images only first)
+6.  Simple playlist playback loop
+7.  Basic error handling
 
 **Deliverables:**
 - Working client that displays images from playlist
@@ -453,13 +453,13 @@ digital-display-client/
 **Goal:** Complete MVP with all core features
 
 **Tasks:**
-1. ✅ Add video playback support
-2. ✅ Implement event tracking (impression + play)
-3. ✅ Implement heartbeat mechanism
-4. ✅ Add retry logic and error recovery
-5. ✅ Add playlist caching
-6. ✅ Improve UI/UX (fullscreen, transitions)
-7. ✅ Add configuration management
+1.  Add video playback support
+2.  Implement event tracking (impression + play)
+3.  Implement heartbeat mechanism
+4.  Add retry logic and error recovery
+5.  Add playlist caching
+6.  Improve UI/UX (fullscreen, transitions)
+7.  Add configuration management
 
 **Deliverables:**
 - Full-featured MVP client
@@ -473,14 +473,14 @@ digital-display-client/
 **Goal:** Production-ready client
 
 **Tasks:**
-1. ✅ Offline mode support
-2. ✅ Event queue for offline scenarios
-3. ✅ Health monitoring UI
-4. ✅ Configuration UI
-5. ✅ Comprehensive error handling
-6. ✅ Performance optimization
-7. ✅ Testing (unit + integration)
-8. ✅ Documentation
+1.  Offline mode support
+2.  Event queue for offline scenarios
+3.  Health monitoring UI
+4.  Configuration UI
+5.  Comprehensive error handling
+6.  Performance optimization
+7.  Testing (unit + integration)
+8.  Documentation
 
 **Deliverables:**
 - Production-ready client
@@ -489,7 +489,7 @@ digital-display-client/
 
 ---
 
-## 🔧 Technical Requirements
+##  Technical Requirements
 
 ### Runtime Requirements
 - **Browser:** Chrome/Edge 90+, Firefox 88+, Safari 14+ (for web version)
@@ -513,7 +513,7 @@ digital-display-client/
 
 ---
 
-## 📦 Deployment Options
+##  Deployment Options
 
 ### Option 1: Web Application (Kiosk Mode)
 - Deploy as static files
@@ -539,7 +539,7 @@ digital-display-client/
 
 ---
 
-## 🧪 Testing Strategy
+##  Testing Strategy
 
 ### Unit Tests
 - API client functions
@@ -561,7 +561,7 @@ digital-display-client/
 
 ---
 
-## 📊 Monitoring & Logging
+##  Monitoring & Logging
 
 ### Logging
 - API call logs (request/response)
@@ -583,7 +583,7 @@ digital-display-client/
 
 ---
 
-## 🔄 Update Strategy
+##  Update Strategy
 
 ### Over-the-Air Updates
 - Check for updates on startup
@@ -598,7 +598,7 @@ digital-display-client/
 
 ---
 
-## 📝 Configuration Management
+##  Configuration Management
 
 ### Configuration Sources (Priority Order)
 1. Environment variables
@@ -626,7 +626,7 @@ interface ScreenConfig {
 
 ---
 
-## 🎨 UI/UX Considerations
+##  UI/UX Considerations
 
 ### Display Modes
 - **Fullscreen:** No UI elements, just content
@@ -645,7 +645,7 @@ interface ScreenConfig {
 
 ---
 
-## 🔐 Security & Privacy
+##  Security & Privacy
 
 ### Security Measures
 - Validate all API responses
@@ -661,7 +661,7 @@ interface ScreenConfig {
 
 ---
 
-## 📈 Success Metrics
+##  Success Metrics
 
 ### Key Performance Indicators (KPIs)
 - **Uptime:** > 99% screen availability
@@ -678,7 +678,7 @@ interface ScreenConfig {
 
 ---
 
-## 🚦 Next Steps
+##  Next Steps
 
 ### Immediate Actions
 1. **Choose Technology Stack** - Finalize web-based vs native
@@ -688,15 +688,15 @@ interface ScreenConfig {
 5. **Test Integration** - Connect to running backend
 
 ### Week 1 Deliverables
-- ✅ Project setup complete
-- ✅ API client implemented
-- ✅ Screen registration working
-- ✅ Playlist fetching working
-- ✅ Basic player displaying images
+-  Project setup complete
+-  API client implemented
+-  Screen registration working
+-  Playlist fetching working
+-  Basic player displaying images
 
 ---
 
-## 📚 Related Documentation
+##  Related Documentation
 
 - **API Documentation:** `docs/API_DOCUMENTATION.md`
 - **Domain Model:** `docs/01-domain-model.md`
@@ -705,7 +705,7 @@ interface ScreenConfig {
 
 ---
 
-## ❓ Open Questions
+##  Open Questions
 
 1. **Deployment Target:** What devices will run the client? (Raspberry Pi, tablets, desktop PCs?)
 2. **Update Mechanism:** How will clients receive updates? (Manual, OTA, scheduled?)
@@ -715,7 +715,7 @@ interface ScreenConfig {
 
 ---
 
-## 📞 Support & Contact
+##  Support & Contact
 
 For questions or clarifications:
 - Review API documentation: `docs/API_DOCUMENTATION.md`

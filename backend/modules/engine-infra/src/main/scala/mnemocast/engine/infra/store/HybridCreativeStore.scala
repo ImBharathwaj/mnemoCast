@@ -16,7 +16,7 @@ class HybridCreativeStore(
 
   override def upsert(creative: Creative): Future[Unit] = {
     postgresStore.upsert(creative).recover { case ex: Exception =>
-      println(s"⚠️  Warning: Failed to write creative to Postgres: ${ex.getMessage}")
+      println(s"WARNING: Failed to write creative to Postgres: ${ex.getMessage}")
     }.flatMap { _ =>
       redisStore.upsert(creative)
     }

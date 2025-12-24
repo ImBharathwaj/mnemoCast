@@ -19,7 +19,7 @@ If environment variables are not set, the system uses these **hardcoded defaults
 - Access Key: `"minioadmin"`
 - Secret Key: `"minioadmin"`
 
-**⚠️ WARNING**: These are insecure default credentials meant only for development. Never use these in production!
+** WARNING**: These are insecure default credentials meant only for development. Never use these in production!
 
 ## How to Set Credentials
 
@@ -104,8 +104,8 @@ For production environments, consider:
 
 ## Current Status
 
-✅ **Working**: Credentials read from environment variables  
-⚠️ **Insecure Defaults**: Hardcoded defaults are for development only  
-📝 **No Persistence**: Credentials are not saved anywhere - only in environment  
-🔐 **Production Ready**: No - needs proper secret management for production
+ **Working**: Credentials read from environment variables  
+ **Insecure Defaults**: Hardcoded defaults are for development only  
+ **No Persistence**: Credentials are not saved anywhere - only in environment  
+ **Production Ready**: No - needs proper secret management for production
 

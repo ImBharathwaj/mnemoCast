@@ -1,11 +1,11 @@
-# 🚀 Mnemocast Performance Benchmarks
+#  Mnemocast Performance Benchmarks
 
 **Last Updated:** December 2024  
 **Test Environment:** Local development (8-core CPU, 16GB RAM)
 
 ---
 
-## 📊 Performance Targets
+##  Performance Targets
 
 | Endpoint | Target Response Time | Actual (P50) | Actual (P95) | Actual (P99) |
 |----------|---------------------|--------------|--------------|--------------|
@@ -18,7 +18,7 @@
 
 ---
 
-## 🔧 Performance Characteristics
+##  Performance Characteristics
 
 ### **Ad Delivery Endpoint**
 - **Average Response Time:** 12ms
@@ -45,7 +45,7 @@
 
 ---
 
-## 📈 Scalability Notes
+##  Scalability Notes
 
 ### **Horizontal Scaling**
 - **Stateless Design:** All endpoints are stateless, enabling horizontal scaling
@@ -63,28 +63,28 @@
 #### **Scenario 1: Normal Load**
 - **Requests/sec:** 500
 - **Duration:** 5 minutes
-- **Result:** ✅ All requests successful, avg response time: 15ms
+- **Result:**  All requests successful, avg response time: 15ms
 
 #### **Scenario 2: Peak Load**
 - **Requests/sec:** 2,000
 - **Duration:** 2 minutes
-- **Result:** ✅ 99.8% success rate, avg response time: 45ms
+- **Result:**  99.8% success rate, avg response time: 45ms
 
 #### **Scenario 3: Stress Test**
 - **Requests/sec:** 5,000
 - **Duration:** 1 minute
-- **Result:** ⚠️ 95% success rate, avg response time: 180ms, some timeouts
+- **Result:**  95% success rate, avg response time: 180ms, some timeouts
 
 ---
 
-## 🎯 Optimization Recommendations
+##  Optimization Recommendations
 
 ### **Completed Optimizations**
-1. ✅ Connection pooling for Redis and PostgreSQL
-2. ✅ Request/response logging with minimal overhead
-3. ✅ Efficient JSON serialization (Circe)
-4. ✅ Async request handling (Pekko HTTP)
-5. ✅ Rate limiting to prevent abuse
+1.  Connection pooling for Redis and PostgreSQL
+2.  Request/response logging with minimal overhead
+3.  Efficient JSON serialization (Circe)
+4.  Async request handling (Pekko HTTP)
+5.  Rate limiting to prevent abuse
 
 ### **Future Optimizations**
 1. **Caching Layer:**
@@ -107,7 +107,7 @@
 
 ---
 
-## 📝 Performance Monitoring
+##  Performance Monitoring
 
 ### **Key Metrics Tracked**
 - Request count per endpoint
@@ -128,7 +128,7 @@
 
 ---
 
-## 🔍 Performance Testing Tools
+##  Performance Testing Tools
 
 ### **Recommended Tools**
 - **k6** - Load testing (recommended)
@@ -163,7 +163,7 @@ export default function () {
 
 ---
 
-## 📊 Resource Usage
+##  Resource Usage
 
 ### **Per Instance (Single Instance)**
 - **CPU:** 5-15% (normal load), 40-60% (peak load)
@@ -182,7 +182,7 @@ export default function () {
 
 ---
 
-## ✅ Performance Checklist
+##  Performance Checklist
 
 - [x] Response times meet targets
 - [x] System handles concurrent requests

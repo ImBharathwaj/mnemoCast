@@ -7,7 +7,7 @@
 
 ---
 
-## 📊 Overall Progress
+##  Overall Progress
 
 - [ ] Step 1: Targeting Logic (Manual)
 - [ ] Step 2: Integrate Targeting into Delivery
@@ -16,11 +16,11 @@
 - [ ] Step 5: Events API — List Events per Ad
 - [ ] Step 6: Docs & Demo Script
 
-**Status:** 🔴 Not Started
+**Status:**  Not Started
 
 ---
 
-## 1️⃣ Targeting Logic (Manual)
+## 1⃣ Targeting Logic (Manual)
 
 **Status:** ⏳ Pending  
 **Module:** `engine-domain`  
@@ -70,7 +70,7 @@ def matches(ad: Ad, request: DeliveryRequest): Boolean
 
 ---
 
-## 2️⃣ Integrate Targeting into Delivery
+## 2⃣ Integrate Targeting into Delivery
 
 **Status:** ⏳ Pending  
 **Module:** `engine-infra`  
@@ -123,7 +123,7 @@ curl "http://localhost:8080/ads/deliver?country=IN"
 
 ---
 
-## 3️⃣ Admin API — Create Ad
+## 3⃣ Admin API — Create Ad
 
 **Status:** ⏳ Pending  
 **Module:** `engine-api`  
@@ -214,7 +214,7 @@ curl -X POST http://localhost:8080/admin/ads \
 
 ---
 
-## 4️⃣ Admin API — List Ads
+## 4⃣ Admin API — List Ads
 
 **Status:** ⏳ Pending  
 **Module:** `engine-api`  
@@ -277,7 +277,7 @@ curl "http://localhost:8080/admin/ads?activeOnly=false"
 
 ---
 
-## 5️⃣ Events API — List Events per Ad
+## 5⃣ Events API — List Events per Ad
 
 **Status:** ⏳ Pending  
 **Module:** `engine-api`  
@@ -353,7 +353,7 @@ returns array of events.
 
 ---
 
-## 6️⃣ Docs & Demo Script
+## 6⃣ Docs & Demo Script
 
 **Status:** ⏳ Pending  
 **Type:** Manual documentation
@@ -406,7 +406,7 @@ returns array of events.
 
 ---
 
-## 🧪 Integration Testing Checklist
+##  Integration Testing Checklist
 
 After completing all steps, verify end-to-end:
 
@@ -419,7 +419,7 @@ After completing all steps, verify end-to-end:
 
 ---
 
-## 📝 Notes
+##  Notes
 
 - **Step 1** is manual implementation (pure domain logic)
 - **Steps 2-5** can use Cursor assistance for scaffolding

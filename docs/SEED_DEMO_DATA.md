@@ -1,10 +1,10 @@
-# 🌱 Demo Data Seed Script
+#  Demo Data Seed Script
 
 **Purpose:** Populate database with realistic dummy data for dashboard showcase and testing.
 
 ---
 
-## 📋 Overview
+##  Overview
 
 The `seed_demo_data.sql` script creates comprehensive demo data including:
 - **9 Screens** across different cities and venue types
@@ -17,7 +17,7 @@ The `seed_demo_data.sql` script creates comprehensive demo data including:
 
 ---
 
-## 🚀 Usage
+##  Usage
 
 ### Run the Seed Script
 
@@ -47,7 +47,7 @@ SELECT 'Events', COUNT(*) FROM delivery_events;
 
 ---
 
-## 📊 Data Overview
+##  Data Overview
 
 ### Screens (9 total)
 - **Chennai Airport** (2 screens) - Premium, 4K, audible
@@ -87,7 +87,7 @@ SELECT 'Events', COUNT(*) FROM delivery_events;
 
 ---
 
-## 🎯 Use Cases Demonstrated
+##  Use Cases Demonstrated
 
 ### 1. **Geographic Targeting**
 - Campaigns target specific cities (Chennai, Mumbai, Delhi, etc.)
@@ -117,7 +117,7 @@ SELECT 'Events', COUNT(*) FROM delivery_events;
 
 ---
 
-## 🔄 Re-seeding Data
+##  Re-seeding Data
 
 The script is **idempotent** - safe to run multiple times:
 - Uses `ON CONFLICT DO UPDATE` for most inserts
@@ -145,7 +145,7 @@ TRUNCATE TABLE ads CASCADE;
 
 ---
 
-## 📈 Expected Dashboard Display
+##  Expected Dashboard Display
 
 After seeding, the dashboard should show:
 
@@ -177,7 +177,7 @@ After seeding, the dashboard should show:
 
 ---
 
-## 🧪 Testing Scenarios
+##  Testing Scenarios
 
 ### Scenario 1: Campaign Performance
 - View analytics for "Summer Sale 2024"
@@ -197,7 +197,7 @@ After seeding, the dashboard should show:
 
 ---
 
-## 📝 Notes
+##  Notes
 
 1. **Media URLs:** Use placeholder URLs (`localhost:8080`). Replace with actual media URLs after uploading files.
 
@@ -211,7 +211,7 @@ After seeding, the dashboard should show:
 
 ---
 
-## 🔧 Customization
+##  Customization
 
 ### Add More Screens:
 ```sql

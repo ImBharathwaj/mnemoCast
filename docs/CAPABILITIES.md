@@ -4,7 +4,7 @@ A comprehensive overview of what the Mnemocast Ad Serving Engine can do.
 
 ---
 
-## 🎯 Core Capabilities
+##  Core Capabilities
 
 ### 1. Intelligent Ad Delivery
 
@@ -22,10 +22,10 @@ A comprehensive overview of what the Mnemocast Ad Serving Engine can do.
 5. Returns ad details with tracking URLs
 
 **Key Features:**
-- ✅ Real-time ad serving (< 100ms typical response time)
-- ✅ Multi-criteria filtering (targeting + budget + frequency)
-- ✅ Automatic ad exclusion when constraints are met
-- ✅ Tracking URL generation for impressions and clicks
+-  Real-time ad serving (< 100ms typical response time)
+-  Multi-criteria filtering (targeting + budget + frequency)
+-  Automatic ad exclusion when constraints are met
+-  Tracking URL generation for impressions and clicks
 
 ---
 
@@ -85,11 +85,11 @@ A comprehensive overview of what the Mnemocast Ad Serving Engine can do.
    - Example: "Show this ad 50 times per hour"
 
 **Key Features:**
-- ✅ Multiple budget constraints per ad
-- ✅ Automatic budget exhaustion handling
-- ✅ Real-time budget checking
-- ✅ UTC-based time calculations
-- ✅ Optional budgets (null = unlimited)
+-  Multiple budget constraints per ad
+-  Automatic budget exhaustion handling
+-  Real-time budget checking
+-  UTC-based time calculations
+-  Optional budgets (null = unlimited)
 
 **Use Cases:**
 - Control total campaign spend: `maxPlays: 10000`
@@ -121,11 +121,11 @@ A comprehensive overview of what the Mnemocast Ad Serving Engine can do.
    - Example: "Within the last 24 hours"
 
 **Key Features:**
-- ✅ Device-level and user-level capping
-- ✅ Configurable time windows
-- ✅ Both caps must be satisfied (AND logic)
-- ✅ Real-time frequency checking
-- ✅ Automatic exclusion when caps reached
+-  Device-level and user-level capping
+-  Configurable time windows
+-  Both caps must be satisfied (AND logic)
+-  Real-time frequency checking
+-  Automatic exclusion when caps reached
 
 **Use Cases:**
 - Prevent ad spam: `maxImpressionsPerDevice: 3, frequencyCapWindowHours: 24`
@@ -171,11 +171,11 @@ A comprehensive overview of what the Mnemocast Ad Serving Engine can do.
    - Returns: Summary with key KPIs
 
 **Key Features:**
-- ✅ Real-time metric calculation
-- ✅ Time-range filtering (start/end dates)
-- ✅ Top performers identification
-- ✅ Recent activity tracking
-- ✅ JSON API responses
+-  Real-time metric calculation
+-  Time-range filtering (start/end dates)
+-  Top performers identification
+-  Recent activity tracking
+-  JSON API responses
 
 **Use Cases:**
 - Monitor campaign performance: Track impressions
@@ -207,11 +207,11 @@ A comprehensive overview of what the Mnemocast Ad Serving Engine can do.
 - Request ID
 
 **Key Features:**
-- ✅ Immutable event log (append-only)
-- ✅ Full metadata capture
-- ✅ Fast queries by ad ID
-- ✅ Time-based filtering
-- ✅ Device/user-based queries for frequency capping
+-  Immutable event log (append-only)
+-  Full metadata capture
+-  Fast queries by ad ID
+-  Time-based filtering
+-  Device/user-based queries for frequency capping
 
 **Use Cases:**
 - Audit trail: Track all ad deliveries
@@ -248,15 +248,15 @@ A comprehensive overview of what the Mnemocast Ad Serving Engine can do.
    - Debug delivery issues
 
 **Key Features:**
-- ✅ RESTful API for management
-- ✅ JSON request/response format
-- ✅ Flexible ad configuration
-- ✅ Active/inactive status control
-- ✅ Event history access
+-  RESTful API for management
+-  JSON request/response format
+-  Flexible ad configuration
+-  Active/inactive status control
+-  Event history access
 
 ---
 
-## 🔧 Technical Capabilities
+##  Technical Capabilities
 
 ### Performance
 - **Response Time**: < 100ms typical for ad delivery
@@ -284,7 +284,7 @@ A comprehensive overview of what the Mnemocast Ad Serving Engine can do.
 
 ---
 
-## 📊 System Metrics & Monitoring
+##  System Metrics & Monitoring
 
 ### What the System Tracks
 
@@ -309,7 +309,7 @@ A comprehensive overview of what the Mnemocast Ad Serving Engine can do.
 
 ---
 
-## 🎯 Use Cases & Scenarios
+##  Use Cases & Scenarios
 
 ### Scenario 1: Controlled Campaign Launch
 **Goal**: Launch a campaign with controlled spending
@@ -387,7 +387,7 @@ A comprehensive overview of what the Mnemocast Ad Serving Engine can do.
 
 ---
 
-## 🚀 What Makes This System Powerful
+##  What Makes This System Powerful
 
 1. **Intelligent Filtering**: Multi-layer filtering ensures right ad to right user
 2. **Budget Control**: Automatic budget enforcement prevents over-spending
@@ -400,7 +400,7 @@ A comprehensive overview of what the Mnemocast Ad Serving Engine can do.
 
 ---
 
-## 📈 Current Limitations (MVP)
+##  Current Limitations (MVP)
 
 - Single ad per campaign (no campaign grouping yet)
 - No advanced targeting (time-based, geographic coordinates)
@@ -413,7 +413,7 @@ A comprehensive overview of what the Mnemocast Ad Serving Engine can do.
 
 ---
 
-## 🎓 Getting Started
+##  Getting Started
 
 1. **Quick Start**: See `QUICKSTART.md`
 2. **API Reference**: See `docs/02-api-spec.md`

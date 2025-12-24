@@ -1,4 +1,4 @@
-# 🔄 Dashboard Real-Time Data Fix
+#  Dashboard Real-Time Data Fix
 
 **Issue:** Frontend doesn't show any real-time data.
 
@@ -6,7 +6,7 @@
 
 ---
 
-## ✅ Changes Made
+##  Changes Made
 
 ### 1. **Auto-Refresh Added**
 - Dashboard now refreshes every 10 seconds automatically
@@ -25,7 +25,7 @@
 
 ---
 
-## 🔍 Troubleshooting Steps
+##  Troubleshooting Steps
 
 ### Step 1: Check Browser Console
 Open browser DevTools (F12) → Console tab and look for:
@@ -72,7 +72,7 @@ Backend should have CORS enabled (already configured). Check backend logs for CO
 
 ---
 
-## 🐛 Common Issues
+##  Common Issues
 
 ### Issue: "Failed to load campaigns" error
 
@@ -125,7 +125,7 @@ curl http://YOUR_SERVER_IP:8080/api/v1/screens
 
 ---
 
-## 🔧 Manual Testing
+##  Manual Testing
 
 ### Test Dashboard Data Loading
 
@@ -150,26 +150,26 @@ curl http://YOUR_SERVER_IP:8080/api/v1/screens
 
 ---
 
-## 📊 Expected Behavior
+##  Expected Behavior
 
 ### Dashboard Should Show:
-- ✅ Total Campaigns count
-- ✅ Active Campaigns count  
-- ✅ Total Screens count
-- ✅ Online Screens count
-- ✅ Analytics data (if available)
-- ✅ Last updated timestamp
-- ✅ Auto-refresh indicator
+-  Total Campaigns count
+-  Active Campaigns count  
+-  Total Screens count
+-  Online Screens count
+-  Analytics data (if available)
+-  Last updated timestamp
+-  Auto-refresh indicator
 
 ### Auto-Refresh:
-- ✅ Refreshes every 10 seconds when enabled
-- ✅ Shows "Last updated" timestamp
-- ✅ Updates counts automatically
-- ✅ Can be toggled on/off
+-  Refreshes every 10 seconds when enabled
+-  Shows "Last updated" timestamp
+-  Updates counts automatically
+-  Can be toggled on/off
 
 ---
 
-## 🚀 Quick Fixes
+##  Quick Fixes
 
 ### Fix 1: Rebuild Dashboard
 ```bash
@@ -198,7 +198,7 @@ npm start
 
 ---
 
-## ✅ Verification Checklist
+##  Verification Checklist
 
 - [ ] Backend is running and accessible
 - [ ] Dashboard shows correct API URL in console

@@ -1,16 +1,16 @@
-📌 Mnemocast – MVP REST API Plan (Pitch-Ready)
+ Mnemocast – MVP REST API Plan (Pitch-Ready)
 
-🎯 Goal: A functioning OOH/Digital Ad Serving engine that serves ads + tracks performance + shows analytics
-🚫 No login / auth — all APIs are public for now
+ Goal: A functioning OOH/Digital Ad Serving engine that serves ads + tracks performance + shows analytics
+ No login / auth — all APIs are public for now
 
-🧱 API Module Overview
+ API Module Overview
 Module	Purpose
 1. Inventory & Targeting	Where ads can appear + context metadata
 2. Campaigns & Ads	Creatives, schedules, budgets, targeting
 3. Delivery & Tracking	Core ad decisioning & events
 4. Analytics & Reporting	Metrics for pitch demo
 5. System / Debug	Health & service visibility
-📍 1. Inventory & Targeting
+ 1. Inventory & Targeting
 1.1 Placement / Screen API
 Endpoint	Description
 POST /api/v1/placements	Register a new screen/placement
@@ -24,7 +24,7 @@ Example Request
   "location": "Chennai - Food Court"
 }
 
-🎯 2. Campaigns & Ads (MVP: No AdSets Layer)
+ 2. Campaigns & Ads (MVP: No AdSets Layer)
 
 AdSets = merged into ads themselves (targeting per ad).
 
@@ -68,7 +68,7 @@ Example Body
   }
 }
 
-🎯 3. Delivery & Tracking (Heart of Engine)
+ 3. Delivery & Tracking (Heart of Engine)
 3.1 Serve Ad Endpoint
 Method	Endpoint
 POST	/api/v1/delivery
@@ -121,7 +121,7 @@ Log click event
 
 Redirect to original landing URL
 
-📊 4. Analytics & Reporting
+ 4. Analytics & Reporting
 4.1 Summary API
 Endpoint
 GET /api/v1/analytics/summary?from&to&campaign_id&placement_id
@@ -143,27 +143,27 @@ Example Response
 4.2 Time Series Metrics
 Endpoint
 GET /api/v1/analytics/timeseries?granularity=hour&group_by=placement
-⚙️ 5. System / Debug
+ 5. System / Debug
 Endpoint	Description
 GET /health	Service alive
 GET /ready	Redis/DB connected
 GET /api/v1/system/info	Version, build SHA
-🧪 Test Coverage Plan
+ Test Coverage Plan
 Test Type	Purpose
 Unit Tests	logic: selection, caps, budgets
 Integration Tests	Redis/DB + full delivery flow
 Negative Tests	No ad → correct “no_fill”
 Load Tests	p95 latency within threshold
 Demo Tests	dashboards reflect live traffic
-🚀 MVP Pitch Demo Checklist
+ MVP Pitch Demo Checklist
 Status	Task
-☐	Ads serving consistently (/delivery)
-☐	Budgets + caps enforced
-☐	Impressions + clicks logged
-☐	Summary analytics computed
-☐	docker-compose: one command demo
-☐	Simple dashboard / Grafana for visuals
-📌 What This Enables in a Pitch
+	Ads serving consistently (/delivery)
+	Budgets + caps enforced
+	Impressions + clicks logged
+	Summary analytics computed
+	docker-compose: one command demo
+	Simple dashboard / Grafana for visuals
+ What This Enables in a Pitch
 
 Run a traffic generator → ads serve in real-time
 

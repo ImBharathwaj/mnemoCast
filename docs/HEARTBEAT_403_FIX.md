@@ -1,18 +1,18 @@
-# 🔧 Heartbeat 403 Error - Fix & Troubleshooting
+#  Heartbeat 403 Error - Fix & Troubleshooting
 
-## ✅ Changes Made
+##  Changes Made
 
 ### 1. Enhanced Authentication Logging
 
 **File:** `backend/modules/engine-api/src/main/scala/mnemocast/engine/api/middleware/ScreenAuthMiddleware.scala`
 
 **Improvements:**
-- ✅ Added detailed logging for authentication attempts
-- ✅ Logs screen ID being authenticated
-- ✅ Logs passkey mismatch details (length comparison)
-- ✅ Logs missing headers with available headers list
-- ✅ Logs screen not found errors
-- ✅ Case-insensitive header matching (both `.is()` and `.lowercaseName()`)
+-  Added detailed logging for authentication attempts
+-  Logs screen ID being authenticated
+-  Logs passkey mismatch details (length comparison)
+-  Logs missing headers with available headers list
+-  Logs screen not found errors
+-  Case-insensitive header matching (both `.is()` and `.lowercaseName()`)
 
 **Log Output Examples:**
 ```
@@ -31,9 +31,9 @@ Or on failure:
 **File:** `backend/modules/engine-api/src/main/scala/mnemocast/engine/api/routes/ScreenRoutes.scala`
 
 **Improvements:**
-- ✅ Logs when heartbeat route is matched
-- ✅ Logs all request headers for debugging
-- ✅ Helps identify if request reaches the endpoint
+-  Logs when heartbeat route is matched
+-  Logs all request headers for debugging
+-  Helps identify if request reaches the endpoint
 
 **Log Output:**
 ```
@@ -46,9 +46,9 @@ Or on failure:
 **File:** `backend/modules/engine-api/src/main/scala/mnemocast/engine/api/HttpServer.scala`
 
 **Improvements:**
-- ✅ Specific handler for `AuthorizationFailedRejection`
-- ✅ Returns proper JSON error message
-- ✅ Includes CORS headers in error response
+-  Specific handler for `AuthorizationFailedRejection`
+-  Returns proper JSON error message
+-  Includes CORS headers in error response
 
 **Error Response:**
 ```json
@@ -59,7 +59,7 @@ Or on failure:
 
 ---
 
-## 🔍 Troubleshooting Steps
+##  Troubleshooting Steps
 
 ### Step 1: Check Backend Logs
 
@@ -118,10 +118,10 @@ SELECT passkey FROM screens WHERE id = 'd31f2fe7-16f3-4842-8db7-4b67868ecdc6';
 - `X-Screen-Passkey` (case-insensitive, but use this exact format)
 
 **Common Issues:**
-- ❌ `x-screen-id` (lowercase) - Should work but prefer `X-Screen-Id`
-- ❌ `X-SCREEN-ID` (uppercase) - Should work but prefer `X-Screen-Id`
-- ❌ `screen-id` (missing X- prefix) - Won't work
-- ❌ `X-ScreenId` (camelCase) - Won't work
+-  `x-screen-id` (lowercase) - Should work but prefer `X-Screen-Id`
+-  `X-SCREEN-ID` (uppercase) - Should work but prefer `X-Screen-Id`
+-  `screen-id` (missing X- prefix) - Won't work
+-  `X-ScreenId` (camelCase) - Won't work
 
 ### Step 5: Test with curl
 
@@ -154,7 +154,7 @@ curl -X PUT "http://localhost:8080/api/v1/screens/$SCREEN_ID/heartbeat" \
 
 ---
 
-## 🐛 Common Issues & Solutions
+##  Common Issues & Solutions
 
 ### Issue 1: Screen Not Found
 
@@ -206,7 +206,7 @@ Available headers: Content-Type, User-Agent, ...
 
 ---
 
-## 📝 Debugging Checklist
+##  Debugging Checklist
 
 - [ ] Backend logs show route matched
 - [ ] Backend logs show headers received
@@ -221,7 +221,7 @@ Available headers: Content-Type, User-Agent, ...
 
 ---
 
-## 🔧 Quick Fixes
+##  Quick Fixes
 
 ### If Screen Doesn't Exist
 
@@ -254,7 +254,7 @@ Available headers: Content-Type, User-Agent, ...
 
 ---
 
-## 📊 Expected Log Flow (Success)
+##  Expected Log Flow (Success)
 
 ```
 [2025-12-19 00:36:00] [PUT /api/v1/screens/d31f2fe7-.../heartbeat] Route matched - checking authentication
@@ -267,7 +267,7 @@ Available headers: Content-Type, User-Agent, ...
 
 ---
 
-## 📊 Expected Log Flow (Failure)
+##  Expected Log Flow (Failure)
 
 ```
 [2025-12-19 00:36:00] [PUT /api/v1/screens/d31f2fe7-.../heartbeat] Route matched - checking authentication
@@ -280,7 +280,7 @@ Available headers: Content-Type, User-Agent, ...
 
 ---
 
-## ✅ Next Steps
+##  Next Steps
 
 1. **Restart backend** to get new logging
 2. **Check backend logs** when screen client sends heartbeat
@@ -292,7 +292,7 @@ The enhanced logging will help identify exactly why authentication is failing!
 
 ---
 
-**Status:** ✅ Enhanced Logging Added  
+**Status:**  Enhanced Logging Added  
 **Date:** 2025-12-19  
 **Version:** 4.2.1
 

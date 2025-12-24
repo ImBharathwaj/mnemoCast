@@ -1,4 +1,4 @@
-# 🔗 Dashboard Creative URL Fix
+#  Dashboard Creative URL Fix
 
 **Issue:** Clicking on creative links in the dashboard redirects to `localhost`, which doesn't work when accessing from another machine.
 
@@ -6,7 +6,7 @@
 
 ---
 
-## ✅ Solution Applied
+##  Solution Applied
 
 The dashboard now automatically transforms creative URLs to replace `localhost` with the current hostname when accessed from another machine.
 
@@ -24,7 +24,7 @@ The dashboard now automatically transforms creative URLs to replace `localhost` 
 
 ---
 
-## 🔧 Technical Details
+##  Technical Details
 
 ### URL Transformation Function
 
@@ -61,7 +61,7 @@ All creative links now use:
 
 ---
 
-## 🧪 Testing
+##  Testing
 
 ### Test from Another Machine
 
@@ -81,14 +81,14 @@ All creative links now use:
 
 ### Expected Behavior
 
-- ✅ Links show correct IP address (not localhost)
-- ✅ Media files load correctly when clicked
-- ✅ Works for both MinIO and local storage URLs
-- ✅ No redirect to localhost
+-  Links show correct IP address (not localhost)
+-  Media files load correctly when clicked
+-  Works for both MinIO and local storage URLs
+-  No redirect to localhost
 
 ---
 
-## 🔄 How URLs Are Transformed
+##  How URLs Are Transformed
 
 ### Example Transformations
 
@@ -106,7 +106,7 @@ http://192.168.1.100:8080/api/v1/media/creatives/file.jpg
 
 ---
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Issue: Links still redirect to localhost
 
@@ -146,7 +146,7 @@ curl http://SERVER_IP:8080/api/v1/media/creatives/file.jpg
 
 ---
 
-## 📝 Files Changed
+##  Files Changed
 
 1. **Created:**
    - `dashboard/src/utils/urlTransform.ts` - URL transformation utility
@@ -158,7 +158,7 @@ curl http://SERVER_IP:8080/api/v1/media/creatives/file.jpg
 
 ---
 
-## 🔗 Related Fixes
+##  Related Fixes
 
 This fix works together with:
 - **Backend Media URL Fix:** `docs/MEDIA_URL_LAN_FIX.md`
@@ -166,19 +166,19 @@ This fix works together with:
 - **Dashboard LAN Access Fix:** `docs/DASHBOARD_LAN_ACCESS_FIX.md`
 
 For complete LAN access, ensure:
-1. ✅ Backend uses `SERVER_HOST` environment variable
-2. ✅ MinIO is accessible from other machines
-3. ✅ Dashboard transforms URLs (this fix)
+1.  Backend uses `SERVER_HOST` environment variable
+2.  MinIO is accessible from other machines
+3.  Dashboard transforms URLs (this fix)
 
 ---
 
-## ✅ Expected Behavior After Fix
+##  Expected Behavior After Fix
 
-1. ✅ Creative links show correct IP address (not localhost)
-2. ✅ Clicking links opens media with correct URL
-3. ✅ Media loads correctly from any machine on LAN
-4. ✅ No redirects to localhost
-5. ✅ Works for both existing and new creatives
+1.  Creative links show correct IP address (not localhost)
+2.  Clicking links opens media with correct URL
+3.  Media loads correctly from any machine on LAN
+4.  No redirects to localhost
+5.  Works for both existing and new creatives
 
 ---
 
