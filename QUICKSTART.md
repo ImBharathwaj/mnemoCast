@@ -136,4 +136,4 @@ Install missing prerequisites:
 - sbt: https://www.scala-sbt.org/download.html
 - Redis: https://redis.io/download
 
-minio server ~/minio/data --address ":9000" --console-address ":9001"
+minio server ~/minio/data --address ":9000" --console-address ":9001"s
