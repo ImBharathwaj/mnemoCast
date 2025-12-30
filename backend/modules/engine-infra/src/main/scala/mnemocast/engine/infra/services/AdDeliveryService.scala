@@ -53,6 +53,7 @@ class AdDeliveryService(
         if (ads.isEmpty) {
           println(s"[$timestamp] [AdDelivery] ERROR: NO ACTIVE ADS IN DATABASE!")
           println(s"[$timestamp] [AdDelivery] ==========================================")
+          return Future.successful(None)
         } else {
           println(s"[$timestamp] [AdDelivery] Active ads: ${ads.map(_.id).mkString(", ")}")
         }
@@ -126,7 +127,7 @@ class AdDeliveryService(
             println(s"[$timestamp] [AdDelivery] Final eligible ads: ${eligible.map(_.id).mkString(", ")}")
             
             pickAd(eligible, screenClassification) match {
-            case Some(ad) =>
+              case Some(ad) =>
               println(s"[$timestamp] [AdDelivery] SUCCESS: Selected ad: ${ad.id} (weight: ${ad.weight}, screen classification: $screenClassification)")
               println(s"[$timestamp] [AdDelivery] ==========================================")
               val response = DeliveryResponse(
@@ -142,7 +143,7 @@ class AdDeliveryService(
               // Log event, then return the response
               eventStore.append(event).map(_ => Some(response))
 
-            case None =>
+              case None =>
               println(s"[$timestamp] [AdDelivery] ERROR: NO ELIGIBLE ADS FOUND AFTER ALL FILTERS")
               println(s"[$timestamp] [AdDelivery] Summary:")
               println(s"[$timestamp] [AdDelivery]   - Total active ads: ${ads.length}")
@@ -151,16 +152,14 @@ class AdDeliveryService(
               println(s"[$timestamp] [AdDelivery]   - After frequency cap: ${eligible.length}")
               println(s"[$timestamp] [AdDelivery] ==========================================")
               Future.successful(None)
+            }
           }
         }
       }
     }
-    }
   }
 
   /**
-    * Weighted selection among eligible ads with screen classification boost.
-    * 
     * Higher classified screens boost ad weights proportionally:
     * - Screen classification 5 + Ad weight 3 = effective weight 15
     * - This creates a pay-per-attention model where premium screens favor premium (high-weight) ads
